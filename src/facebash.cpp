@@ -29,6 +29,7 @@ int main(int argc, char* argv[])
 	      request.setOpt(url);
 
 	      request.perform();
+	      std::cout << std::endl << std::flush;
 	    }
 	  catch (curlpp::RuntimeError &e)
 	    {
