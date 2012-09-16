@@ -1,6 +1,6 @@
 #include "LoginField.h"
 
-void LoginField::SetStdinEcho(bool enable = true)
+void LoginField::SetStdinEcho(bool enable)
 {
 #ifdef WIN32
   HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -27,7 +27,7 @@ void LoginField::SetStdinEcho(bool enable = true)
 #endif
 }
 
-void LoginField::readUser(std::string prompt = std::string("Username: "))
+void LoginField::readUser(std::string prompt)
 {
   std::cout << prompt.c_str();
 
@@ -39,7 +39,7 @@ void LoginField::readUser(std::string prompt = std::string("Username: "))
   std::cout << std::flush;
 }
 
-void LoginField::readPass(std::string prompt = std::string("Password: "))
+void LoginField::readPass(std::string prompt)
 {
   // Print the field prompt, then turn off echo
   std::cout << prompt.c_str();

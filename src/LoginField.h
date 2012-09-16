@@ -17,8 +17,8 @@ class LoginField
   LoginField() {}
   ~LoginField() {}
 
-  void readPass(std::string);
-  void readUser(std::string);
+  void readUser(std::string prompt = std::string("Username: "));
+  void readPass(std::string prompt = std::string("Password: "));
 
   std::string pass() {return password;}
   std::string user() {return username;}
