@@ -5,20 +5,19 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
-using std::cout;
-using std::cerr;
-using std::endl;
+#include "LoginField.h"
 
 int main(int argc, char* argv[])
 {
-  if (argc != 3)
-    {
-      cerr << "Usage: -u <url>" << endl;
-      return -1;
-    }
-
   for (int i = 0; i < argc; i ++)
     {
+      if (strcmp(argv[i], "-l") == 0)
+	{
+	  LoginField login = LoginField();
+	  login.readUser(std::string("Email: "));
+	  login.readPass();
+	}
+
       if (strcmp(argv[i], "-u") == 0 && i != argc-1)
 	{
 	  try
@@ -33,11 +32,11 @@ int main(int argc, char* argv[])
 	    }
 	  catch (curlpp::RuntimeError &e)
 	    {
-	      cout << e.what() << endl;
+	      std::cout << e.what() << std::endl;
 	    }
 	  catch (curlpp::LogicError &e)
 	    {
-	      cout << e.what() << endl;
+	      std::cout << e.what() << std::endl;
 	    }
 	}
     }
