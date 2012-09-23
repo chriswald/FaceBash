@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <script>
+      if (window.location.hash.length != 0)
+        var accessToken = window.location.hash.substring(1);
+        var c_name = "F.aceBashAuthToken";
+        document.cookie = c_name + "=" + authToken;
+    </script>
+  </body>
+</html>
