@@ -1,11 +1,17 @@
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
 #include "LoginField.h"
+
+const std::string AppId = "103806206443210";
 
 int main(int argc, char* argv[])
 {
@@ -34,9 +40,31 @@ int main(int argc, char* argv[])
 	}
       if (strcmp(argv[i], "-l") == 0)
 	{
-	  LoginField login = LoginField();
-	  login.readUser(std::string("Email: "));
-	  login.readPass();
+	  pid_t child = 0;
+	  child = fork();
+	  if (child < 0)
+	    {
+	      std::cerr << "Could not branch to browser." << std::endl;
+	      std::cerr << "Ensure links is installed." << std::endl;
+	    }
+	  else if (child == 0)
+	    {
+	      bool found_token = true; // false;
+	      while (!found_token)
+		{
+		  // Poll for token
+		}
+	    }
+	  else
+	    {
+	      std::string link = std::string("https://www.facebook.com/dialog/oauth?");
+	      link += "client_id=" + AppId;
+	      link += "&redirect_uri=http://chriswald.com";
+	      link += "&scope=user_about_me";
+	      link += "&response_type=token";
+
+	      execl("/usr/bin/links", "/usr/bin/links", link.c_str(), (char *) 0);
+	    }
 	}
 
       if (strcmp(argv[i], "-u") == 0 && i != argc-1)
