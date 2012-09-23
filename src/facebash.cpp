@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 	      link += "&scope=user_about_me";
 	      link += "&response_type=token";
 
-	      execl("/usr/bin/links", "/usr/bin/links", link.c_str(), (char *) 0);
+	      execl("/usr/bin/links2", "/usr/bin/links2", link.c_str(), (char *) 0);
 	    }
 	}
 
