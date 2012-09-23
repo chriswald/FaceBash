@@ -1,4 +1,4 @@
-apt-get install -y libboost1.50-all-dev libcurl4-openssl-dev
+apt-get install -y libboost1.50-all-dev libcurl4-openssl-dev links2
 wget http://curlpp.googlecode.com/files/curlpp-0.7.3.tar.gz
 tar -xzf curlpp-0.7.3.tar.gz
 rm curlpp-0.7.3.tar.gz
