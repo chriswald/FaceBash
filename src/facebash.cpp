@@ -46,27 +46,25 @@ int main(int argc, char* argv[])
 	  login.readUser("Email: ");
 	  login.readPass();
 
-	  pid_t child = 0;
-	  child = fork();
-	  if (child < 0)
+	  int status;
+	  pid_t pid = fork();
+
+	  if (pid < 0)
 	    {
-	      std::cerr << "Could not branch to browser." << std::endl;
-	      std::cerr << "Ensure links is installed." << std::endl;
+	      perror("fork error");
 	    }
-	  else if (child == 0)
-	    {
-	      int status;
-	      do {
-		waitpid(child, &status, 0);
-	      } while (!WIFEXITED(status));
-	    }
-	  else
+	  else if (pid == 0)
 	    {
 	      execl("/usr/bin/python2.7", "/usr/bin/python2.7", "scripts/login.py", login.user().c_str(), login.pass().c_str(), (char *) 0);
 	    }
+	  else
+	    {
+	      if ((pid = wait(&status)) == -1)
+		perror("wait error");
+	    }
 
 	  std::ifstream member27;
-	  member27.open("~/.facebash/member27");
+	  member27.open("/home/pi/.facebash/member27");
 	  if (member27.is_open())
 	    {
 	      while (member27.good())
