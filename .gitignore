@@ -1,3 +1,4 @@
 FaceBash
 *.out
 *~
+bin/*
