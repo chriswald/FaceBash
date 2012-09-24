@@ -1,8 +1,10 @@
+#include <fstream>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include <curlpp/cURLpp.hpp>
@@ -53,15 +55,31 @@ int main(int argc, char* argv[])
 	    }
 	  else if (child == 0)
 	    {
-	      bool found_token = true; // false;
-	      while (!found_token)
-		{
-		  // Poll for token
-		}
+	      int status;
+	      do {
+		waitpid(child, &status, 0);
+	      } while (!WIFEXITED(status));
 	    }
 	  else
 	    {
-	      execl("/usr/bin/python2.7", "/usr/bin/python2.7", "login.py", login.user().c_str(), login.pass().c_str(), (char *) 0);
+	      execl("/usr/bin/python2.7", "/usr/bin/python2.7", "scripts/login.py", login.user().c_str(), login.pass().c_str(), (char *) 0);
+	    }
+
+	  std::ifstream member27;
+	  member27.open("~/.facebash/member27");
+	  if (member27.is_open())
+	    {
+	      while (member27.good())
+		{
+		  std::string line;
+		  getline (member27, line);
+		  std::cout << line << std::endl;
+		}
+	      member27.close();
+	    }
+	  else
+	    {
+	      std::cerr << "Unable to login." << std::endl;
 	    }
 	}
 

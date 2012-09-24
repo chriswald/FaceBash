@@ -39,4 +39,24 @@ if 'facebook' in response1.geturl():
 else:
     return_val = response1.geturl()
 
-print return_val
+sys.stdout.write('Got Value\n')
+sys.stdout.flush()
+
+if not return_val == 'fail':
+    POSTS = return_val[return_val.index('#')+1:]
+    parts = POSTS.split('&')
+    auth_token = parts[0].split('=')[1]
+    expires_in = parts[1].split('=')[1]
+    sys.stdout.write('Opening file')
+    sys.stdout.flush()
+    f = open('/home/pi/.facebash/member27', 'w')
+    f.write(auth_token + '\n')
+    f.write(expires_in + '\n')
+    f.close()
+else:
+    f = open('~/.facebash/member27', 'w+')
+    f.write('fail')
+    f.close()
+
+sys.stdout.write('Done')
+sys.stdout.flush()
