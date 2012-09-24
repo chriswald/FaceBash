@@ -40,6 +40,10 @@ int main(int argc, char* argv[])
 	}
       if (strcmp(argv[i], "-l") == 0)
 	{
+	  LoginField login = LoginField();
+	  login.readUser("Email: ");
+	  login.readPass();
+
 	  pid_t child = 0;
 	  child = fork();
 	  if (child < 0)
@@ -57,13 +61,7 @@ int main(int argc, char* argv[])
 	    }
 	  else
 	    {
-	      std::string link = std::string("https://www.facebook.com/dialog/oauth?");
-	      link += "client_id=" + AppId;
-	      link += "&redirect_uri=http://chriswald.com";
-	      link += "&scope=user_about_me";
-	      link += "&response_type=token";
-
-	      execl("/usr/bin/elinks", "/usr/bin/elinks", link.c_str(), (char *) 0);
+	      execl("/usr/bin/python2.7", "/usr/bin/python2.7", "login.py", login.user().c_str(), login.pass().c_str(), (char *) 0);
 	    }
 	}
 
