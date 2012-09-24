@@ -20,8 +20,8 @@ class LoginField
   void readUser(std::string prompt = std::string("Username: "));
   void readPass(std::string prompt = std::string("Password: "));
 
-  std::string pass() {return password;}
   std::string user() {return username;}
+  std::string pass() {return password;}
 
  private:
   std::string username;
