@@ -1,4 +1,4 @@
-apt-get install -y libboost1.50-all-dev libcurl4-openssl-dev python2.7 g++
+apt-get install -y libboost1.46-dev libcurl4-openssl-dev python2.7 g++
 wget http://curlpp.googlecode.com/files/curlpp-0.7.3.tar.gz
 tar -xzf curlpp-0.7.3.tar.gz
 rm curlpp-0.7.3.tar.gz
@@ -16,3 +16,4 @@ chmod +x setuptools-0.6c11-py2.7.egg
 ./setuptools-0.6c11-py2.7.egg
 easy_install mechanize
 rm setuptools-0.6c11-py2.7.egg
+mkdir bin
