@@ -44,11 +44,11 @@ if not return_val == 'fail':
     parts = POSTS.split('&')
     auth_token = parts[0].split('=')[1]
     expires_in = parts[1].split('=')[1]
-    f = open('/home/pi/.facebash/member27', 'w')
+    f = open('member27', 'w+')
     f.write(auth_token + '\n')
     f.write(expires_in + '\n')
     f.close()
 else:
-    f = open('~/.facebash/member27', 'w+')
+    f = open('member27', 'w+')
     f.write('fail')
     f.close()
