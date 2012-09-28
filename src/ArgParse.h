@@ -12,6 +12,7 @@
 
 #include "LoginField.h"
 
+using std::cerr;
 using std::cin;
 using std::cout;
 using std::endl;
@@ -30,13 +31,13 @@ class ArgParse
 
   void Login();
   void UpdateStatus();
-  void ShowNewsFeed()          {};
-  void AboutFriend()           {};
-  void ShowUpcomingBirthdays() {};
-  void AboutMe()               {};
+  void ShowNewsFeed();
+  void AboutFriend();
+  void ShowUpcomingBirthdays();
+  void AboutMe();
 
  private:
-  string prompt(string message, ostream os = cout, istream is = cin) { return NULL; };
+  string prompt(string message, ostream os = cout, istream is = cin);
 
   int count;
   string *argument;

@@ -59,16 +59,44 @@ void ArgParse::Login()
   member27.open("member27");
   if (member27.is_open())
     {
-      while (member27.good())
-	{
-	  std::string line;
-	  getline (member27, line);
-	  std::cout << line << std::endl;
-	}
+      cout << "Logged In." << endl;
       member27.close();
     }
   else
     {
-      std::cerr << "Unable to login." << std::endl;
+      cerr << "Unable to login." << endl;
     }
+}
+
+void ArgParse::UpdateStatus()
+{
+  
+}
+
+void ArgParse::ShowNewsFeed()
+{
+
+}
+
+void ArgParse::AboutFriend()
+{
+
+}
+
+void ArgParse::ShowUpcomingBirthdays()
+{
+
+}
+
+void ArgParse::AboutMe()
+{
+
+}
+
+string ArgParse::prompt(string message, ostream os, istream is)
+{
+  string tmp;
+  os << message;
+  is >> tmp;
+  return tmp;
 }
