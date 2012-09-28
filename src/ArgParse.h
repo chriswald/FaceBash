@@ -2,7 +2,15 @@
 #define __ARG_PARSE_H
 
 #include <cstring>
+#include <fstream>
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+#include "LoginField.h"
 
 using std::cin;
 using std::cout;
