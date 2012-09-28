@@ -1,61 +1,35 @@
 #include "ArgParse.h"
 
-ArgParse::ArgParse(int argc, char *argv[])
+ArgParse::ArgParse(int argc, char **argv)
 {
   count = argc;
-  args = argv;
+  argument = new string[count];
+  for (int i = 0; i < count; i ++)
+    argument[i] = string(argv[i]);
 }
 
 ArgParse::~ArgParse()
-{
-  for (int i = 0; i < count; i ++)
-    {
-      delete[] args[i];
-    }
-}
+{}
 
-void ArgParse::parseArgs()
+void ArgParse::ParseArgs()
 {
-  if      (argvHas("-l") || argvHas("--login"))
+  if      (argHas("-l") || argHas("--login"))
     Login();
 
-  else if (argvHas("-s") || argvHas("--post_status"))
+  else if (argHas("-s") || argHas("--update_status"))
     UpdateStatus();
-
-  else if (argvHas("-n") || argvHas("--news_feed"))
-    ShowNewsFeed();
-
-  else if (argvHas("-a") || argvHas("--about_friend"))
-    AboutFriend();
-
-  else if (argvHas("-b") || argvHas("--birthdays"))
-    ShowUpcomingBirthdays();
-
-  else if (                 argvHas("--about_me"))
-    AboutMe();
 }
 
-
-bool ArgParse::argvHas(string arg)
+bool ArgParse::argHas(string arg)
 {
   for (int i = 0; i < count; i ++)
     {
-      if (strcmp(arg.c_str(), args[i]) == 0)
-	return true;
+      if (strcmp(argument[i].c_str(), arg.c_str()) == 0)
+	{
+	  return true;
+	}
     }
-
   return false;
-}
-
-string ArgParse::prompt(string message, ostream os, istream is)
-{
-  string reply;
-
-  os << message;
-  is >> reply;
-  os << endl;
-
-  return reply;
 }
 
 void ArgParse::Login()
@@ -82,7 +56,7 @@ void ArgParse::Login()
     }
   
   std::ifstream member27;
-  member27.open("/home/pi/.facebash/member27");
+  member27.open("member27");
   if (member27.is_open())
     {
       while (member27.good())
@@ -97,29 +71,4 @@ void ArgParse::Login()
     {
       std::cerr << "Unable to login." << std::endl;
     }
-}
-
-void ArgParse::UpdateStatus()
-{
-
-}
-
-void ArgParse::ShowNewsFeed()
-{
-
-}
-
-void ArgParse::AboutFriend()
-{
-
-}
-
-void ArgParse::ShowUpcomingBirthdays()
-{
-
-}
-
-void ArgParse::AboutMe()
-{
-
 }

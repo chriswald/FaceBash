@@ -22,24 +22,24 @@ using std::string;
 class ArgParse
 {
  public:
-  ArgParse (int argc, char *argv[]);
+  ArgParse (int argc, char **argv);
   ~ArgParse();
 
-  void parseArgs();
-  bool argvHas(string arg);
+  void ParseArgs();
+  bool argHas(string arg);
 
   void Login();
   void UpdateStatus();
-  void ShowNewsFeed();
-  void AboutFriend();
-  void ShowUpcomingBirthdays();
-  void AboutMe();
+  void ShowNewsFeed()          {};
+  void AboutFriend()           {};
+  void ShowUpcomingBirthdays() {};
+  void AboutMe()               {};
 
  private:
-  string prompt(string message, ostream os = cout, istream is = cin);
+  string prompt(string message, ostream os = cout, istream is = cin) { return NULL; };
 
   int count;
-  char **args;
+  string *argument;
 };
 
 #endif // __ARG_PARSE_H
