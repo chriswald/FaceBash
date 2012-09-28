@@ -10,12 +10,17 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <curlpp/cURLpp.hpp>
+#include <curlpp/Options.hpp>
+#include <curlpp/Easy.hpp>
+
 #include "LoginField.h"
 
 using std::cerr;
 using std::cin;
 using std::cout;
 using std::endl;
+using std::ifstream;
 using std::istream;
 using std::ostream;
 using std::string;
@@ -37,7 +42,8 @@ class ArgParse
   void AboutMe();
 
  private:
-  string prompt(string message, ostream os = cout, istream is = cin);
+  string prompt(string message);
+  string authToken();
 
   int count;
   string *argument;

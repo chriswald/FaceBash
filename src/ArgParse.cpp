@@ -70,7 +70,18 @@ void ArgParse::Login()
 
 void ArgParse::UpdateStatus()
 {
+  cURLpp::Easy request;
+  cURLpp::Forms formParts;
+  cURLpp::options::Url url(string("https://graph.facebook.com/me/feed"));
+  string token = authToken();
+  string message = prompt(string("Status: "));
+
+  formParts.push_back(new cURLpp::FormParts::Content("access_token", token));
+  formParts.push_back(new cURLpp::FormParts::Content("message", message));
   
+  request.setOpt(url);
+  request.setOpt(new cURLpp::Options::HttpPost(formParts));
+  request.perform();
 }
 
 void ArgParse::ShowNewsFeed()
@@ -93,10 +104,41 @@ void ArgParse::AboutMe()
 
 }
 
-string ArgParse::prompt(string message, ostream os, istream is)
+string ArgParse::prompt(string message)
 {
   string tmp;
-  os << message;
-  is >> tmp;
+  cout << message;
+  getline(cin, tmp);
   return tmp;
+}
+
+string ArgParse::authToken()
+{
+  string token;
+  ifstream fin;
+  fin.open("member27");
+  if (fin.is_open())
+    {
+      fin >> token;
+      fin.close();
+      return token;
+    }
+  else
+    {
+      cerr << "Please Log In" << endl;
+      Login();
+      fin.open("member27");
+      if (fin.is_open())
+	{
+	  fin >> token;
+	  fin.close();
+	  return token;
+	}
+      else
+	{
+	  cerr << "Could not log in." << endl;
+	}
+    }
+
+  return NULL;
 }
