@@ -4,6 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -23,6 +24,7 @@ using std::endl;
 using std::ifstream;
 using std::istream;
 using std::ostream;
+using std::ostringstream;
 using std::string;
 
 class ArgParse

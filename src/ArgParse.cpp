@@ -1,16 +1,32 @@
 #include "ArgParse.h"
 
+/*
+ * Constructor:
+ * Sets the count to the number of arguments and copies all arguments to to an
+ * array of strings.
+ */
 ArgParse::ArgParse(int argc, char **argv)
 {
   count = argc;
-  argument = new string[count];
+  arguments = new string[count];
   for (int i = 0; i < count; i ++)
-    argument[i] = string(argv[i]);
+    arguments[i] = string(argv[i]);
 }
 
+/*
+ * Destructor:
+ * Returns arguments array to the heap.
+ */
 ArgParse::~ArgParse()
-{}
+{
+  delete[] arguments;
+}
 
+/*
+ * Parse Arguments:
+ * Searches the provided arguments for meaningful inputs and calls corresponding
+ * functions to handle heavy lifting.
+ */
 void ArgParse::ParseArgs()
 {
   if      (argHas("-l") || argHas("--login"))
@@ -18,13 +34,21 @@ void ArgParse::ParseArgs()
 
   else if (argHas("-s") || argHas("--update_status"))
     UpdateStatus();
+
+  else if (argHas("-n") || argHas("--show_news_feed"))
+    ShowNewsFeed();
 }
 
+/*
+ * Arguments Have:
+ * Returns true if the argument list contains the specified argument, false
+ * otherwise.
+ */
 bool ArgParse::argHas(string arg)
 {
   for (int i = 0; i < count; i ++)
     {
-      if (strcmp(argument[i].c_str(), arg.c_str()) == 0)
+      if (strcmp(arguments[i].c_str(), arg.c_str()) == 0)
 	{
 	  return true;
 	}
@@ -32,6 +56,15 @@ bool ArgParse::argHas(string arg)
   return false;
 }
 
+/*
+ * Log In:
+ * Handles all responsibilities associated with retrieving a valid
+ * authentification token. The user is prompted for their email and password,
+ * then the process is forked in order to call a python script which handles the
+ * logging in. The parent process waits for the script to exit, then runs a
+ * check to see if the authentification token exists, informing the user whether
+ * the login completed successfully or not based on the results of that check.
+ */
 void ArgParse::Login()
 {
   LoginField login = LoginField();
@@ -68,6 +101,12 @@ void ArgParse::Login()
     }
 }
 
+/*
+ * Update Status:
+ * Handles all tasks associated with allowing a user to update his or her
+ * status. Prompts the user for a status message, then polls for the
+ * authentification token, then submits a POST to the Facebook Graph APIl
+ */
 void ArgParse::UpdateStatus()
 {
   cURLpp::Easy request;
@@ -86,7 +125,13 @@ void ArgParse::UpdateStatus()
 
 void ArgParse::ShowNewsFeed()
 {
+  ostringstream os;
+  cURLpp::Easy request;
+  cURLpp::options::Url url(string("https://graph.facebook.com/me/statuses") + string("?access_token=") + authToken());
+  request.setOpt(url);
 
+  os << request;
+  cout << os.str();
 }
 
 void ArgParse::AboutFriend()
