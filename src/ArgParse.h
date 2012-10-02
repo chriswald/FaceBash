@@ -22,10 +22,10 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::ifstream;
-using std::istream;
-using std::ostream;
 using std::ostringstream;
 using std::string;
+
+const string version = ".1";
 
 class ArgParse
 {
@@ -43,12 +43,15 @@ class ArgParse
   void ShowUpcomingBirthdays();
   void AboutMe();
 
+  void ShowHelpText();
+  void ShowVersion();
+
  private:
   string prompt(string message);
   string authToken();
 
   int count;
-  string *argument;
+  string *arguments;
 };
 
 #endif // __ARG_PARSE_H

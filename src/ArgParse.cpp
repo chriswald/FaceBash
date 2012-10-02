@@ -29,14 +29,20 @@ ArgParse::~ArgParse()
  */
 void ArgParse::ParseArgs()
 {
-  if      (argHas("-l") || argHas("--login"))
+  if      (argHas("-h") || argHas("--help"))
+    ShowHelpText();
+
+  else if (argHas("-l") || argHas("--login"))
     Login();
+
+  else if (argHas("-n") || argHas("--show_news_feed"))
+    ShowNewsFeed();
 
   else if (argHas("-s") || argHas("--update_status"))
     UpdateStatus();
 
-  else if (argHas("-n") || argHas("--show_news_feed"))
-    ShowNewsFeed();
+  else if (argHas("-v") || argHas("--version"))
+    ShowVersion();
 }
 
 /*
@@ -147,6 +153,27 @@ void ArgParse::ShowUpcomingBirthdays()
 void ArgParse::AboutMe()
 {
 
+}
+
+void ArgParse::ShowHelpText()
+{
+  ShowVersion();
+  cout                                                                  << endl;
+  cout << "Usage: bin/Facebash [options]"                               << endl;
+  cout                                                                  << endl;
+  cout << "Options:"                                                    << endl;
+  cout << "   -h, --help            Shows this message"                 << endl;
+  cout << "   -l, --login           Logs a user into Facebook"          << endl;
+  cout << "   -n, --show_news_feed  Shows the current user's news feed" << endl;
+  cout << "   -s, --update_status   Updates the current user's status"  << endl;
+  cout << "   -v, --version         Displays version information"       << endl;
+  cout                                                                  << endl;
+}
+
+void ArgParse::ShowVersion()
+{
+  cout << "F.acebash v" << version                 << endl;
+  cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
 }
 
 string ArgParse::prompt(string message)

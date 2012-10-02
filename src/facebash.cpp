@@ -1,7 +1,7 @@
 #include "ArgParse.h"
 #include "LoginField.h"
 
-const std::string AppId = "103806206443210";
+const std::string AppId   = "103806206443210";
 
 int main(int, char**);
 
