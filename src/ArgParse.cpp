@@ -133,11 +133,11 @@ void ArgParse::ShowNewsFeed()
 {
   ostringstream os;
   cURLpp::Easy request;
-  cURLpp::options::Url url(string("https://graph.facebook.com/me/statuses") + string("?access_token=") + authToken());
+  cURLpp::options::Url url(string("https://graph.facebook.com/me/home") + string("?access_token=") + authToken());
   request.setOpt(url);
 
   os << request;
-  cout << os.str();
+  cout << os.str() << endl << endl;
 }
 
 void ArgParse::AboutFriend()
