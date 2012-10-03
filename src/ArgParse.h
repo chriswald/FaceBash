@@ -15,6 +15,8 @@
 #include <curlpp/Options.hpp>
 #include <curlpp/Easy.hpp>
 
+#include <json/json.h>
+
 #include "LoginField.h"
 
 using std::cerr;

@@ -125,6 +125,7 @@ void ArgParse::Login()
  */
 void ArgParse::UpdateStatus()
 {
+  ostringstream os;
   cURLpp::Easy request;
   cURLpp::Forms formParts;
   cURLpp::options::Url url(string("https://graph.facebook.com/me/feed"));
@@ -136,18 +137,57 @@ void ArgParse::UpdateStatus()
   
   request.setOpt(url);
   request.setOpt(new cURLpp::Options::HttpPost(formParts));
-  request.perform();
+  os << request;
 }
 
 void ArgParse::ShowNewsFeed()
 {
+  // Get the JSON from Facebook
   ostringstream os;
   cURLpp::Easy request;
   cURLpp::options::Url url(string("https://graph.facebook.com/me/home") + string("?access_token=") + authToken());
   request.setOpt(url);
 
   os << request;
-  cout << os.str() << endl << endl;
+  
+  // Parse the JSON
+  Json::Value root;
+  Json::Reader reader;
+
+  bool parsingSuccessful = reader.parse(os.str(), root);
+  if (!parsingSuccessful)
+    {
+      cerr << "Failed to parse the document." << endl;
+      return;
+    }
+
+  /*
+  for (unsigned int i = 0; i < root.size(); i ++)
+    {
+      if (strcmp(root[i].asString().c_str(), "error") == 0)
+	{
+	  cerr << "An Error Occurred." << endl;
+	  cerr << root["error"]["message"] << endl;
+	  return;
+	}
+    }
+  */
+
+  const Json::Value posts = root["data"];
+  for (unsigned int i = 0; i < posts.size(); i ++)
+    {
+      string content_type = posts[i]["type"].asString();
+      if (strcmp(content_type.c_str(), "status") == 0)
+	{
+	  string posted_by = posts[i]["from"]["name"].asString();
+	  string message = posts[i]["message"].asString();
+	  if (strcmp(message.c_str(), "") != 0)
+	    {
+	      cout << posted_by << endl;
+	      cout << "   " << posts[i]["message"].asString() << endl << endl;
+	    }
+	}
+    }
 }
 
 void ArgParse::AboutFriend()
