@@ -2,8 +2,9 @@
 
 /*
  * Constructor:
- * Sets the count to the number of arguments and copies all arguments to to an
- * array of strings. Does not copy the first argument, the program name.
+ * Sets the count to the number of arguments and copies all arguments
+ * to to an array of strings. Does not copy the first argument, the
+ * program name.
  */
 ArgParse::ArgParse(int argc, char **argv)
 {
@@ -24,11 +25,18 @@ ArgParse::~ArgParse()
 
 /*
  * Parse Arguments:
- * Searches the provided arguments for meaningful inputs and calls corresponding
- * functions to handle heavy lifting.
+ * Searches the provided arguments for meaningful inputs and calls
+ * corresponding functions to handle heavy lifting. Displays help text
+ * if no arguments were passed.
  */
 void ArgParse::ParseArgs()
 {
+  if (count == 0)
+    {
+      ShowHelpText();
+      return;
+    }
+
   if      (argHas("-h") || argHas("--help"))
     ShowHelpText();
 
@@ -47,8 +55,8 @@ void ArgParse::ParseArgs()
 
 /*
  * Arguments Have:
- * Returns true if the argument list contains the specified argument, false
- * otherwise.
+ * Returns true if the argument list contains the specified argument,
+ * false otherwise.
  */
 bool ArgParse::argHas(string arg)
 {
@@ -65,11 +73,12 @@ bool ArgParse::argHas(string arg)
 /*
  * Log In:
  * Handles all responsibilities associated with retrieving a valid
- * authentification token. The user is prompted for their email and password,
- * then the process is forked in order to call a python script which handles the
- * logging in. The parent process waits for the script to exit, then runs a
- * check to see if the authentification token exists, informing the user whether
- * the login completed successfully or not based on the results of that check.
+ * authentification token. The user is prompted for their email and
+ * password, then the process is forked in order to call a python
+ * script which handles the logging in. The parent process waits for
+ * the script to exit, then runs a check to see if the
+ * authentification token exists, informing the user whether the login
+ * completed successfully or not based on the results of that check.
  */
 void ArgParse::Login()
 {
@@ -109,9 +118,10 @@ void ArgParse::Login()
 
 /*
  * Update Status:
- * Handles all tasks associated with allowing a user to update his or her
- * status. Prompts the user for a status message, then polls for the
- * authentification token, then submits a POST to the Facebook Graph APIl
+ * Handles all tasks associated with allowing a user to update his or
+ * her status. Prompts the user for a status message, then polls for
+ * the authentification token, then submits a POST to the Facebook
+ * Graph API.
  */
 void ArgParse::UpdateStatus()
 {
@@ -155,6 +165,10 @@ void ArgParse::AboutMe()
 
 }
 
+/*
+ * Show Help Text:
+ * Displays a list of all accepted commands and their functions.
+ */
 void ArgParse::ShowHelpText()
 {
   ShowVersion();
@@ -170,12 +184,21 @@ void ArgParse::ShowHelpText()
   cout                                                                  << endl;
 }
 
+/*
+ * Show Version Information:
+ * Displays the program's current version and copyright information.
+ */
 void ArgParse::ShowVersion()
 {
   cout << "F.acebash v" << version                 << endl;
   cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
 }
 
+/*
+ * Prompt:
+ * Displays a prompt to the user and waits for input, returned as a
+ * string.
+ */
 string ArgParse::prompt(string message)
 {
   string tmp;
@@ -184,6 +207,13 @@ string ArgParse::prompt(string message)
   return tmp;
 }
 
+/*
+ * Get Auth Token:
+ * Attempts to retrieve the auth token. On success the auth token is
+ * returned. On failure the user is prompted. The token is again
+ * polled for. On success the token is returned. On failure a message
+ * is displayed and NULL is returned.
+ */
 string ArgParse::authToken()
 {
   string token;
