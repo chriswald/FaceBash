@@ -3,14 +3,14 @@
 /*
  * Constructor:
  * Sets the count to the number of arguments and copies all arguments to to an
- * array of strings.
+ * array of strings. Does not copy the first argument, the program name.
  */
 ArgParse::ArgParse(int argc, char **argv)
 {
-  count = argc;
+  count = argc-1;
   arguments = new string[count];
   for (int i = 0; i < count; i ++)
-    arguments[i] = string(argv[i]);
+    arguments[i] = string(argv[i+1]);
 }
 
 /*
