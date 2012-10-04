@@ -56,6 +56,7 @@ class ArgParse
  private:
   string prompt(string message);
   string authToken();
+  string getFriendID(string name);
 
   int count;
   string *arguments;

@@ -125,10 +125,24 @@ void ArgParse::Login()
  */
 void ArgParse::UpdateStatus()
 {
+  string who;
+  if (count > 1)
+    {
+      who = getFriendID(arguments[1]);
+      if (strcmp(who.c_str(), "\0") == 0)
+	{
+	  return;
+	}
+    }
+  else
+    {
+      who = "me";
+    }
+
   ostringstream os;
   cURLpp::Easy request;
   cURLpp::Forms formParts;
-  cURLpp::options::Url url(string("https://graph.facebook.com/me/feed"));
+  cURLpp::options::Url url(string("https://graph.facebook.com/"+who+"/feed"));
   string token = authToken();
   string message = prompt(string("Status: "));
 
@@ -329,4 +343,57 @@ string ArgParse::authToken()
     }
 
   return NULL;
+}
+
+string ArgParse::getFriendID(string name)
+{
+  ostringstream os;
+  cURLpp::Easy request;
+  cURLpp::options::Url url(string("https://graph.facebook.com/me/friends") + string("?access_token=") + authToken());
+  request.setOpt(url);
+
+  os << request;
+
+  Json::Value root;
+  Json::Reader reader;
+
+  bool parsingSuccessful = reader.parse(os.str(), root);
+  if (!parsingSuccessful)
+    {
+      cerr << "Failed to parse the document." << endl;
+      return NULL;
+    }
+
+  string error_message = root["error"]["message"].asString();
+  if (strcmp(error_message.c_str(), "\0") != 0)
+    {
+      cerr << error_message << endl;
+      return NULL;
+    }
+
+  vector<string> ids;
+
+  const Json::Value data = root["data"];
+  for (unsigned int i = 0; i < data.size(); i ++)
+    {
+      if (data[i]["name"].asString().find(name.c_str()) != (int) -1)
+	{
+	  ids.push_back(data[i]["id"].asString());
+	}
+    }
+
+  if (ids.size() > 1)
+    {
+      cerr << "You have more than one friend with that name." << endl;
+      return NULL;
+    }
+  else if (ids.size() == 0)
+    {
+      cerr << "You don't have any friends with that name." << endl;
+      return NULL;
+    }
+  else
+    {
+      return ids[0];
+    }
 }
