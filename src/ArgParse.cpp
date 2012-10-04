@@ -140,6 +140,11 @@ void ArgParse::UpdateStatus()
   os << request;
 }
 
+/*
+ * Show News Feed:
+ * Shows the user's news feed. Filters out all posts that are not only
+ * text so that posts that don't make sense will be filtered out.
+ */
 void ArgParse::ShowNewsFeed()
 {
   // Get the JSON from Facebook
@@ -161,17 +166,7 @@ void ArgParse::ShowNewsFeed()
       return;
     }
 
-  /*
-  for (unsigned int i = 0; i < root.size(); i ++)
-    {
-      if (strcmp(root[i].asString().c_str(), "error") == 0)
-	{
-	  cerr << "An Error Occurred." << endl;
-	  cerr << root["error"]["message"] << endl;
-	  return;
-	}
-    }
-  */
+  cout << root["error"]["message"].asString() << endl;
 
   const Json::Value posts = root["data"];
   for (unsigned int i = 0; i < posts.size(); i ++)
