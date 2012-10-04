@@ -162,7 +162,7 @@ void ArgParse::UpdateStatus()
       cerr << os.str() << endl;
     }
 
-  cerr << root["error"]["message"].asString() << endl;
+  showErrorMessage(root);
 }
 
 /*
@@ -191,10 +191,8 @@ void ArgParse::ShowNewsFeed()
       return;
     }
 
-  string error_message = root["error"]["message"].asString();
-  if (strcmp(error_message.c_str(), "\0") != 0)
+  if (showErrorMessage(root))
     {
-      cerr << error_message << endl;
       return;
     }
 
@@ -206,46 +204,7 @@ void ArgParse::ShowNewsFeed()
 	{
 	  string posted_by = posts[i]["from"]["name"].asString();
 	  string message = posts[i]["message"].asString();
-	  if (strcmp(message.c_str(), "") != 0)
-	    {
-	      vector<string> lines;
-	      string remainder = message;
-
-	      vector<string> new_lines;
-	      int nl_index = remainder.find("\n");
-	      while (nl_index != -1 && nl_index != (int) strlen(remainder.c_str()))
-		{
-		  string line = remainder.substr(0, nl_index);
-		  remainder = remainder.substr(nl_index + 1);
-		  new_lines.push_back(line);
-		  nl_index = remainder.find("\n");
-		}
-	      new_lines.push_back(remainder);
-
-	      for (unsigned int j = 0; j < new_lines.size(); j ++)
-		{
-		  string new_line = new_lines[j];
-		  while (strlen(new_line.c_str()) > LINE_WIDTH)
-		    {
-		      int space_index = new_line.substr(0, LINE_WIDTH).rfind(" ");
-		      string line = new_line.substr(0, space_index);
-		      new_line = new_line.substr(space_index + 1);
-		      lines.push_back(line);
-		    }
-		  lines.push_back(new_line);
-		}
-
-	      cout << setiosflags(std::ios::left);
-	      cout << setfill('-') << setw(LINE_WIDTH+5) << "/" << "\\" << endl;
-	      cout << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
-	      cout << setfill('-') << setw(LINE_WIDTH+5) << "|" << "|" << endl;
-	      for (unsigned int j = 0; j < lines.size(); j ++)
-		{
-		  cout << setfill(' ') << setw(LINE_WIDTH+5) << "|  " + lines[j] << "|" << endl;
-		}
-	      cout << setfill('-') << setw(LINE_WIDTH+5) << "\\" << "/" << endl;
-	      cout << endl;
-	    }
+	  formatNewsStory(posted_by, message, cout);
 	}
     }
 }
@@ -345,6 +304,13 @@ string ArgParse::authToken()
   return NULL;
 }
 
+/*
+ * Get Friend's ID:
+ * Queries Facebook for the active user's friend list, then search
+ * that list for all friends whose names contain the name
+ * parameter, agregating the ID's of all matches. If more than one
+ * match is found an error message is shown and NULL is returned.
+ */
 string ArgParse::getFriendID(string name)
 {
   ostringstream os;
@@ -364,10 +330,8 @@ string ArgParse::getFriendID(string name)
       return NULL;
     }
 
-  string error_message = root["error"]["message"].asString();
-  if (strcmp(error_message.c_str(), "\0") != 0)
+  if (showErrorMessage(root))
     {
-      cerr << error_message << endl;
       return NULL;
     }
 
@@ -396,4 +360,60 @@ string ArgParse::getFriendID(string name)
     {
       return ids[0];
     }
+}
+
+void ArgParse::formatNewsStory(string posted_by, string message, ostream & os)
+{
+  if (strcmp(message.c_str(), "") != 0)
+    {
+      vector<string> lines;
+      string remainder = message;
+      
+      vector<string> new_lines;
+      int nl_index = remainder.find("\n");
+      while (nl_index != -1 && nl_index != (int) strlen(remainder.c_str()))
+	{
+	  string line = remainder.substr(0, nl_index);
+	  remainder = remainder.substr(nl_index + 1);
+	  new_lines.push_back(line);
+	  nl_index = remainder.find("\n");
+	}
+      new_lines.push_back(remainder);
+      
+      for (unsigned int j = 0; j < new_lines.size(); j ++)
+	{
+	  string new_line = new_lines[j];
+	  while (strlen(new_line.c_str()) > LINE_WIDTH)
+	    {
+	      int space_index = new_line.substr(0, LINE_WIDTH).rfind(" ");
+	      string line = new_line.substr(0, space_index);
+	      new_line = new_line.substr(space_index + 1);
+	      lines.push_back(line);
+	    }
+	  lines.push_back(new_line);
+	}
+      
+      os << setiosflags(std::ios::left);
+      os << setfill('-') << setw(LINE_WIDTH+5) << "/" << "\\" << endl;
+      os << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
+      os << setfill('-') << setw(LINE_WIDTH+5) << "|" << "|" << endl;
+      for (unsigned int j = 0; j < lines.size(); j ++)
+	{
+	  os << setfill(' ') << setw(LINE_WIDTH+5) << "|  " + lines[j] << "|" << endl;
+	}
+      os << setfill('-') << setw(LINE_WIDTH+5) << "\\" << "/" << endl;
+      os << endl;
+    }
+}
+
+bool ArgParse::showErrorMessage(Json::Value root)
+{
+  string error_message = root["error"]["message"].asString();
+  if (strcmp(error_message.c_str(), "\0") == 0)
+    {
+      cerr << error_message << endl;
+      return true;
+    }
+
+  return false;
 }

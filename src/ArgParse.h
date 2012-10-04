@@ -26,6 +26,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::ifstream;
+using std::ostream;
 using std::ostringstream;
 using std::setfill;
 using std::setw;
@@ -57,6 +58,8 @@ class ArgParse
   string prompt(string message);
   string authToken();
   string getFriendID(string name);
+  void formatNewsStory(string posted_by, string message, ostream & os);
+  bool showErrorMessage(Json::Value root);
 
   int count;
   string *arguments;
