@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
@@ -10,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <vector>
 
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Options.hpp>
@@ -25,7 +27,10 @@ using std::cout;
 using std::endl;
 using std::ifstream;
 using std::ostringstream;
+using std::setfill;
+using std::setw;
 using std::string;
+using std::vector;
 
 const string version = ".1";
 
@@ -54,6 +59,8 @@ class ArgParse
 
   int count;
   string *arguments;
+
+  const static unsigned short int LINE_WIDTH = 70;
 };
 
 #endif // __ARG_PARSE_H

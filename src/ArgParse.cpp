@@ -138,6 +138,17 @@ void ArgParse::UpdateStatus()
   request.setOpt(url);
   request.setOpt(new cURLpp::Options::HttpPost(formParts));
   os << request;
+
+  Json::Value root;
+  Json::Reader reader;
+  bool parsingSuccessful = reader.parse(os.str(), root);
+  if (!parsingSuccessful)
+    {
+      cerr << "Failed to parse response." << endl;
+      cerr << os.str() << endl;
+    }
+
+  cerr << root["error"]["message"].asString() << endl;
 }
 
 /*
@@ -166,7 +177,12 @@ void ArgParse::ShowNewsFeed()
       return;
     }
 
-  cout << root["error"]["message"].asString() << endl;
+  string error_message = root["error"]["message"].asString();
+  if (strcmp(error_message.c_str(), "\0") != 0)
+    {
+      cerr << error_message << endl;
+      return;
+    }
 
   const Json::Value posts = root["data"];
   for (unsigned int i = 0; i < posts.size(); i ++)
@@ -178,8 +194,43 @@ void ArgParse::ShowNewsFeed()
 	  string message = posts[i]["message"].asString();
 	  if (strcmp(message.c_str(), "") != 0)
 	    {
-	      cout << posted_by << endl;
-	      cout << "   " << posts[i]["message"].asString() << endl << endl;
+	      vector<string> lines;
+	      string remainder = message;
+
+	      vector<string> new_lines;
+	      int nl_index = remainder.find("\n");
+	      while (nl_index != -1 && nl_index != (int) strlen(remainder.c_str()))
+		{
+		  string line = remainder.substr(0, nl_index);
+		  remainder = remainder.substr(nl_index + 1);
+		  new_lines.push_back(line);
+		  nl_index = remainder.find("\n");
+		}
+	      new_lines.push_back(remainder);
+
+	      for (unsigned int j = 0; j < new_lines.size(); j ++)
+		{
+		  string new_line = new_lines[j];
+		  while (strlen(new_line.c_str()) > LINE_WIDTH)
+		    {
+		      int space_index = new_line.substr(0, LINE_WIDTH).rfind(" ");
+		      string line = new_line.substr(0, space_index);
+		      new_line = new_line.substr(space_index + 1);
+		      lines.push_back(line);
+		    }
+		  lines.push_back(new_line);
+		}
+
+	      cout << setiosflags(std::ios::left);
+	      cout << setfill('-') << setw(LINE_WIDTH+5) << "/" << "\\" << endl;
+	      cout << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
+	      cout << setfill('-') << setw(LINE_WIDTH+5) << "|" << "|" << endl;
+	      for (unsigned int j = 0; j < lines.size(); j ++)
+		{
+		  cout << setfill(' ') << setw(LINE_WIDTH+5) << "|  " + lines[j] << "|" << endl;
+		}
+	      cout << setfill('-') << setw(LINE_WIDTH+5) << "\\" << "/" << endl;
+	      cout << endl;
 	    }
 	}
     }
