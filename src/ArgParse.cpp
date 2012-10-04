@@ -327,12 +327,12 @@ string ArgParse::getFriendID(string name)
   if (!parsingSuccessful)
     {
       cerr << "Failed to parse the document." << endl;
-      return NULL;
+      return "\0";
     }
 
   if (showErrorMessage(root))
     {
-      return NULL;
+      return "\0";
     }
 
   vector<string> ids;
@@ -349,12 +349,12 @@ string ArgParse::getFriendID(string name)
   if (ids.size() > 1)
     {
       cerr << "You have more than one friend with that name." << endl;
-      return NULL;
+      return "\0";
     }
   else if (ids.size() == 0)
     {
       cerr << "You don't have any friends with that name." << endl;
-      return NULL;
+      return "\0";
     }
   else
     {
@@ -406,10 +406,10 @@ void ArgParse::formatNewsStory(string posted_by, string message, ostream & os)
     }
 }
 
-bool ArgParse::showErrorMessage(Json::Value root)
+bool ArgParse::showErrorMessage(const Json::Value & root)
 {
   string error_message = root["error"]["message"].asString();
-  if (strcmp(error_message.c_str(), "\0") == 0)
+  if (strcmp(error_message.c_str(), "\0") != 0)
     {
       cerr << error_message << endl;
       return true;
