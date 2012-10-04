@@ -16,4 +16,22 @@ chmod +x setuptools-0.6c11-py2.7.egg
 ./setuptools-0.6c11-py2.7.egg
 easy_install mechanize
 rm setuptools-0.6c11-py2.7.egg
+wget http://iweb.dl.sourceforge.net/project/jsoncpp/jsoncpp/0.5.0/jsoncpp-src-0.5.0.tar.gz
+tar -xzf jsoncpp-src-0.5.0.tar.gz
+rm jsoncpp-src-0.5.0.tar.gz
+mv jsoncpp-src-0.5.0 jsoncpp
+wget http://superb-dca3.dl.sourceforge.net/project/scons/scons/2.2.0/scons-2.2.0.tar.gz
+tar -xzf scons-2.2.0.tar.gz
+rm scons-2.2.0.tar.gz
+mv scons-2.2.0 scons
+cd scons
+python setup.py install
+cp script/scons ../jsoncpp/scons.py
+cd ../jsoncpp
+python scons.py platform=linux-gcc
+cp -r include/json/ /usr/include/json/
+cd libs/linux-gcc-*
+cp *.a *.so /usr/local/lib/
+cd ../../..
+rm -rf jsoncpp/ scons/
 mkdir bin
