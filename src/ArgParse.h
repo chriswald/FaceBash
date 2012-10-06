@@ -1,6 +1,7 @@
 #ifndef __ARG_PARSE_H
 #define __ARG_PARSE_H
 
+#include <cstdio>
 #include <cstring>
 #include <fstream>
 #include <iomanip>
@@ -45,6 +46,7 @@ class ArgParse
   bool argHas(string arg);
 
   void Login();
+  void Logout();
   void UpdateStatus();
   void ShowNewsFeed();
   void AboutFriend();

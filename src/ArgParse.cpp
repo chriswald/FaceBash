@@ -43,6 +43,9 @@ void ArgParse::ParseArgs()
   else if (argHas("-l") || argHas("--login"))
     Login();
 
+  else if (                argHas("--logout"))
+    Logout();
+
   else if (argHas("-n") || argHas("--show_news_feed"))
     ShowNewsFeed();
 
@@ -107,13 +110,40 @@ void ArgParse::Login()
   member27.open("member27");
   if (member27.is_open())
     {
-      cout << "Logged In." << endl;
-      member27.close();
+      string content;
+      member27 >> content;
+
+      if (strlen(content.c_str()) > 1)
+	{
+	  cout << "Logged In." << endl;
+	}
+      else
+	{
+	  if      (strcmp(content.c_str(), "1") == 0)
+	    {
+	      cout << "Invalid Email or Password." << endl;
+	    }
+	  else if (strcmp(content.c_str(), "2") == 0)
+	    {
+	      cout << "User denied permission to F.aceBash." << endl;
+	    }
+	  else
+	    {
+	      cout << "An unknown error occured." << endl;
+	    }
+	}
     }
   else
     {
       cerr << "Unable to login." << endl;
     }
+
+  member27.close();
+}
+
+void ArgParse::Logout()
+{
+  remove("member27");
 }
 
 /*
@@ -237,6 +267,7 @@ void ArgParse::ShowHelpText()
   cout << "Options:"                                                    << endl;
   cout << "   -h, --help            Shows this message"                 << endl;
   cout << "   -l, --login           Logs a user into Facebook"          << endl;
+  cout << "       --logout          Logs the user out of Facebook"      << endl;
   cout << "   -n, --show_news_feed  Shows the current user's news feed" << endl;
   cout << "   -s, --update_status   Updates the current user's status"  << endl;
   cout << "   -v, --version         Displays version information"       << endl;
@@ -335,12 +366,12 @@ string ArgParse::getFriendID(string name)
       return "\0";
     }
 
-  vector<string> ids;
+  vector<string> ids (0);
 
   const Json::Value data = root["data"];
   for (unsigned int i = 0; i < data.size(); i ++)
     {
-      if (data[i]["name"].asString().find(name.c_str()) != (int) -1)
+      if (data[i]["name"].asString().find(name.c_str()) <= (unsigned int) -1)
 	{
 	  ids.push_back(data[i]["id"].asString());
 	}
