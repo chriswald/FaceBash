@@ -54,6 +54,9 @@ void ArgParse::ParseArgs()
 
   else if (argHas("-v") || argHas("--version"))
     ShowVersion();
+
+  else
+    ShowHelpText();
 }
 
 /*
