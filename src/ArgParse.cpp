@@ -144,6 +144,10 @@ void ArgParse::Login()
   member27.close();
 }
 
+/*
+ * Log Out:
+ * Really just deletes the file containing the authentication token.
+ */
 void ArgParse::Logout()
 {
   remove("member27");
@@ -201,23 +205,27 @@ void ArgParse::UpdateStatus()
 /*
  * Show News Feed:
  * Shows the user's news feed. Filters out all posts that are not only
- * text so that posts that don't make sense will be filtered out.
+ * text so that posts that don't make sense will be filtered out. If
+ * the user passes a number in the arguments that many stories will be
+ * shown. This can be used to be sure the most recent stories don't
+ * get pushed out of view.
  */
 void ArgParse::ShowNewsFeed()
 {
   // Get the JSON from Facebook
-  ostringstream os;
+  ostringstream oss;
   cURLpp::Easy request;
-  cURLpp::options::Url url(string("https://graph.facebook.com/me/home") + string("?access_token=") + authToken());
+  cURLpp::options::Url url(string("https://graph.facebook.com/me/home")
+                         + string("?access_token=") + authToken());
   request.setOpt(url);
 
-  os << request;
+  oss << request;
   
   // Parse the JSON
   Json::Value root;
   Json::Reader reader;
 
-  bool parsingSuccessful = reader.parse(os.str(), root);
+  bool parsingSuccessful = reader.parse(oss.str(), root);
   if (!parsingSuccessful)
     {
       cerr << "Failed to parse the document." << endl;
@@ -230,6 +238,21 @@ void ArgParse::ShowNewsFeed()
     }
 
   const Json::Value posts = root["data"];
+  unsigned int how_many;
+  if (count > 1)
+    {
+      how_many = atoi(arguments[1].c_str());
+      if (how_many <= 0 || how_many > posts.size())
+	{
+	  how_many = posts.size();
+	}
+    }
+  else
+    {
+      how_many = posts.size();
+    }
+
+  unsigned int how_many_have_been_shown = 0;
   for (unsigned int i = 0; i < posts.size(); i ++)
     {
       string content_type = posts[i]["type"].asString();
@@ -238,6 +261,9 @@ void ArgParse::ShowNewsFeed()
 	  string posted_by = posts[i]["from"]["name"].asString();
 	  string message = posts[i]["message"].asString();
 	  formatNewsStory(posted_by, message, cout);
+	  how_many_have_been_shown ++;
+	  if (how_many_have_been_shown >= how_many)
+	    break;
 	}
     }
 }
@@ -396,6 +422,11 @@ string ArgParse::getFriendID(string name)
     }
 }
 
+/*
+ * Format News Story:
+ * Formats a news story by printing a nice border, the poster, and the
+ * message. The message is formatted for width.
+ */
 void ArgParse::formatNewsStory(string posted_by, string message, ostream & os)
 {
   if (strcmp(message.c_str(), "") != 0)
@@ -426,20 +457,26 @@ void ArgParse::formatNewsStory(string posted_by, string message, ostream & os)
 	    }
 	  lines.push_back(new_line);
 	}
-      
+
       os << setiosflags(std::ios::left);
-      os << setfill('-') << setw(LINE_WIDTH+5) << "/" << "\\" << endl;
-      os << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
-      os << setfill('-') << setw(LINE_WIDTH+5) << "|" << "|" << endl;
+      os << " " << setfill('-') << setw(LINE_WIDTH+5) << "/" << "\\" << endl;
+      os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
+      os << " " << setfill('-') << setw(LINE_WIDTH+5) << "|" << "|" << endl;
       for (unsigned int j = 0; j < lines.size(); j ++)
 	{
-	  os << setfill(' ') << setw(LINE_WIDTH+5) << "|  " + lines[j] << "|" << endl;
+	  os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "|  " + lines[j] << "|" << endl;
 	}
-      os << setfill('-') << setw(LINE_WIDTH+5) << "\\" << "/" << endl;
+      os << " " << setfill('-') << setw(LINE_WIDTH+5) << "\\" << "/" << endl;
       os << endl;
     }
 }
 
+
+/*
+ * Show Error Message:
+ * If the Json document contains an error message display it and
+ * return true. Return false otherwise.
+ */
 bool ArgParse::showErrorMessage(const Json::Value & root)
 {
   string error_message = root["error"]["message"].asString();
