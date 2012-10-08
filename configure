@@ -35,3 +35,4 @@ cp *.a *.so /usr/local/lib/
 cd ../../..
 rm -rf jsoncpp/ scons/
 mkdir bin
+ldconfig
