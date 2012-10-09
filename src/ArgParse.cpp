@@ -258,7 +258,8 @@ void ArgParse::ShowNewsFeed()
   for (unsigned int i = 0; i < posts.size(); i ++)
     {
       string content_type = posts[i]["type"].asString();
-      if (strcmp(content_type.c_str(), "status") == 0)
+      if (strcmp(content_type.c_str(), "status") == 0 &&
+	  strlen(posts[i]["message"].asString().c_str()) > 0)
 	{
 	  stories.push(posts[i]);
 
@@ -441,7 +442,7 @@ void ArgParse::formatNewsStory(Json::Value story, ostream & os)
   string message = story["message"].asString();
   string posted_by = story["from"]["name"].asString();
 
-  if (strcmp(message.c_str(), "") != 0)
+  if (strlen(message.c_str()) > 0)
     {
       vector<string> lines;
       string remainder = message;
