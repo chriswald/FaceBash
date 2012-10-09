@@ -252,20 +252,29 @@ void ArgParse::ShowNewsFeed()
       how_many = posts.size();
     }
 
+  stack<Json::Value> stories;
+
   unsigned int how_many_have_been_shown = 0;
   for (unsigned int i = 0; i < posts.size(); i ++)
     {
       string content_type = posts[i]["type"].asString();
       if (strcmp(content_type.c_str(), "status") == 0)
 	{
-	  string posted_by = posts[i]["from"]["name"].asString();
-	  string message = posts[i]["message"].asString();
-	  formatNewsStory(posted_by, message, cout);
+	  stories.push(posts[i]);
+
 	  how_many_have_been_shown ++;
 	  if (how_many_have_been_shown >= how_many)
 	    break;
 	}
     }
+  
+  while (!stories.empty())
+    {
+      Json::Value story = stories.top();
+      formatNewsStory(story, cout);
+      stories.pop();
+    }
+  
 }
 
 void ArgParse::AboutFriend()
@@ -427,8 +436,16 @@ string ArgParse::getFriendID(string name)
  * Formats a news story by printing a nice border, the poster, and the
  * message. The message is formatted for width.
  */
-void ArgParse::formatNewsStory(string posted_by, string message, ostream & os)
+void ArgParse::formatNewsStory(Json::Value story, ostream & os)
 {
+  string message = story["message"].asString();
+  string posted_by = story["from"]["name"].asString();
+  string posted_to = "\0";
+  if (story["to"].size() > 0)
+    {
+      posted_to = story["to"]["data"]["name"].asString();
+    }
+
   if (strcmp(message.c_str(), "") != 0)
     {
       vector<string> lines;
@@ -460,7 +477,15 @@ void ArgParse::formatNewsStory(string posted_by, string message, ostream & os)
 
       os << setiosflags(std::ios::left);
       os << " " << setfill('-') << setw(LINE_WIDTH+5) << "/" << "\\" << endl;
-      os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
+      if (strcmp(posted_to.c_str(), "\0") == 0)
+	{
+	  os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
+	}
+      else
+	{
+	  os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by + " > "
+	    + posted_to << "|" << endl;
+	}
       os << " " << setfill('-') << setw(LINE_WIDTH+5) << "|" << "|" << endl;
       for (unsigned int j = 0; j < lines.size(); j ++)
 	{

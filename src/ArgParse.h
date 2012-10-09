@@ -31,6 +31,7 @@ using std::ostream;
 using std::ostringstream;
 using std::setfill;
 using std::setw;
+using std::stack;
 using std::string;
 using std::vector;
 
@@ -60,7 +61,7 @@ class ArgParse
   string prompt(string message);
   string authToken();
   string getFriendID(string name);
-  void formatNewsStory(string posted_by, string message, ostream & os);
+  void formatNewsStory(Json::Value story, ostream & os);
   bool showErrorMessage(const Json::Value & root);
 
   int count;
