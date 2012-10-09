@@ -440,11 +440,6 @@ void ArgParse::formatNewsStory(Json::Value story, ostream & os)
 {
   string message = story["message"].asString();
   string posted_by = story["from"]["name"].asString();
-  string posted_to = "\0";
-  if (story["to"].size() > 0)
-    {
-      posted_to = story["to"]["data"]["name"].asString();
-    }
 
   if (strcmp(message.c_str(), "") != 0)
     {
@@ -477,15 +472,7 @@ void ArgParse::formatNewsStory(Json::Value story, ostream & os)
 
       os << setiosflags(std::ios::left);
       os << " " << setfill('-') << setw(LINE_WIDTH+5) << "/" << "\\" << endl;
-      if (strcmp(posted_to.c_str(), "\0") == 0)
-	{
-	  os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
-	}
-      else
-	{
-	  os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by + " > "
-	    + posted_to << "|" << endl;
-	}
+      os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
       os << " " << setfill('-') << setw(LINE_WIDTH+5) << "|" << "|" << endl;
       for (unsigned int j = 0; j < lines.size(); j ++)
 	{
