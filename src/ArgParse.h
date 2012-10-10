@@ -62,7 +62,8 @@ class ArgParse
   string authToken();
   string getFriendID(string name);
   void formatNewsStory(Json::Value story, ostream & os);
-  bool showErrorMessage(const Json::Value & root);
+  int showErrorMessage(const Json::Value & root);
+  bool relogin();
 
   int count;
   string *arguments;

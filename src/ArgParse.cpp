@@ -400,9 +400,14 @@ string ArgParse::getFriendID(string name)
       return "\0";
     }
 
-  if (showErrorMessage(root))
+  int error_code = showErrorMessage(root);
+  if (error_code)
     {
-      return "\0";
+      bool relogin_success = relogin();
+      if (!relogin_success)
+	{
+	  return "\0";
+	}
     }
 
   vector<string> ids (0);
@@ -490,14 +495,19 @@ void ArgParse::formatNewsStory(Json::Value story, ostream & os)
  * If the Json document contains an error message display it and
  * return true. Return false otherwise.
  */
-bool ArgParse::showErrorMessage(const Json::Value & root)
+int ArgParse::showErrorMessage(const Json::Value & root)
 {
   string error_message = root["error"]["message"].asString();
   if (strcmp(error_message.c_str(), "\0") != 0)
     {
       cerr << error_message << endl;
-      return true;
+      return root["error"]["code"].asInt();
     }
 
+  return 0;
+}
+
+bool ArgParse::relogin()
+{
   return false;
 }
