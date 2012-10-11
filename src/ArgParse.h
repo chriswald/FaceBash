@@ -61,11 +61,11 @@ class ArgParse
   string prompt(string message);
   string authToken();
   string getFriendID(string name);
-  void formatNewsStory(Json::Value story, ostream & os);
-  int showErrorMessage(const Json::Value & root);
-  bool relogin();
+  void   formatNewsStory(Json::Value story, ostream & os);
+  int    showErrorMessage(const Json::Value & root);
+  bool   relogin();
 
-  int count;
+  int     count;
   string *arguments;
 
   const static unsigned short int LINE_WIDTH = 70;

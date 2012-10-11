@@ -31,7 +31,7 @@ sudo cp -r include/json/ /usr/include/json/
 cd libs/linux-gcc-*
 sudo cp *.a *.so /usr/local/lib/
 cd ../../..
-rm -rf jsoncpp/ scons/
+sudo rm -rf jsoncpp/ scons/
 mkdir bin
 sudo bash -c "echo /usr/local/lib/ > /etc/ld.so.conf.d/local.conf"
 sudo /sbin/ldconfig
