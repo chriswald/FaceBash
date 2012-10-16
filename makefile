@@ -3,7 +3,7 @@ CFLAGS=-Wall -I/usr/local/include -I/usr/include -L/usr/local/lib -ljson_linux-g
 LDFLAGS=
 #SOURCES=src/facebash.cpp src/LoginField.cpp src/LoginField.h
 SOURCES=src/*.cpp src/*.h
-EXECUTABLE=FaceBash
+EXECUTABLE=facebash
 EXEPATH=bin/
 EXE=
 
