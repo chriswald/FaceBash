@@ -180,36 +180,34 @@ void ArgParse::UpdateStatus()
       who = "me";
     }
 
-  ostringstream os;
-  cURLpp::Easy request;
-  cURLpp::Forms formParts;
-  cURLpp::options::Url url(string("https://graph.facebook.com/"+who+"/feed"));
   string token = authToken();
-  string message = prompt(string("Status: "));
+  if (strcmp(token.c_str(), "\0") == 0)
+    {
+      cout << "Please Log in." << endl;
+      return;
+    }
 
+  stringstream ss;
+  string message = prompt(string("Status: "));
+  string url = string("https://graph.facebook.com/"+who+"/feed");
+  cURLpp::Forms formParts;
   formParts.push_back(new cURLpp::FormParts::Content("access_token", token));
   formParts.push_back(new cURLpp::FormParts::Content("message", message));
-  
-  request.setOpt(url);
-  request.setOpt(new cURLpp::Options::HttpPost(formParts));
 
-  try
+  bool request_success = makeRequest(ss, url, formParts);
+
+  if (!request_success)
     {
-      os << request;
-    }
-  catch (curlpp::LibcurlRuntimeError e)
-    {
-      cout << e.what() << endl;
       return;
     }
 
   Json::Value root;
   Json::Reader reader;
-  bool parsingSuccessful = reader.parse(os.str(), root);
+  bool parsingSuccessful = reader.parse(ss.str(), root);
   if (!parsingSuccessful)
     {
       cerr << "Failed to parse response." << endl;
-      cerr << os.str() << endl;
+      cerr << ss.str() << endl;
     }
 
   showErrorMessage(root);
@@ -226,27 +224,20 @@ void ArgParse::UpdateStatus()
 void ArgParse::ShowNewsFeed()
 {
   // Get the JSON from Facebook
-  ostringstream oss;
-  cURLpp::Easy request;
-  cURLpp::options::Url url(string("https://graph.facebook.com/me/home")
-			   + string("?access_token=") + authToken());
+  stringstream ss;
+  string url = string("https://graph.facebook.com/me/home");
+  bool request_success = makeRequest(ss, url);
 
-  request.setOpt(url);
-    
-  try
+  if (!request_success)
     {
-      oss << request;
-    }
-  catch (curlpp::LibcurlRuntimeError e)
-    {
-      cerr << e.what() << endl;
       return;
     }
+
   // Parse the JSON
   Json::Value root;
   Json::Reader reader;
 
-  bool parsingSuccessful = reader.parse(oss.str(), root);
+  bool parsingSuccessful = reader.parse(ss.str(), root);
   if (!parsingSuccessful)
     {
       cerr << "Failed to parse the document." << endl;
@@ -294,7 +285,7 @@ void ArgParse::ShowNewsFeed()
   while (!stories.empty())
     {
       Json::Value story = stories.top();
-      formatNewsStory(story, index++, cout);
+      formatNewsStory(cout, story, index++);
       stories.pop();
     }
   
@@ -378,22 +369,8 @@ string ArgParse::authToken()
     }
   else
     {
-      cerr << "Please Log In" << endl;
-      Login();
-      fin.open("member27");
-      if (fin.is_open())
-	{
-	  fin >> token;
-	  fin.close();
-	  return token;
-	}
-      else
-	{
-	  cerr << "Could not log in." << endl;
-	}
+      return "\0";
     }
-
-  return NULL;
 }
 
 /*
@@ -405,17 +382,19 @@ string ArgParse::authToken()
  */
 string ArgParse::getFriendID(string name)
 {
-  ostringstream os;
-  cURLpp::Easy request;
-  cURLpp::options::Url url(string("https://graph.facebook.com/me/friends") + string("?access_token=") + authToken());
-  request.setOpt(url);
+  stringstream ss;
+  string url = string("https://graph.facebook.com/me/friends");
+  bool request_success = makeRequest(ss, url);
 
-  os << request;
+  if (!request_success)
+    {
+      return "\0";
+    }
 
   Json::Value root;
   Json::Reader reader;
 
-  bool parsingSuccessful = reader.parse(os.str(), root);
+  bool parsingSuccessful = reader.parse(ss.str(), root);
   if (!parsingSuccessful)
     {
       cerr << "Failed to parse the document." << endl;
@@ -464,7 +443,7 @@ string ArgParse::getFriendID(string name)
  * Formats a news story by printing a nice border, the poster, and the
  * message. The message is formatted for width.
  */
-void ArgParse::formatNewsStory(Json::Value story, int index, ostream & os)
+void ArgParse::formatNewsStory(ostream & os, Json::Value story, int index)
 {
   string message = story["message"].asString();
   string posted_by = story["from"]["name"].asString();
@@ -565,4 +544,59 @@ int ArgParse::showErrorMessage(const Json::Value & root)
 bool ArgParse::relogin()
 {
   return false;
+}
+
+bool ArgParse::makeRequest(stringstream & ss, const string & url)
+{
+  string token = authToken();
+
+  if (strcmp(token.c_str(), "\0") == 0)
+    {
+      cout << "Please Log in." << endl;
+      return false;
+    }
+
+  cURLpp::Easy request;
+  cURLpp::options::Url URL(url + string("?access_token=") + token);
+  request.setOpt(URL);
+
+  try
+    {
+      ss << request;
+    }
+  catch (curlpp::LibcurlRuntimeError & e)
+    {
+      cout << e.what() << endl;
+      return false;
+    }
+
+  return true;
+}
+
+bool ArgParse::makeRequest(stringstream & ss, const string & url, const cURLpp::Forms & formParts)
+{
+  string token = authToken();
+
+  if (strcmp(token.c_str(), "\0") == 0)
+    {
+      cout << "Please Log in." << endl;
+      return false;
+    }
+
+  cURLpp::Easy request;
+  cURLpp::options::Url URL(url + string("?access_token=") + token);
+  request.setOpt(URL);
+  request.setOpt(new cURLpp::Options::HttpPost(formParts));
+
+  try
+    {
+      ss << request;
+    }
+  catch (curlpp::LibcurlRuntimeError & e)
+    {
+      cout << e.what() << endl;
+      return false;
+    }
+
+  return true;
 }

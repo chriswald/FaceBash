@@ -62,7 +62,7 @@ class ArgParse
   string prompt(string message);
   string authToken();
   string getFriendID(string name);
-  void   formatNewsStory(Json::Value story, int index, ostream & os);
+  void   formatNewsStory(ostream & os, Json::Value story, int index);
   int    showErrorMessage(const Json::Value & root);
   bool   relogin();
 
@@ -70,6 +70,8 @@ class ArgParse
   void writeNameLine(ostream & os, const string & name, const int index);
   void writeMessageLines(ostream & os, const vector<string> lines);
 
+  bool makeRequest(stringstream & ss, const string & url);
+  bool makeRequest(stringstream & ss, const string & url, const cURLpp::Forms & formParts);
 
   int     count;
   string *arguments;
