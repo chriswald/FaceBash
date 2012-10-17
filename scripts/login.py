@@ -1,6 +1,7 @@
 import mechanize as mech
 import os
 import sys
+import urllib2
 
 # Instantiate a Browser
 browser = mech.Browser()
@@ -89,14 +90,19 @@ browser.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US) Ap
 
 # This is where the magic happens
 # Open the URI, fill out the forms and submit everything
-browser.open(uri)
-browser.select_form(nr=0)
-browser['email'] = sys.argv[1]
-browser['pass'] = sys.argv[2]
-response1 = browser.submit(name='login', label='Log In')
-
-url = response1.geturl()
 return_val = ''
+url = ''
+
+try:
+    browser.open(uri)
+    browser.select_form(nr=0)
+    browser['email'] = sys.argv[1]
+    browser['pass'] = sys.argv[2]
+    response1 = browser.submit(name='login', label='Log In')
+
+    url = response1.geturl()
+except urllib2.URLError:
+    return_val = '3'
 
 if 'login.php' in url:
     return_val = '1'

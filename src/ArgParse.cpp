@@ -130,6 +130,10 @@ void ArgParse::Login()
 	    {
 	      cout << "User denied permission to F.aceBash." << endl;
 	    }
+	  else if (strcmp(content.c_str(), "3") == 0)
+	    {
+	      cout << "Not connected to the Internet." << endl;
+	    }
 	  else
 	    {
 	      cout << "An unknown error occured." << endl;
@@ -188,7 +192,16 @@ void ArgParse::UpdateStatus()
   
   request.setOpt(url);
   request.setOpt(new cURLpp::Options::HttpPost(formParts));
-  os << request;
+
+  try
+    {
+      os << request;
+    }
+  catch (curlpp::LibcurlRuntimeError e)
+    {
+      cout << e.what() << endl;
+      return;
+    }
 
   Json::Value root;
   Json::Reader reader;
@@ -216,11 +229,19 @@ void ArgParse::ShowNewsFeed()
   ostringstream oss;
   cURLpp::Easy request;
   cURLpp::options::Url url(string("https://graph.facebook.com/me/home")
-                         + string("?access_token=") + authToken());
-  request.setOpt(url);
+			   + string("?access_token=") + authToken());
 
-  oss << request;
-  
+  request.setOpt(url);
+    
+  try
+    {
+      oss << request;
+    }
+  catch (curlpp::LibcurlRuntimeError e)
+    {
+      cerr << e.what() << endl;
+      return;
+    }
   // Parse the JSON
   Json::Value root;
   Json::Reader reader;
