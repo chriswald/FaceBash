@@ -269,10 +269,11 @@ void ArgParse::ShowNewsFeed()
 	}
     }
   
+  int index = 0;
   while (!stories.empty())
     {
       Json::Value story = stories.top();
-      formatNewsStory(story, cout);
+      formatNewsStory(story, index++, cout);
       stories.pop();
     }
   
@@ -442,7 +443,7 @@ string ArgParse::getFriendID(string name)
  * Formats a news story by printing a nice border, the poster, and the
  * message. The message is formatted for width.
  */
-void ArgParse::formatNewsStory(Json::Value story, ostream & os)
+void ArgParse::formatNewsStory(Json::Value story, int index, ostream & os)
 {
   string message = story["message"].asString();
   string posted_by = story["from"]["name"].asString();
@@ -476,19 +477,50 @@ void ArgParse::formatNewsStory(Json::Value story, ostream & os)
 	  lines.push_back(new_line);
 	}
 
-      os << setiosflags(std::ios::left);
-      os << " " << setfill('-') << setw(LINE_WIDTH+5) << "/" << "\\" << endl;
-      os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "| " + posted_by << "|" << endl;
-      os << " " << setfill('-') << setw(LINE_WIDTH+5) << "|" << "|" << endl;
-      for (unsigned int j = 0; j < lines.size(); j ++)
-	{
-	  os << " " << setfill(' ') << setw(LINE_WIDTH+5) << "|  " + lines[j] << "|" << endl;
-	}
-      os << " " << setfill('-') << setw(LINE_WIDTH+5) << "\\" << "/" << endl;
+      writeSeperatorLine(os);
+      writeNameLine(os, posted_by);
+      writeSeperatorLine(os);
+      writeMessageLines(os, lines);
+      writeSeperatorLine(os);
       os << endl;
     }
 }
 
+void ArgParse::writeMessageLines(ostream & os, const vector<string> lines)
+{
+  for (unsigned int i = 0; i < lines.size(); i ++)
+    {
+      stringstream ss;
+      ss << "|  " << lines[i];
+      int len = strlen(ss.str().c_str());
+      for (int j = len; j < LINE_WIDTH+5; j ++)
+	ss << " ";
+      ss << "|" << endl;
+      os << ss.str();
+    }
+}
+
+void ArgParse::writeNameLine(ostream & os, const string & name)
+{
+  stringstream ss;
+  ss << "| " << name;
+  int len = strlen(ss.str().c_str());
+  for (int i = len; i < LINE_WIDTH+5; i ++)
+    ss << " ";
+  ss << "|" << endl;
+  os << ss.str();
+}
+  
+
+void ArgParse::writeSeperatorLine(ostream & os)
+{
+  stringstream ss;
+  ss << "|";
+  for (int i = 1; i < LINE_WIDTH+5; i ++)
+    ss << "-";
+  ss << "|" << endl;
+  os << ss.str();
+}    
 
 /*
  * Show Error Message:

@@ -33,6 +33,7 @@ using std::setfill;
 using std::setw;
 using std::stack;
 using std::string;
+using std::stringstream;
 using std::vector;
 
 const string version = ".1";
@@ -61,9 +62,14 @@ class ArgParse
   string prompt(string message);
   string authToken();
   string getFriendID(string name);
-  void   formatNewsStory(Json::Value story, ostream & os);
+  void   formatNewsStory(Json::Value story, int index, ostream & os);
   int    showErrorMessage(const Json::Value & root);
   bool   relogin();
+
+  void writeSeperatorLine(ostream & os);
+  void writeNameLine(ostream & os, const string & name);
+  void writeMessageLines(ostream & os, const vector<string> lines);
+
 
   int     count;
   string *arguments;
