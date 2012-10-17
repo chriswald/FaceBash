@@ -67,7 +67,7 @@ class ArgParse
   bool   relogin();
 
   void writeSeperatorLine(ostream & os);
-  void writeNameLine(ostream & os, const string & name);
+  void writeNameLine(ostream & os, const string & name, const int index);
   void writeMessageLines(ostream & os, const vector<string> lines);
 
 

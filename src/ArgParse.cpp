@@ -269,7 +269,7 @@ void ArgParse::ShowNewsFeed()
 	}
     }
   
-  int index = 0;
+  int index = 1;
   while (!stories.empty())
     {
       Json::Value story = stories.top();
@@ -478,7 +478,7 @@ void ArgParse::formatNewsStory(Json::Value story, int index, ostream & os)
 	}
 
       writeSeperatorLine(os);
-      writeNameLine(os, posted_by);
+      writeNameLine(os, posted_by, index);
       writeSeperatorLine(os);
       writeMessageLines(os, lines);
       writeSeperatorLine(os);
@@ -500,14 +500,16 @@ void ArgParse::writeMessageLines(ostream & os, const vector<string> lines)
     }
 }
 
-void ArgParse::writeNameLine(ostream & os, const string & name)
+void ArgParse::writeNameLine(ostream & os, const string & name, const int index)
 {
   stringstream ss;
+  stringstream sindex;
+  sindex << index << " ";
   ss << "| " << name;
   int len = strlen(ss.str().c_str());
-  for (int i = len; i < LINE_WIDTH+5; i ++)
+  for (unsigned int i = len; i < LINE_WIDTH+5 - strlen(sindex.str().c_str()); i ++)
     ss << " ";
-  ss << "|" << endl;
+  ss << sindex.str() << "|" << endl;
   os << ss.str();
 }
   
