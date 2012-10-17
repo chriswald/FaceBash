@@ -3,6 +3,12 @@ import os
 import sys
 import urllib2
 
+# Error Codes
+INVALID_LOGIN     = '001'
+PERMISSION_DENIED = '002'
+BAD_CONNECTION    = '003'
+UNKNOW_ERROR      = '999'
+
 # Instantiate a Browser
 browser = mech.Browser()
 
@@ -102,10 +108,10 @@ try:
 
     url = response1.geturl()
 except urllib2.URLError:
-    return_val = '3'
+    return_val = BAD_CONNECTION
 
 if 'login.php' in url:
-    return_val = '1'
+    return_val = INVALID_LOGIN
 else:
     # If we were redirected to a facebook site ask the user for permission to
     # add this application to their trusted list.
@@ -117,7 +123,7 @@ else:
             response1 = browser.submit(nr=0)
             url = response1.geturl()
         else:
-            return_val = '2'
+            return_val = PERMISSION_DENIED
 
     if '#' in url and '&' in url:
         POSTS = url[url.index('#')+1:]
@@ -125,7 +131,7 @@ else:
         auth_token = parts[0].split('=')[1]
         return_val = auth_token
     else:
-        return_val = '3'
+        return_val = UNKNOW_ERROR
 
 try:
     os.remove('member27')

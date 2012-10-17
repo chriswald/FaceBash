@@ -132,7 +132,7 @@ void ArgParse::Login()
       string content;
       member27 >> content;
 
-      if (strlen(content.c_str()) > 1)
+      if (strlen(content.c_str()) > ERROR_CODE_LENGTH)
 	{
 	  cout << "Logged In." << endl;
 	}
@@ -147,13 +147,13 @@ void ArgParse::Login()
 	   *     when asked to grant permission).
 	   *  3) The user is not connected to the internet.
 	   */
-	  if      (strcmp(content.c_str(), "1") == 0)
+	  if      (strcmp(content.c_str(), "001") == 0)
 	      cout << "Invalid Email or Password." << endl;
 
-	  else if (strcmp(content.c_str(), "2") == 0)
+	  else if (strcmp(content.c_str(), "002") == 0)
 	      cout << "User denied permission to F.aceBash." << endl;
 
-	  else if (strcmp(content.c_str(), "3") == 0)
+	  else if (strcmp(content.c_str(), "003") == 0)
 	      cout << "Not connected to the Internet." << endl;
 
 	  else // Something went wrong (maybe on Facebook's end)

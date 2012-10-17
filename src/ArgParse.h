@@ -77,6 +77,7 @@ class ArgParse
   string *arguments;
 
   const static unsigned short int LINE_WIDTH = 70;
+  const static unsigned short int ERROR_CODE_LENGTH = 3;
 };
 
 #endif // __ARG_PARSE_H
