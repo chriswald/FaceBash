@@ -39,9 +39,13 @@ void ArgParse::ParseArgs()
       return;
     }
 
+  //
+  if      (argHas("-c") || argHas("--comment"))
+    Comment();
+
   // The user specifically requested the help text. This also displays
   // the version info.
-  if      (argHas("-h") || argHas("--help"))
+  else if (argHas("-h") || argHas("--help"))
     ShowHelpText();
 
   // The user wants to login to F.aceBash / Facebook.
@@ -86,6 +90,15 @@ bool ArgParse::argHas(string arg)
 	}
     }
   return false;
+}
+
+/*
+ * Comment on Status:
+ *
+ */
+void ArgParse::Comment()
+{
+  // TODO Need to add Story class, hmmm...
 }
 
 /*
@@ -296,7 +309,9 @@ void ArgParse::ShowNewsFeed()
       how_many = posts.size();
     }
 
-  stack<Json::Value> stories;
+  // A stack of news stories is used so that the stories can be
+  // displayed in reverse order (newest last) later on.
+  stack<NewsStory> news_stories;
 
   // Keep track of how many posts have actually been shown, not just
   // how many to try to show.
@@ -311,10 +326,7 @@ void ArgParse::ShowNewsFeed()
 	  strlen(posts[i]["message"].asString().c_str()) > 0)
 	{
 	  // Push the story onto a stack to display later.
-	  stories.push(posts[i]);
-	  // Then increment how many stories "have been shown". The
-	  // stories will actually be shown later.
-	  how_many_have_been_shown ++;
+	  news_stories.push(NewsStory(posts[i], ++how_many_have_been_shown));
 
 	  // If the number of accepted stories reaches the number of
 	  // stories available break out of the loop.
@@ -324,14 +336,13 @@ void ArgParse::ShowNewsFeed()
     }
   
   // While there are stories still on the stack...
-  while (!stories.empty())
+  while (!news_stories.empty())
     {
       // Get the top story and pass it for formatting along with an
       // index number that can be used for referencing it later. Then
       // remove it from the stack.
-      Json::Value story = stories.top();
-      formatNewsStory(cout, story, how_many_have_been_shown--);
-      stories.pop();
+      cout << news_stories.top();
+      news_stories.pop();
     }
   
 }
@@ -488,114 +499,6 @@ string ArgParse::getFriendID(string name)
       return ids[0];
     }
 }
-
-/*
- * Format News Story:
- * Formats a news story by printing a nice border, the poster, and the
- * message. The message is formatted for width.
- */
-void ArgParse::formatNewsStory(ostream & os, Json::Value story, int index)
-{
-  string message = story["message"].asString();
-  string posted_by = story["from"]["name"].asString();
-
-  // This conditional is probably unnecessarry since the same
-  // condition is being checked in ShowNewsFeed, but its also not
-  // hurting anything so I'll keep it.
-  if (strlen(message.c_str()) > 0)
-    {
-      vector<string> lines;
-      string remainder = message;
-      
-      vector<string> new_lines;
-      // Break the message body at newlines.
-      int nl_index = remainder.find("\n");
-      while (nl_index != -1 && nl_index != (int) strlen(remainder.c_str()))
-	{
-	  string line = remainder.substr(0, nl_index);
-	  remainder = remainder.substr(nl_index + 1);
-	  new_lines.push_back(line);
-	  nl_index = remainder.find("\n");
-	}
-      new_lines.push_back(remainder);
-      
-      // Run through each of those lines and make sure it does not
-      // exceed LINE_WIDTH. Split it into sub lines until it does.
-      for (unsigned int j = 0; j < new_lines.size(); j ++)
-	{
-	  string new_line = new_lines[j];
-	  while (strlen(new_line.c_str()) > LINE_WIDTH)
-	    {
-	      int space_index = new_line.substr(0, LINE_WIDTH).rfind(" ");
-	      string line = new_line.substr(0, space_index);
-	      new_line = new_line.substr(space_index + 1);
-	      lines.push_back(line);
-	    }
-	  lines.push_back(new_line);
-	}
-
-      // Write each individual portion of the story.
-      writeSeperatorLine(os);
-      writeNameLine(os, posted_by, index);
-      writeSeperatorLine(os);
-      writeMessageLines(os, lines);
-      writeSeperatorLine(os);
-      os << endl;
-    }
-}
-
-/*
- * Write Message Line:
- * Writes each line from lines to os with leading characters and
- * trailing characters with enough spaces to evenly align everything.
- */
-void ArgParse::writeMessageLines(ostream & os, const vector<string> lines)
-{
-  for (unsigned int i = 0; i < lines.size(); i ++)
-    {
-      stringstream ss;
-      ss << "|  " << lines[i];
-      int len = strlen(ss.str().c_str());
-      for (int j = len; j < LINE_WIDTH+5; j ++)
-	ss << " ";
-      ss << "|" << endl;
-      os << ss.str();
-    }
-}
-
-/*
- * Write Name Line:
- * Writes the name (left aligned) and index (right aligned) to os. The
- * two values are written with a fixed width of LINE_WIDTH. Leading
- * and trailing characters are also printed.
- */
-void ArgParse::writeNameLine(ostream & os, const string & name, const int index)
-{
-  stringstream ss;
-  stringstream sindex;
-  sindex << index << " ";
-  ss << "| " << name;
-  int len = strlen(ss.str().c_str());
-  for (unsigned int i = len; i < LINE_WIDTH+5 - strlen(sindex.str().c_str()); i ++)
-    ss << " ";
-  ss << sindex.str() << "|" << endl;
-  os << ss.str();
-}
-  
-/*
- * Write Seperator Line:
- * Writes a line of width LINE_WIDTH used as a filler / seperator
- * between elements.
- */
-void ArgParse::writeSeperatorLine(ostream & os)
-{
-  stringstream ss;
-  ss << "|";
-  for (int i = 1; i < LINE_WIDTH+5; i ++)
-    ss << "-";
-  ss << "|" << endl;
-  os << ss.str();
-}    
 
 /*
  * Show Error Message:

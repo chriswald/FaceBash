@@ -21,6 +21,7 @@
 #include <json/json.h>
 
 #include "LoginField.h"
+#include "NewsStory.h"
 
 using std::cerr;
 using std::cin;
@@ -47,6 +48,7 @@ class ArgParse
   void ParseArgs();
   bool argHas(string arg);
 
+  void Comment();
   void Login();
   void Logout();
   void UpdateStatus();
@@ -65,10 +67,6 @@ class ArgParse
   void   formatNewsStory(ostream & os, Json::Value story, int index);
   int    showErrorMessage(const Json::Value & root);
   bool   relogin();
-
-  void writeSeperatorLine(ostream & os);
-  void writeNameLine(ostream & os, const string & name, const int index);
-  void writeMessageLines(ostream & os, const vector<string> lines);
 
   bool makeRequest(stringstream & ss, const string & url);
   bool makeRequest(stringstream & ss, const string & url, const cURLpp::Forms & formParts);
