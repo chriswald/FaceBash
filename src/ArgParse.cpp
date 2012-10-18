@@ -227,7 +227,7 @@ void ArgParse::UpdateStatus()
   cURLpp::Forms formParts;
   formParts.push_back(new cURLpp::FormParts::Content("message", message));
 
-  bool request_success = makeRequest(ss, url, formParts);
+  bool request_success = NetUtils::makeRequest(ss, url, formParts);
 
   // If the request wasn't successfully made just return. Some
   // function previous to this should have displayed some error
@@ -246,7 +246,7 @@ void ArgParse::UpdateStatus()
       cerr << ss.str() << endl;
     }
 
-  showErrorMessage(root);
+  NetUtils::showErrorMessage(root);
 }
 
 /*
@@ -259,92 +259,9 @@ void ArgParse::UpdateStatus()
  */
 void ArgParse::ShowNewsFeed()
 {
-  // Get the JSON from Facebook
-  stringstream ss;
-  string url = string("https://graph.facebook.com/me/home");
-  bool request_success = makeRequest(ss, url);
+  Journal journal(true);
 
-  // If the request wasn't successfully made just return. Some
-  // function previous to this should have displayed some error
-  // message.
-  if (!request_success)
-    {
-      return;
-    }
-
-  // Parse the JSON
-  Json::Value root;
-  Json::Reader reader;
-
-  bool parsingSuccessful = reader.parse(ss.str(), root);
-  if (!parsingSuccessful)
-    {
-      cerr << "Failed to parse the document." << endl;
-      return;
-    }
-
-  if (showErrorMessage(root))
-    {
-      return;
-    }
-
-  const Json::Value posts = root["data"];
-  unsigned int how_many;
-  if (count > 1)
-    {
-      // Converts the first argument to an integer
-      how_many = atoi(arguments[1].c_str());
-
-      // If the requested number of posts is out of range then just
-      // set it to the maximum available.
-      if (how_many <= 0 || how_many > posts.size())
-	{
-	  how_many = posts.size();
-	}
-    }
-  else
-    {
-      // If no number of posts is specified by the user just set it to
-      // the maximum available.
-      how_many = posts.size();
-    }
-
-  // A stack of news stories is used so that the stories can be
-  // displayed in reverse order (newest last) later on.
-  stack<NewsStory> news_stories;
-
-  // Keep track of how many posts have actually been shown, not just
-  // how many to try to show.
-  unsigned int how_many_have_been_shown = 0;
-
-  for (unsigned int i = 0; i < posts.size(); i ++)
-    {
-      string content_type = posts[i]["type"].asString();
-
-      // Make sure the post is a status and isn't empty
-      if (strcmp(content_type.c_str(), "status") == 0 &&
-	  strlen(posts[i]["message"].asString().c_str()) > 0)
-	{
-	  // Push the story onto a stack to display later.
-	  news_stories.push(NewsStory(posts[i], ++how_many_have_been_shown));
-
-	  // If the number of accepted stories reaches the number of
-	  // stories available break out of the loop.
-	  if (how_many_have_been_shown >= how_many)
-	    break;
-	}
-    }
-  
-  // While there are stories still on the stack...
-  while (!news_stories.empty())
-    {
-      // Get the top story and pass it for formatting along with an
-      // index number that can be used for referencing it later. Then
-      // remove it from the stack.
-      cout << news_stories.top();
-      news_stories.pop();
-    }
-  
+  cout << journal;
 }
 
 void ArgParse::AboutFriend()
@@ -406,28 +323,6 @@ string ArgParse::prompt(string message)
 }
 
 /*
- * Get Auth Token:
- * Attempts to retrieve the auth token. On success the auth token is
- * returned. On failure \0 is returned.
- */
-string ArgParse::authToken()
-{
-  string token;
-  ifstream fin;
-  fin.open("member27");
-  if (fin.is_open())
-    {
-      fin >> token;
-      fin.close();
-      return token;
-    }
-  else
-    {
-      return "\0";
-    }
-}
-
-/*
  * Get Friend's ID:
  * Queries Facebook for the active user's friend list, then search
  * that list for all friends whose names contain the name
@@ -439,7 +334,7 @@ string ArgParse::getFriendID(string name)
   // Query Facebook for a list of all the user's friends.
   stringstream ss;
   string url = string("https://graph.facebook.com/me/friends");
-  bool request_success = makeRequest(ss, url);
+  bool request_success = NetUtils::makeRequest(ss, url);
 
   if (!request_success)
     {
@@ -459,7 +354,7 @@ string ArgParse::getFriendID(string name)
       return "\0";
     }
 
-  int error_code = showErrorMessage(root);
+  int error_code = NetUtils::showErrorMessage(root);
   if (error_code)
     {
       bool relogin_success = relogin();
@@ -501,93 +396,10 @@ string ArgParse::getFriendID(string name)
 }
 
 /*
- * Show Error Message:
- * If the Json document contains an error message display it and
- * return true. Return false otherwise.
- */
-int ArgParse::showErrorMessage(const Json::Value & root)
-{
-  string error_message = root["error"]["message"].asString();
-  if (strcmp(error_message.c_str(), "\0") != 0)
-    {
-      cerr << error_message << endl;
-      return root["error"]["code"].asInt();
-    }
-
-  return 0;
-}
-
-/*
  * ReLogin:
  * Uuuhhhhhh, yeah this might do something at some point.
  */
 bool ArgParse::relogin()
 {
   return false;
-}
-
-/*
- * Make Request:
- * Makes a request to the given url and writes the return to
- * ss. Returns true if the request was successful, false otherwise.
- */
-bool ArgParse::makeRequest(stringstream & ss, const string & url)
-{
-  string token = authToken();
-
-  if (strcmp(token.c_str(), "\0") == 0)
-    {
-      cout << "Please Log in." << endl;
-      return false;
-    }
-
-  cURLpp::Easy request;
-  cURLpp::options::Url URL(url + string("?access_token=") + token);
-  request.setOpt(URL);
-
-  try
-    {
-      ss << request;
-    }
-  catch (curlpp::LibcurlRuntimeError & e)
-    {
-      cout << e.what() << endl;
-      return false;
-    }
-
-  return true;
-}
-
-/*
- * Make Request:
- * Makes a request to the given url with the given form data and
- * writes the return to ss. Returns true if the request was
- * successful, false otherwise.
- */
-bool ArgParse::makeRequest(stringstream & ss, const string & url, const cURLpp::Forms & formParts)
-{
-  string token = authToken();
-
-  if (strcmp(token.c_str(), "\0") == 0)
-    {
-      cout << "Please Log in." << endl;
-      return false;
-    }
-
-  cURLpp::Easy request;
-  cURLpp::options::Url URL(url + string("?access_token=") + token);
-  request.setOpt(URL);
-  request.setOpt(new cURLpp::Options::HttpPost(formParts));
-
-  try
-    {
-      ss << request;
-    }
-  catch (curlpp::LibcurlRuntimeError & e)
-    {
-      cout << e.what() << endl;
-      return false;
-    }
-
-  return true;
 }

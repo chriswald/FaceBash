@@ -33,4 +33,4 @@ class NewsStory
   string ID;
 };
 
-#endif
+#endif // __NEWS_STORY_H

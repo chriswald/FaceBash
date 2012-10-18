@@ -20,7 +20,9 @@
 
 #include <json/json.h>
 
+#include "Journal.h"
 #include "LoginField.h"
+#include "NetUtils.h"
 #include "NewsStory.h"
 
 using std::cerr;
@@ -62,14 +64,9 @@ class ArgParse
 
  private:
   string prompt(string message);
-  string authToken();
   string getFriendID(string name);
   void   formatNewsStory(ostream & os, Json::Value story, int index);
-  int    showErrorMessage(const Json::Value & root);
   bool   relogin();
-
-  bool makeRequest(stringstream & ss, const string & url);
-  bool makeRequest(stringstream & ss, const string & url, const cURLpp::Forms & formParts);
 
   int     count;
   string *arguments;
