@@ -39,7 +39,7 @@ void ArgParse::ParseArgs()
       return;
     }
 
-  //
+  // Add a comment to a specified post.
   if      (argHas("-c") || argHas("--comment"))
     Comment();
 
@@ -98,7 +98,52 @@ bool ArgParse::argHas(string arg)
  */
 void ArgParse::Comment()
 {
-  // TODO Need to add Story class, hmmm...
+  Journal journal(true);
+
+  int index = 1;
+  if (count > 1)
+    {
+      index = atoi(arguments[1].c_str());
+    }
+
+  if (index > journal.length())
+    {
+      cout << "Index out of bounds." << endl;
+      cout << "Maximum value: " << journal.length() << endl;
+      return;
+    }
+  else if (index < 1)
+    {
+      cout << "Index out of bounds." << endl;
+      cout << "Minimum value: 1" << endl;
+      return;
+    }
+
+  NewsStory story = journal[index-1];
+  cout << story;
+
+  string message = Utils::prompt("Comment: ");
+  string ID = story.getID();
+  string url = string("https://graph.facebook.com/") + ID + string("/comments");
+
+  stringstream ss;
+  bool request_successful = NetUtils::makeRequest(ss, url, message);
+
+  if (!request_successful)
+    {
+      return;
+    }
+
+  Json::Value root;
+  Json::Reader reader;
+  bool parsingSuccessful = reader.parse(ss.str(), root);
+  if (!parsingSuccessful)
+    {
+      cerr << "Failed to parse response." << endl;
+      cerr << ss.str() << endl;
+    }
+
+  NetUtils::showErrorMessage(root);
 }
 
 /*
@@ -222,7 +267,7 @@ void ArgParse::UpdateStatus()
     }
 
   stringstream ss;
-  string message = prompt(string("Status: "));
+  string message = Utils::prompt(string("Status: "));
   string url = string("https://graph.facebook.com/"+who+"/feed");
   cURLpp::Forms formParts;
   formParts.push_back(new cURLpp::FormParts::Content("message", message));
@@ -307,19 +352,6 @@ void ArgParse::ShowVersion()
 {
   cout << "F.acebash v" << version                 << endl;
   cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
-}
-
-/*
- * Prompt:
- * Displays a prompt to the user and waits for input, returned as a
- * string.
- */
-string ArgParse::prompt(string message)
-{
-  string tmp;
-  cout << message;
-  getline(cin, tmp);
-  return tmp;
 }
 
 /*

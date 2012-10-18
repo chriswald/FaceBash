@@ -18,6 +18,16 @@ ostream & operator<<(ostream & os, const Journal j)
   return os;
 }
 
+int Journal::length()
+{
+  return news_stories.size();
+}
+
+NewsStory Journal::operator[](int index)
+{
+  return news_stories[index];
+}
+
 bool Journal::getNewsStories()
 {
 

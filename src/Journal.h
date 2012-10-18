@@ -16,6 +16,8 @@ class Journal
   Journal(bool get_stories_now = false);
   ~Journal();
   friend ostream & operator<<(ostream & os, const Journal j);
+  int length();
+  NewsStory operator[](int index);
 
  private:
   bool getNewsStories();

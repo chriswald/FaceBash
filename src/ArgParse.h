@@ -24,6 +24,7 @@
 #include "LoginField.h"
 #include "NetUtils.h"
 #include "NewsStory.h"
+#include "Utils.h"
 
 using std::cerr;
 using std::cin;

@@ -23,6 +23,7 @@ class NetUtils
  public:
   static bool makeRequest(stringstream & ss, const string & url);
   static bool makeRequest(stringstream & ss, const string & url, const cURLpp::Forms & formParts);
+  static bool makeRequest(stringstream & ss, const string & url, const string & args);
   static int showErrorMessage(const Json::Value & root);
   
  private:

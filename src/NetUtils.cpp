@@ -67,6 +67,38 @@ bool NetUtils::makeRequest(stringstream & ss, const string & url, const cURLpp::
 }
 
 /*
+ * Make Request:
+ * Makes a request to the given url and writes the return to
+ * ss. Returns true if the request was successful, false otherwise.
+ */
+bool NetUtils::makeRequest(stringstream & ss, const string & url, const string & args)
+{
+  string token = authToken();
+
+  if (strcmp(token.c_str(), "\0") == 0)
+    {
+      cout << "Please Log in." << endl;
+      return false;
+    }
+
+  cURLpp::Easy request;
+  cURLpp::options::Url URL(url + string("?access_token=") + token + string("&") + args);
+  request.setOpt(URL);
+
+  try
+    {
+      ss << request;
+    }
+  catch (curlpp::LibcurlRuntimeError & e)
+    {
+      cout << e.what() << endl;
+      return false;
+    }
+
+  return true;
+}
+
+/*
  * Show Error Message:
  * If the Json document contains an error message display it and
  * return true. Return false otherwise.
