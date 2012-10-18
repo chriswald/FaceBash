@@ -11,7 +11,7 @@ Journal::~Journal()
 
 ostream & operator<<(ostream & os, const Journal j)
 {
-  for (unsigned int i = 0; i < j.news_stories.size(); i ++)
+  for (int i = j.news_stories.size()-1; i >= 0; i --)
     {
       os << j.news_stories[i];
     }
