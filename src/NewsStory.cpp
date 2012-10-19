@@ -20,6 +20,30 @@ string NewsStory::getID()
   return ID;
 }
 
+void NewsStory::Comment(const string & message)
+{
+  cURLpp::Forms form;
+  form.push_back(new cURLpp::FormParts::Content("message", message));
+
+  string url = string("https://graph.facebook.com/") + ID + string("/comments");
+
+  stringstream ss;
+  bool request_success = NetUtils::makeRequest(ss, url, form);
+
+  if (!request_success)
+    return;
+
+  Json::Value root;
+  Json::Reader reader;
+  bool parsing_success = reader.parse(ss.str(), root);
+  if (!parsing_success)
+    {
+      cout << "Failed to parse response." << endl;
+      cout << ss.str() << endl;
+    }
+
+  NetUtils::showErrorMessage(root);
+}
 
 /*
  * Format News Story:

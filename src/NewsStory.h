@@ -7,6 +7,12 @@
 #include <vector>
 #include <json/json.h>
 
+#include <curlpp/cURLpp.hpp>
+#include <curlpp/Options.hpp>
+#include <curlpp/Easy.hpp>
+
+#include "NetUtils.h"
+
 using std::endl;
 using std::ostream;
 using std::stringstream;
@@ -19,6 +25,8 @@ class NewsStory
   NewsStory(const Json::Value & news_story, unsigned int i);
   friend ostream & operator<<(ostream & os, const NewsStory & news);
   string getID();
+
+  void Comment(const string & message);
 
  private:
   void formatNewsStory(stringstream & ss) const;  

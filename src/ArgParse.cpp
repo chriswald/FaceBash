@@ -123,27 +123,8 @@ void ArgParse::Comment()
   cout << story;
 
   string message = Utils::prompt("Comment: ");
-  string ID = story.getID();
-  string url = string("https://graph.facebook.com/") + ID + string("/comments");
 
-  stringstream ss;
-  bool request_successful = NetUtils::makeRequest(ss, url, message);
-
-  if (!request_successful)
-    {
-      return;
-    }
-
-  Json::Value root;
-  Json::Reader reader;
-  bool parsingSuccessful = reader.parse(ss.str(), root);
-  if (!parsingSuccessful)
-    {
-      cerr << "Failed to parse response." << endl;
-      cerr << ss.str() << endl;
-    }
-
-  NetUtils::showErrorMessage(root);
+  story.Comment(message);
 }
 
 /*
