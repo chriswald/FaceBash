@@ -36,6 +36,17 @@ sudo cp *.a *.so /usr/local/lib/
 cd ../../..
 sudo rm -rf jsoncpp/ scons/
 
+wget ftp://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+tar -xzf ncurses*.tar.gz
+rm ncurses*.tar.gz
+mv ncurses* ncurses
+cd ncurses
+./configure
+make
+sudo make install
+cd ..
+rm -rf ncurses
+
 wget ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz
 tar -xzf readline-6.2.tar.gz
 mv readline-6.2 readline
