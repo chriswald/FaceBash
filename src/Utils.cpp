@@ -7,8 +7,9 @@
  */
 string Utils::prompt(string message)
 {
-  string tmp;
-  cout << message;
-  getline(cin, tmp);
-  return tmp;
+  char * tmp;
+  tmp = readline(message.c_str());
+  string ret (tmp);
+  free (tmp);
+  return ret;
 }

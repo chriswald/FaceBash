@@ -1,8 +1,11 @@
 #ifndef __UTILS_H
 #define __UTILS_H
 
-#include <iostream>
+#include <cstdlib>
 #include <cstring>
+#include <iostream>
+
+#include <readline/readline.h>
 
 using std::cin;
 using std::cout;
@@ -15,6 +18,7 @@ class Utils
   static string prompt(string message);
 
  private:
+  static char* line_read;
 };
 
 #endif // __UTILS_H

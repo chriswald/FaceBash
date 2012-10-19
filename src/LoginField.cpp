@@ -27,33 +27,26 @@ void LoginField::SetStdinEcho(bool enable)
 #endif
 }
 
-void LoginField::readUser(std::string prompt)
+void LoginField::readUser(string prompt)
 {
-  std::cout << prompt.c_str();
-
-  std::string s;
-  getline(std::cin, s);
-
-  LoginField::username = s;
-
-  std::cout << std::flush;
+  char * tmp;
+  tmp = readline(prompt.c_str());
+  username = string(tmp);
+  free(tmp);
 }
 
 void LoginField::readPass(std::string prompt)
 {
   // Print the field prompt, then turn off echo
-  std::cout << prompt.c_str();
-  LoginField::SetStdinEcho(false);
+  cout << prompt.c_str();
+  SetStdinEcho(false);
 
-  // Read input
-  std::string s;
-  getline(std::cin, s);
-
-  // Store as password
-  LoginField::password = s;
+  // Read input and store as password
+  string s;
+  getline(cin, password);
 
   // Turn echo back on and replace an endl that
   // was missed from getline() when echo was off
-  LoginField::SetStdinEcho(true);
-  std::cout << std::endl << std::flush;
+  SetStdinEcho(true);
+  cout << endl;
 }
