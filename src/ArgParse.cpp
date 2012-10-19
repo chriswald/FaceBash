@@ -286,8 +286,34 @@ void ArgParse::UpdateStatus()
 void ArgParse::ShowNewsFeed()
 {
   Journal journal(true);
+  int how_many = journal.length();
 
-  cout << journal;
+  if (count > 1)
+    {
+      how_many = atoi(arguments[1].c_str());
+    }
+  if (how_many < 1)
+    {
+      cout << "Invalid argument: Minimum value of 1" << endl;
+      return;
+    }
+  else if (how_many > journal.length())
+    {
+      cout << "Invaild argument: Maximum value of " << journal.length() << endl;
+      return;
+    }
+  
+  cout << "Showing your news feed:" << endl;
+  
+  if (how_many < journal.length())
+    {
+      for (int i = how_many-1; i >= 0; i --)
+	cout << journal[i];
+    }
+  else
+    {
+      cout << journal;
+    }
 }
 
 void ArgParse::AboutFriend()
