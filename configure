@@ -1,4 +1,5 @@
 sudo apt-get install -y libboost1.46-dev libcurl4-openssl-dev python2.7 g++
+
 wget http://curlpp.googlecode.com/files/curlpp-0.7.3.tar.gz
 tar -xzf curlpp-0.7.3.tar.gz
 rm curlpp-0.7.3.tar.gz
@@ -9,11 +10,13 @@ make
 make install
 cd ..
 rm -rf curlpp/
+
 wget http://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11-py2.7.egg
 sudo chmod +x setuptools-0.6c11-py2.7.egg
 ./setuptools-0.6c11-py2.7.egg
 sudo easy_install mechanize
 rm setuptools-0.6c11-py2.7.egg
+
 wget http://iweb.dl.sourceforge.net/project/jsoncpp/jsoncpp/0.5.0/jsoncpp-src-0.5.0.tar.gz
 tar -xzf jsoncpp-src-0.5.0.tar.gz
 rm jsoncpp-src-0.5.0.tar.gz
@@ -32,6 +35,18 @@ cd libs/linux-gcc-*
 sudo cp *.a *.so /usr/local/lib/
 cd ../../..
 sudo rm -rf jsoncpp/ scons/
+
+wget ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz
+tar -xzf readline-6.2.tar.gz
+mv readline-6.2 readline
+cd readline
+./configure
+make
+sudo make install
+cd ..
+rm -rf readline/
+
 mkdir bin
+
 sudo bash -c "echo /usr/local/lib/ > /etc/ld.so.conf.d/local.conf"
 sudo /sbin/ldconfig
