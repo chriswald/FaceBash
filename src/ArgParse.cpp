@@ -338,17 +338,23 @@ void ArgParse::AboutMe()
 void ArgParse::ShowHelpText()
 {
   ShowVersion();
-  cout                                                                  << endl;
-  cout << "Usage: bin/Facebash [options]"                               << endl;
-  cout                                                                  << endl;
-  cout << "Options:"                                                    << endl;
-  cout << "   -h, --help            Shows this message"                 << endl;
-  cout << "   -l, --login           Logs a user into Facebook"          << endl;
-  cout << "       --logout          Logs the user out of Facebook"      << endl;
-  cout << "   -n, --show_news_feed  Shows the current user's news feed" << endl;
-  cout << "   -s, --update_status   Updates the current user's status"  << endl;
-  cout << "   -v, --version         Displays version information"       << endl;
-  cout                                                                  << endl;
+  cout                                                                             << endl;
+  cout << "Usage: bin/Facebash [options]"                                          << endl;
+  cout                                                                             << endl;
+  cout << "Options:"                                                               << endl;
+  cout << "   -c [n],  --comment [n]"                                              << endl;
+  cout << "                    Adds comment to the nth most recent post."          << endl;
+  cout << "                    [default most recent]"                              << endl;
+  cout << "   -h, --help       Shows this message"                                 << endl;
+  cout << "   -l, --login      Logs a user into Facebook"                          << endl;
+  cout << "       --logout     Logs the user out of Facebook"                      << endl;
+  cout << "   -n [n], --show_news_feed [n]"                                        << endl;
+  cout << "                    Shows n most recent items from the current user's"  << endl;
+  cout << "                    news feed. [default to all in one page.]"           << endl;
+  cout << "   -s, --update_status"                                                 << endl;
+  cout << "                    Updates the current user's status"                  << endl;
+  cout << "   -v, --version    Displays version information"                       << endl;
+  cout                                                                             << endl;
 }
 
 /*
