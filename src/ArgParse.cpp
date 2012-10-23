@@ -82,14 +82,22 @@ void ArgParse::ParseArgs()
  */
 bool ArgParse::argHas(string arg)
 {
+  if (argIndex(arg) == -1)
+    return false;
+  else
+    return true;
+}
+
+int ArgParse::argIndex(string arg)
+{
   for (int i = 0; i < count; i ++)
     {
       if (strcmp(arguments[i].c_str(), arg.c_str()) == 0)
 	{
-	  return true;
+	  return i;
 	}
     }
-  return false;
+  return -1;
 }
 
 /*
@@ -285,25 +293,43 @@ void ArgParse::UpdateStatus()
  */
 void ArgParse::ShowNewsFeed()
 {
-  Journal journal(true);
-  int how_many = journal.length();
-
+  string friend_ID = "\0";
+  int how_many = 0;
+  
   if (count > 1)
     {
-      how_many = atoi(arguments[1].c_str());
+      int who_index = 0;
+      if (argHas("--who"))
+	{
+	  who_index = argIndex("--who");
+	  friend_ID = getFriendID(arguments[who_index + 1]);
+	  if (strcmp(friend_ID.c_str(), "\0") == 0)
+	    return;
+	}
+
+      int num_index = 0;
+      if (argHas("--num"))
+	{
+	  num_index = argIndex("--num");
+	  how_many = atoi(arguments[num_index + 1].c_str());
+	}
     }
+ 
+  Journal journal;
+  if (strcmp(friend_ID.c_str(), "\0") == 0)
+    journal = Journal(true, "me");
+  else
+    journal = Journal(true, friend_ID);
+ 
   if (how_many < 1)
     {
-      cout << "Invalid argument: Minimum value of 1" << endl;
-      return;
+      how_many = journal.length();
     }
   else if (how_many > journal.length())
     {
       cout << "Invaild argument: Maximum value of " << journal.length() << endl;
       return;
     }
-  
-  cout << "Showing your news feed:" << endl;
   
   if (how_many < journal.length())
     {
@@ -426,12 +452,12 @@ string ArgParse::getFriendID(string name)
   // message and return \0. Otherwise return the ID of the one match.
   if (ids.size() > 1)
     {
-      cerr << "You have more than one friend with that name." << endl;
+      cerr << "You have more than one friend with that name: " << name << endl;
       return "\0";
     }
   else if (ids.size() == 0)
     {
-      cerr << "You don't have any friends with that name." << endl;
+      cerr << "You don't have any friends with that name: " << name << endl;
       return "\0";
     }
   else

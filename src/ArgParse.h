@@ -50,6 +50,7 @@ class ArgParse
 
   void ParseArgs();
   bool argHas(string arg);
+  int  argIndex(string arg);
 
   void Comment();
   void Login();

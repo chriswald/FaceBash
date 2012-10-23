@@ -1,9 +1,9 @@
 #include "Journal.h"
 
-Journal::Journal(bool get_stories_now)
+Journal::Journal(bool get_stories_now, string who)
 {
   if (get_stories_now)
-    getNewsStories();
+    getNewsStories(who);
 }
 
 Journal::~Journal()
@@ -28,12 +28,16 @@ NewsStory Journal::operator[](int index)
   return news_stories[index];
 }
 
-bool Journal::getNewsStories()
+bool Journal::getNewsStories(string who)
 {
 
   // Get the JSON from Facebook
   stringstream ss;
-  string url = string("https://graph.facebook.com/me/home");
+  string url = string("https://graph.facebook.com/") + who;
+  if (strcmp(who.c_str(), "me") == 0)
+    url += string("/home");
+  else
+    url += string("/feed");
   bool request_success = NetUtils::makeRequest(ss, url);
 
   // If the request wasn't successfully made just return. Some
