@@ -302,16 +302,22 @@ void ArgParse::ShowNewsFeed()
       if (argHas("--who"))
 	{
 	  who_index = argIndex("--who");
-	  friend_ID = getFriendID(arguments[who_index + 1]);
-	  if (strcmp(friend_ID.c_str(), "\0") == 0)
-	    return;
+	  if (who_index < count - 1)
+	    {
+	      friend_ID = getFriendID(arguments[who_index + 1]);
+	      if (strcmp(friend_ID.c_str(), "\0") == 0)
+		return;
+	    }
 	}
 
       int num_index = 0;
       if (argHas("--num"))
 	{
 	  num_index = argIndex("--num");
-	  how_many = atoi(arguments[num_index + 1].c_str());
+	  if (num_index < count - 1)
+	    {
+	      how_many = atoi(arguments[num_index + 1].c_str());
+	    }
 	}
     }
  
