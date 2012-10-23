@@ -124,7 +124,7 @@ void ArgParse::Comment()
 
   string message = Utils::prompt("Comment: ");
 
-  story.Comment(message);
+  story.CommentOnStory(message);
 }
 
 /*

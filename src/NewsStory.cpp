@@ -5,6 +5,9 @@ NewsStory::NewsStory(const Json::Value & news_story, unsigned int i)
   story = news_story;
   index = i;
   ID = news_story["id"].asString();
+
+  get_num_likes();
+  get_comments();
 }
 
 ostream & operator<<(ostream & os, const NewsStory & news)
@@ -15,12 +18,12 @@ ostream & operator<<(ostream & os, const NewsStory & news)
   return os;
 }
 
-string NewsStory::getID()
+string NewsStory::getID() const
 {
   return ID;
 }
 
-void NewsStory::Comment(const string & message)
+void NewsStory::CommentOnStory(const string & message)
 {
   cURLpp::Forms form;
   form.push_back(new cURLpp::FormParts::Content("message", message));
@@ -60,46 +63,76 @@ void NewsStory::formatNewsStory(stringstream & ss) const
   // hurting anything so I'll keep it.
   if (strlen(message.c_str()) > 0)
     {
-      vector<string> lines;
-      string remainder = message;
       
-      vector<string> new_lines;
-      // Break the message body at newlines.
-      int nl_index = remainder.find("\n");
-      while (nl_index != -1 && nl_index != (int) strlen(remainder.c_str()))
-	{
-	  string line = remainder.substr(0, nl_index);
-	  remainder = remainder.substr(nl_index + 1);
-	  new_lines.push_back(line);
-	  nl_index = remainder.find("\n");
-	}
-      new_lines.push_back(remainder);
-      
-      // Run through each of those lines and make sure it does not
-      // exceed LINE_WIDTH. Split it into sub lines until it does.
-      for (unsigned int j = 0; j < new_lines.size(); j ++)
-	{
-	  string new_line = new_lines[j];
-	  while (strlen(new_line.c_str()) > LINE_WIDTH)
-	    {
-	      int space_index = new_line.substr(0, LINE_WIDTH).rfind(" ");
-	      string line = new_line.substr(0, space_index);
-	      new_line = new_line.substr(space_index + 1);
-	      lines.push_back(line);
-	    }
-	  lines.push_back(new_line);
-	}
-      
+      vector<string> lines = setLineWidth(message, LINE_WIDTH);
+
       // Write each individual portion of the story.
       writeSeperatorLine(ss);
       writeNameLine(ss, posted_by);
       writeSeperatorLine(ss);
       writeMessageLines(ss, lines);
       writeSeperatorLine(ss);
+
+      for (int i = 0; i < num_comments; i ++)
+	{
+	  Comment c = comments[i];
+	  if (strlen(c.getText().c_str()) > 0)
+	    {
+	      vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - 5);
+	      writeCommentPostedBy(ss, c);
+	      writeCommentLines(ss, l);
+	      writeCommentSeperatorLine(ss);
+	    }
+	}
+
       ss << endl;
     }
 }
 
+vector<string> NewsStory::setLineWidth(string message, int width) const
+{
+  vector<string> lines;
+  string remainder = message;
+  
+  vector<string> new_lines;
+  // Break the message body at newlines.
+  int nl_index = remainder.find("\n");
+  while (nl_index != -1 && nl_index != (int) strlen(remainder.c_str()))
+    {
+      string line = remainder.substr(0, nl_index);
+      remainder = remainder.substr(nl_index + 1);
+      new_lines.push_back(line);
+      nl_index = remainder.find("\n");
+    }
+  new_lines.push_back(remainder);
+  
+  // Run through each of those lines and make sure it does not
+  // exceed LINE_WIDTH. Split it into sub lines until it does.
+  for (unsigned int j = 0; j < new_lines.size(); j ++)
+    {
+      string new_line = new_lines[j];
+      while (strlen(new_line.c_str()) > (unsigned int) width)
+	{
+	  int space_index = new_line.substr(0, width).rfind(" ");
+	  if (space_index == -1)
+	    {
+	      string line = new_line.substr(0, width);
+	      new_line = new_line.substr(width + 1);
+	      lines.push_back(line);
+	    }
+	  else
+	    {
+	      string line = new_line.substr(0, space_index);
+	      new_line = new_line.substr(space_index + 1);
+	      lines.push_back(line);
+	    }
+	}
+      lines.push_back(new_line);
+    }
+
+  return lines;
+}
+  
 /*
  * Write Message Line:
  * Writes each line from lines to os with leading characters and
@@ -132,7 +165,7 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name) const
   stringstream tmp;
   stringstream sindex;
   sindex << index << " ";
-  tmp << "| " << name.c_str();
+  tmp << "| " << name.c_str() << "   " << num_likes << " Likes";
 
   int name_len = strlen(tmp.str().c_str());
   int indx_len = strlen(sindex.str().c_str());
@@ -159,4 +192,63 @@ void NewsStory::writeSeperatorLine(stringstream & ss) const
   tmp << "|" << endl;
 
   ss << tmp.str();
-}    
+}
+
+void NewsStory::writeCommentPostedBy(stringstream & ss, const Comment & c) const
+{
+  stringstream tmp;
+  tmp << "     | " << c.getPostedBy();
+
+  if (c.getNumLikes() > 0)
+    {
+      if (c.getNumLikes() == 1)
+	tmp << "   1 Like";
+      else
+	tmp << "   " << c.getNumLikes() << " Likes";
+    }
+  
+  for (unsigned int i = strlen(tmp.str().c_str()); i < LINE_WIDTH + 5; i ++)
+    {
+      tmp << " ";
+    }
+
+  tmp << "|" << endl;
+  ss << tmp.str();
+}
+
+void NewsStory::writeCommentLines(stringstream & ss, vector<string> lines) const
+{
+  for (unsigned int i = 0; i < lines.size(); i ++)
+    {
+      stringstream tmp;
+      tmp << "     |   " << lines[i];
+      for (unsigned int j = strlen(tmp.str().c_str()); j < LINE_WIDTH + 5; j ++)
+	tmp << " ";
+      tmp << "|" << endl;
+      ss << tmp.str();
+    }
+}
+
+void NewsStory::writeCommentSeperatorLine(stringstream & ss) const
+{
+  stringstream tmp;
+  tmp << "     |";
+  for (unsigned int i = strlen(tmp.str().c_str()); i < LINE_WIDTH + 5; i ++)
+    tmp << "-";
+  tmp << "|" << endl;
+  ss << tmp.str();
+}
+
+void NewsStory::get_num_likes()
+{
+  num_likes = story["likes"]["count"].asInt();
+}
+
+void NewsStory::get_comments()
+{
+  num_comments = story["comments"]["count"].asInt();
+  for (int i = 0; i < num_comments; i ++)
+    {
+      comments.push_back(Comment(story["comments"]["data"][i]));
+    }
+}
