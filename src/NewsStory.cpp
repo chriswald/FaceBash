@@ -165,7 +165,15 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name) const
   stringstream tmp;
   stringstream sindex;
   sindex << index << " ";
-  tmp << "| " << name.c_str() << "   " << num_likes << " Likes";
+  tmp << "| " << name.c_str();
+  
+  if (num_likes > 0)
+    {
+      if (num_likes == 1)
+	tmp << "   <1 Like>";
+      else
+	tmp << "   <" << num_likes << " Likes>";
+    }
 
   int name_len = strlen(tmp.str().c_str());
   int indx_len = strlen(sindex.str().c_str());
@@ -202,9 +210,9 @@ void NewsStory::writeCommentPostedBy(stringstream & ss, const Comment & c) const
   if (c.getNumLikes() > 0)
     {
       if (c.getNumLikes() == 1)
-	tmp << "   1 Like";
+	tmp << "   <1 Like>";
       else
-	tmp << "   " << c.getNumLikes() << " Likes";
+	tmp << "   <" << c.getNumLikes() << " Likes>";
     }
   
   for (unsigned int i = strlen(tmp.str().c_str()); i < LINE_WIDTH + 5; i ++)
