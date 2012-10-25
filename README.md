@@ -8,5 +8,4 @@ Requires cURL, cURLcpp, Boost, and JsonCpp. All of these dependencies can be ins
 Installation
 ============
 
-Run <code>./configure</code> as a standard user. Then type <code>make</code>.
-Alternatively if <code>./configure</code> is run as super user execute <code>chown <user> bin</code> so make will run correctly.
+Run <code>./configure</code> as super user. As a regular user create a <code>bin/</code> directory. Then type <code>make</code>.
