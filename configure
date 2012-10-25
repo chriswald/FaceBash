@@ -1,4 +1,4 @@
-sudo apt-get install -y libboost1.46-dev libcurl4-openssl-dev python2.7 g++
+sudo apt-get install -y libcurl4-openssl-dev python2.7 g++
 
 wget http://curlpp.googlecode.com/files/curlpp-0.7.3.tar.gz
 tar -xzf curlpp-0.7.3.tar.gz
