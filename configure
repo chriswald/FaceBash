@@ -1,4 +1,4 @@
-sudo apt-get install -y libcurl4-openssl-dev python2.7 g++
+sudo apt-get install -y libboost-dev libcurl4-openssl-dev python2.7 g++
 
 wget http://curlpp.googlecode.com/files/curlpp-0.7.3.tar.gz
 tar -xzf curlpp-0.7.3.tar.gz
@@ -33,6 +33,8 @@ sudo python scons.py platform=linux-gcc
 sudo cp -r include/json/ /usr/include/json/
 cd libs/linux-gcc-*
 sudo cp *.a *.so /usr/local/lib/
+sudo ln -sf /usr/local/lib/libjson_linux-gcc-*_libmt.a /usr/local/lib/libjson.a
+sudo ln -sf /usr/local/lib/libjson_linux-gcc-*_libmt.so /usr/local/lib/libjson.so
 cd ../../..
 sudo rm -rf jsoncpp/ scons/
 
@@ -49,6 +51,7 @@ rm -rf ncurses
 
 wget ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz
 tar -xzf readline-6.2.tar.gz
+rm -f readline-6.2.tar.gz
 mv readline-6.2 readline
 cd readline
 ./configure
