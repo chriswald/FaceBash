@@ -73,7 +73,7 @@ bool Journal::getNewsStories(string who)
       
       // Make sure the post is a status and isn't empty
       if (strcmp(content_type.c_str(), "status") == 0 &&
-	  strlen(posts[i]["message"].asString().c_str()) > 0)
+	  posts[i]["message"].asString().length() > 0)
 	{
 	  news_stories.push_back(NewsStory(posts[i], ++how_many));
 	}

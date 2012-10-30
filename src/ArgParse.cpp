@@ -179,7 +179,7 @@ void ArgParse::Login()
       string content;
       member27 >> content;
 
-      if (strlen(content.c_str()) > ERROR_CODE_LENGTH)
+      if (content.length() > ERROR_CODE_LENGTH)
 	{
 	  cout << "Logged In." << endl;
 	}

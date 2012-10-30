@@ -61,7 +61,7 @@ void NewsStory::formatNewsStory(stringstream & ss) const
   // This conditional is probably unnecessarry since the same
   // condition is being checked in ShowNewsFeed, but its also not
   // hurting anything so I'll keep it.
-  if (strlen(message.c_str()) > 0)
+  if (message.length() > 0)
     {
       
       vector<string> lines = setLineWidth(message, LINE_WIDTH);
@@ -76,7 +76,7 @@ void NewsStory::formatNewsStory(stringstream & ss) const
       for (int i = 0; i < num_comments; i ++)
 	{
 	  Comment c = comments[i];
-	  if (strlen(c.getText().c_str()) > 0)
+	  if (c.getText().length() > 0)
 	    {
 	      vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - 5);
 	      writeCommentPostedBy(ss, c);
@@ -97,7 +97,7 @@ vector<string> NewsStory::setLineWidth(string message, int width) const
   vector<string> new_lines;
   // Break the message body at newlines.
   int nl_index = remainder.find("\n");
-  while (nl_index != -1 && nl_index != (int) strlen(remainder.c_str()))
+  while (nl_index != -1 && nl_index != (int) remainder.length())
     {
       string line = remainder.substr(0, nl_index);
       remainder = remainder.substr(nl_index + 1);
@@ -111,7 +111,7 @@ vector<string> NewsStory::setLineWidth(string message, int width) const
   for (unsigned int j = 0; j < new_lines.size(); j ++)
     {
       string new_line = new_lines[j];
-      while (strlen(new_line.c_str()) > (unsigned int) width)
+      while (new_line.length() > (unsigned int) width)
 	{
 	  int space_index = new_line.substr(0, width).rfind(" ");
 	  if (space_index == -1)
@@ -145,7 +145,7 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> lines)
     {
       stringstream stmp;
       stmp << "|  " << lines[i];
-      int len = strlen(stmp.str().c_str());
+      int len = stmp.str().length();
       for (unsigned int j = len; j < LINE_WIDTH+5; j ++)
 	stmp << " ";
       stmp << "|" << endl;
@@ -175,8 +175,8 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name) const
 	tmp << "   <" << num_likes << " Likes>";
     }
 
-  int name_len = strlen(tmp.str().c_str());
-  int indx_len = strlen(sindex.str().c_str());
+  int name_len = tmp.str().length();
+  int indx_len = sindex.str().length();
 
   for (unsigned int i = name_len; i < LINE_WIDTH+5 - indx_len; i ++)
     tmp << " ";
@@ -215,7 +215,7 @@ void NewsStory::writeCommentPostedBy(stringstream & ss, const Comment & c) const
 	tmp << "   <" << c.getNumLikes() << " Likes>";
     }
   
-  for (unsigned int i = strlen(tmp.str().c_str()); i < LINE_WIDTH + 5; i ++)
+  for (unsigned int i = tmp.str().length(); i < LINE_WIDTH + 5; i ++)
     {
       tmp << " ";
     }
@@ -230,7 +230,7 @@ void NewsStory::writeCommentLines(stringstream & ss, vector<string> lines) const
     {
       stringstream tmp;
       tmp << "     |   " << lines[i];
-      for (unsigned int j = strlen(tmp.str().c_str()); j < LINE_WIDTH + 5; j ++)
+      for (unsigned int j = tmp.str().length(); j < LINE_WIDTH + 5; j ++)
 	tmp << " ";
       tmp << "|" << endl;
       ss << tmp.str();
@@ -241,7 +241,7 @@ void NewsStory::writeCommentSeperatorLine(stringstream & ss) const
 {
   stringstream tmp;
   tmp << "     |";
-  for (unsigned int i = strlen(tmp.str().c_str()); i < LINE_WIDTH + 5; i ++)
+  for (unsigned int i = tmp.str().length(); i < LINE_WIDTH + 5; i ++)
     tmp << "-";
   tmp << "|" << endl;
   ss << tmp.str();
