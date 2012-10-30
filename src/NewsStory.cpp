@@ -1,5 +1,9 @@
 #include "NewsStory.h"
 
+/*
+ * Creates a new NewsStory object and sets its ID, number of likes, and number
+ * of comments.
+ */
 NewsStory::NewsStory(const Json::Value & news_story, unsigned int i)
 {
   story = news_story;
@@ -10,6 +14,10 @@ NewsStory::NewsStory(const Json::Value & news_story, unsigned int i)
   get_comments();
 }
 
+/*
+ * Operator <<:
+ * Formats the news story and prints it to ostream os.
+ */
 ostream & operator<<(ostream & os, const NewsStory & news)
 {
   stringstream ss;
@@ -18,11 +26,19 @@ ostream & operator<<(ostream & os, const NewsStory & news)
   return os;
 }
 
+/*
+ * Get ID:
+ * Returns the news story's ID.
+ */
 string NewsStory::getID() const
 {
   return ID;
 }
 
+/*
+ * Comment on Story:
+ * Adds the message to the news story as a comment by passing it to Facebook.
+ */
 void NewsStory::CommentOnStory(const string & message)
 {
   cURLpp::Forms form;
