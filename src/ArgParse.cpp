@@ -106,13 +106,43 @@ int ArgParse::argIndex(string arg)
  */
 void ArgParse::Comment()
 {
-   Journal journal(true);
+   Journal journal(false);
    
    int index = 1;
+   string friend_ID = "me";
+
    if (count > 1)
    {
-      index = atoi(arguments[1].c_str());
+      int who_index = 0;
+      if (argHas("--who"))
+      {
+	 who_index = argIndex("--who");
+	 if (who_index < count - 1)
+	 {
+	    friend_ID = getFriendID(arguments[who_index + 1]);
+	    if (friend_ID == "\0")
+	       return;
+	 }
+      }
+
+      int num_index = 0;
+      if (argHas("--num"))
+      {
+	 num_index = argIndex("--num");
+	 if (num_index < count - 1)
+	 {
+	    index = atoi(arguments[num_index].c_str());
+	 }
+      }
    }
+   else
+   {
+      // I'm going to assume that some arguments need to be passed for
+      // this function to make any sense at all.
+      return;
+   }
+
+   journal.getNewsStories(friend_ID);
    
    if (index > journal.length())
    {
@@ -126,6 +156,8 @@ void ArgParse::Comment()
       cout << "Minimum value: 1" << endl;
       return;
    }
+
+   journal.getNewsStories(friend_ID);
    
    NewsStory story = journal[index-1];
    cout << story;
@@ -237,27 +269,31 @@ void ArgParse::UpdateStatus()
 {
    // Try to find a friend whose name matches what is being searched
    // for.
-   string who;
+   string friend_ID = "\0";
    if (count > 1)
    {
-      who = getFriendID(arguments[1]);
-      if (who == "\0")
+      int who_index = 0;
+      if (argHas("--who"))
       {
-	 // Found more or less than one friend with that name?
-	 // Just return.
-	 return;
+	 who_index = argIndex("--who");
+	 if (who_index < count - 1)
+	 {
+	    friend_ID = getFriendID(arguments[who_index + 1]);
+	    if (friend_ID == "\0")
+	       return;
+	 }
       }
    }
    else
    {
       // No name passed as a parameter?
       // Default to the current user.
-      who = "me";
+      friend_ID = "me";
    }
    
    stringstream ss;
    string message = Utils::prompt(string("Status: "));
-   string url = string("https://graph.facebook.com/"+who+"/feed");
+   string url = string("https://graph.facebook.com/"+friend_ID+"/feed");
    cURLpp::Forms formParts;
    formParts.push_back(new cURLpp::FormParts::Content("message", message));
    

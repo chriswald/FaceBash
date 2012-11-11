@@ -20,9 +20,9 @@ public:
    friend ostream & operator<<(ostream & os, const Journal j);
    int length();
    NewsStory operator[](int index);
+   bool getNewsStories(string who);
    
 private:
-   bool getNewsStories(string who);
    vector<NewsStory> news_stories;
 };
 
