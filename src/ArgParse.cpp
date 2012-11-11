@@ -116,7 +116,7 @@ void ArgParse::Comment()
    int index = 1;
    string friend_ID = "me";
 
-   // See if there are additional arguments
+   // See if there are additional arguments.
    if (count > 1)
    {
       // Try and retrieve a friend's name to comment on a post on
@@ -151,18 +151,18 @@ void ArgParse::Comment()
    // ("me").
    journal.getNewsStories(friend_ID);
    
-   // Bounds check the index number to make sure that the story
-   // exists.
+   // Now that I know how many stories are in the journal, bounds
+   // check the index number to make sure that the story exists.
    if (index > journal.length())
    {
-      cout << "Index out of bounds." << endl;
-      cout << "Maximum value: " << journal.length() << endl;
+      cerr << "Index out of bounds." << endl;
+      cerr << "Maximum value: " << journal.length() << endl;
       return;
    }
    else if (index < 1)
    {
-      cout << "Index out of bounds." << endl;
-      cout << "Minimum value: 1" << endl;
+      cerr << "Index out of bounds." << endl;
+      cerr << "Minimum value: 1" << endl;
       return;
    }
 
@@ -188,6 +188,7 @@ void ArgParse::Comment()
  */
 void ArgParse::Login()
 {
+   // Read login information from the user.
    LoginField login = LoginField();
    login.readUser("Email: ");
    login.readPass();
@@ -195,16 +196,26 @@ void ArgParse::Login()
    int status;
    pid_t pid = fork();
    
-   if (pid < 0)        // Fork failed for some reason
+   // Fork failed for some reason
+   if (pid < 0)
    {
       perror("Fork error");
    }
-   else if (pid == 0)  // Child process
+   // Child process
+   else if (pid == 0)
    {
-      execl("/usr/bin/python2.7", "/usr/bin/python2.7", "scripts/login.py", login.user().c_str(), login.pass().c_str(), (char *) 0);
+      // Execute the login script by passing a username and password.
+      execl("/usr/bin/python2.7",
+	    "/usr/bin/python2.7",
+	    "scripts/login.py",
+	    login.user().c_str(),
+	    login.pass().c_str(),
+	    (char *) 0);
    }
-   else                // Parent process
+   // Parent process
+   else
    {
+      // Wait until the child process has finished execution.
       if ((pid = wait(&status)) == -1)
 	 perror("wait error");
    }
@@ -220,6 +231,8 @@ void ArgParse::Login()
       string content;
       member27 >> content;
       
+      // If the contents of member27 are longer than the maximum error
+      // code length then I must have an auth token.
       if (content.length() > ERROR_CODE_LENGTH)
       {
 	 cout << "Logged In." << endl;
@@ -236,25 +249,27 @@ void ArgParse::Login()
 	  *  3) The user is not connected to the internet.
 	  */
 	 if      (content == "001")
-	    cout << "Invalid Email or Password." << endl;
+	    cerr << "Invalid Email or Password." << endl;
 	 
 	 else if (content == "002")
-	    cout << "User denied permission to F.aceBash." << endl;
+	    cerr << "User denied permission to F.aceBash." << endl;
 	 
 	 else if (content == "003")
-	    cout << "Not connected to the Internet." << endl;
+	    cerr << "Not connected to the Internet." << endl;
 	 
 	 else // Something went wrong (maybe on Facebook's end)
-	    cout << "An unknown error occured." << endl;
+	    cerr << "An unknown error occured." << endl;
 	 
       }
    }
-   else // The file could not be opened. Something went wrong on this end
+   // The file could not be opened. Something went wrong on this end
+   else
    {
       cerr << "Unable to login. Make sure you have proper "
 	   << "local permissions." << endl;
    }
    
+   // Make sure to close the file handle when I'm done.
    member27.close();
 }
 
@@ -278,7 +293,7 @@ void ArgParse::UpdateStatus()
 {
    // Try to find a friend whose name matches what is being searched
    // for.
-   string friend_ID = "\0";
+   string friend_ID = "me";
    if (count > 1)
    {
       int who_index = 0;
@@ -293,19 +308,16 @@ void ArgParse::UpdateStatus()
 	 }
       }
    }
-   else
-   {
-      // No name passed as a parameter?
-      // Default to the current user.
-      friend_ID = "me";
-   }
    
    stringstream ss;
+   
+   // Prompt the user for the status they want to post.
    string message = Utils::prompt(string("Status: "));
+   
+   // Make request to post that status to the specified feed.
    string url = string("https://graph.facebook.com/"+friend_ID+"/feed");
    cURLpp::Forms formParts;
    formParts.push_back(new cURLpp::FormParts::Content("message", message));
-   
    bool request_success = NetUtils::makeRequest(ss, url, formParts);
    
    // If the request wasn't successfully made just return. Some
@@ -316,6 +328,7 @@ void ArgParse::UpdateStatus()
       return;
    }
    
+   // Make sure to display any errors that Facebook may have given us.
    Json::Value root;
    Json::Reader reader;
    bool parsingSuccessful = reader.parse(ss.str(), root);
@@ -338,11 +351,18 @@ void ArgParse::UpdateStatus()
  */
 void ArgParse::ShowNewsFeed()
 {
-   string friend_ID = "me";
-   int how_many = 0;
+   Journal journal (false);
    
+   // Set some default values.
+   string friend_ID = "me";
+   int how_many = -1;
+   
+   // See if there are additional arguments.
    if (count > 1)
    {
+      // Try and retrieve a friend's name to comment on a post on
+      // their wall instead of the user's news feed. Defaults to the
+      // user's news feed.
       int who_index = 0;
       if (argHas("--who"))
       {
@@ -355,6 +375,8 @@ void ArgParse::ShowNewsFeed()
 	 }
       }
       
+      // Try and retrieve an index number correlating to which post to
+      // comment on. Defaults to the most recent.
       int num_index = 0;
       if (argHas("--num"))
       {
@@ -365,28 +387,35 @@ void ArgParse::ShowNewsFeed()
 	 }
       }
    }
-   
-   Journal journal (true, friend_ID);
-   
-   if (how_many < 1)
-   {
+
+   // Populate the journal using either the found ID or the default
+   // ("me").
+   journal.getNewsStories(friend_ID);
+
+   // If no number of stories was read signal to display all available
+   // news stories.
+   if (how_many == -1)
       how_many = journal.length();
-   }
-   else if (how_many > journal.length())
+   
+   // Now that I know how many stories are in the journal, bounds
+   // check the how_many number to make sure that all the stories
+   // exist.
+   if (how_many > journal.length())
    {
-      cout << "Invaild argument: Maximum value of " << journal.length() << endl;
+      cerr << "Index out of bounds." << endl;
+      cerr << "Maximum value: " << journal.length() << endl;
+      return;
+   }
+   else if (how_many < 1)
+   {
+      cerr << "Index out of bounds." << endl;
+      cerr << "Minimum value: 1" << endl;
       return;
    }
    
-   if (how_many < journal.length())
-   {
-      for (int i = how_many-1; i >= 0; i --)
-	 cout << journal[i];
-   }
-   else
-   {
-      cout << journal;
-   }
+   // Display the requested number of news stories.
+   for (int i = how_many-1; i >= 0; i --)
+      cout << journal[i];
 }
 
 void ArgParse::AboutFriend()
