@@ -8,10 +8,10 @@
  */
 ArgParse::ArgParse(int argc, char **argv)
 {
-  count = argc-1;
-  arguments = new string[count];
-  for (int i = 0; i < count; i ++)
-    arguments[i] = string(argv[i+1]);
+   count = argc-1;
+   arguments = new string[count];
+   for (int i = 0; i < count; i ++)
+      arguments[i] = string(argv[i+1]);
 }
 
 /*
@@ -20,7 +20,7 @@ ArgParse::ArgParse(int argc, char **argv)
  */
 ArgParse::~ArgParse()
 {
-  delete[] arguments;
+   delete[] arguments;
 }
 
 /*
@@ -31,48 +31,48 @@ ArgParse::~ArgParse()
  */
 void ArgParse::ParseArgs()
 {
-  // The user didn't enter any arguments. Just display the help text
-  // (also displays the version info).
-  if (count == 0)
-    {
+   // The user didn't enter any arguments. Just display the help text
+   // (also displays the version info).
+   if (count == 0)
+   {
       ShowHelpText();
       return;
-    }
-
-  // Add a comment to a specified post.
-  if      (argHas("-c") || argHas("--comment"))
-    Comment();
-
-  // The user specifically requested the help text. This also displays
-  // the version info.
-  else if (argHas("-h") || argHas("--help"))
-    ShowHelpText();
-
-  // The user wants to login to F.aceBash / Facebook.
-  else if (argHas("-l") || argHas("--login"))
-    Login();
-
-  // The user want to log out of F.aceBash / Facebook.
-  else if (                argHas("--logout"))
-    Logout();
-
-  // Show the user's news feed.
-  else if (argHas("-n") || argHas("--show_news_feed"))
-    ShowNewsFeed();
-
-  // Allow the user to post a status on either their own wall or the
-  // wall of a friend.
-  else if (argHas("-s") || argHas("--update_status"))
-    UpdateStatus();
-
-  // Show the version information (without help text).
-  else if (argHas("-v") || argHas("--version"))
-    ShowVersion();
-
-  // The user entered some argument that isn't supported or
-  // recognized. Show the help text (with version information).
-  else
-    ShowHelpText();
+   }
+   
+   // Add a comment to a specified post.
+   if      (argHas("-c") || argHas("--comment"))
+      Comment();
+   
+   // The user specifically requested the help text. This also displays
+   // the version info.
+   else if (argHas("-h") || argHas("--help"))
+      ShowHelpText();
+   
+   // The user wants to login to F.aceBash / Facebook.
+   else if (argHas("-l") || argHas("--login"))
+      Login();
+   
+   // The user want to log out of F.aceBash / Facebook.
+   else if (                argHas("--logout"))
+      Logout();
+   
+   // Show the user's news feed.
+   else if (argHas("-n") || argHas("--show_news_feed"))
+      ShowNewsFeed();
+   
+   // Allow the user to post a status on either their own wall or the
+   // wall of a friend.
+   else if (argHas("-s") || argHas("--update_status"))
+      UpdateStatus();
+   
+   // Show the version information (without help text).
+   else if (argHas("-v") || argHas("--version"))
+      ShowVersion();
+   
+   // The user entered some argument that isn't supported or
+   // recognized. Show the help text (with version information).
+   else
+      ShowHelpText();
 }
 
 /*
@@ -82,22 +82,22 @@ void ArgParse::ParseArgs()
  */
 bool ArgParse::argHas(string arg)
 {
-  if (argIndex(arg) == -1)
-    return false;
-  else
-    return true;
+   if (argIndex(arg) == -1)
+      return false;
+   else
+      return true;
 }
 
 int ArgParse::argIndex(string arg)
 {
-  for (int i = 0; i < count; i ++)
-    {
+   for (int i = 0; i < count; i ++)
+   {
       if (strcmp(arguments[i].c_str(), arg.c_str()) == 0)
-	{
-	  return i;
-	}
-    }
-  return -1;
+      {
+	 return i;
+      }
+   }
+   return -1;
 }
 
 /*
@@ -106,33 +106,33 @@ int ArgParse::argIndex(string arg)
  */
 void ArgParse::Comment()
 {
-  Journal journal(true);
-
-  int index = 1;
-  if (count > 1)
-    {
+   Journal journal(true);
+   
+   int index = 1;
+   if (count > 1)
+   {
       index = atoi(arguments[1].c_str());
-    }
-
-  if (index > journal.length())
-    {
+   }
+   
+   if (index > journal.length())
+   {
       cout << "Index out of bounds." << endl;
       cout << "Maximum value: " << journal.length() << endl;
       return;
-    }
-  else if (index < 1)
-    {
+   }
+   else if (index < 1)
+   {
       cout << "Index out of bounds." << endl;
       cout << "Minimum value: 1" << endl;
       return;
-    }
-
-  NewsStory story = journal[index-1];
-  cout << story;
-
-  string message = Utils::prompt("Comment: ");
-
-  story.CommentOnStory(message);
+   }
+   
+   NewsStory story = journal[index-1];
+   cout << story;
+   
+   string message = Utils::prompt("Comment: ");
+   
+   story.CommentOnStory(message);
 }
 
 /*
@@ -147,74 +147,74 @@ void ArgParse::Comment()
  */
 void ArgParse::Login()
 {
-  LoginField login = LoginField();
-  login.readUser("Email: ");
-  login.readPass();
-  
-  int status;
-  pid_t pid = fork();
-  
-  if (pid < 0)        // Fork failed for some reason
-    {
+   LoginField login = LoginField();
+   login.readUser("Email: ");
+   login.readPass();
+   
+   int status;
+   pid_t pid = fork();
+   
+   if (pid < 0)        // Fork failed for some reason
+   {
       perror("Fork error");
-    }
-  else if (pid == 0)  // Child process
-    {
+   }
+   else if (pid == 0)  // Child process
+   {
       execl("/usr/bin/python2.7", "/usr/bin/python2.7", "scripts/login.py", login.user().c_str(), login.pass().c_str(), (char *) 0);
-    }
-  else                // Parent process
-    {
+   }
+   else                // Parent process
+   {
       if ((pid = wait(&status)) == -1)
-	perror("wait error");
-    }
-  
-  // Checks to see whether the login was successful by open the
-  // member27 file and checking its contents. If something that looks
-  // like an authentification token is found that's good. Otherwise
-  // display a message relating to the error that was found.
-  std::ifstream member27;
-  member27.open("member27");
-  if (member27.is_open())
-    {
+	 perror("wait error");
+   }
+   
+   // Checks to see whether the login was successful by open the
+   // member27 file and checking its contents. If something that looks
+   // like an authentification token is found that's good. Otherwise
+   // display a message relating to the error that was found.
+   std::ifstream member27;
+   member27.open("member27");
+   if (member27.is_open())
+   {
       string content;
       member27 >> content;
-
+      
       if (content.length() > ERROR_CODE_LENGTH)
-	{
-	  cout << "Logged In." << endl;
-	}
+      {
+	 cout << "Logged In." << endl;
+      }
       else
-	{
-	  /*
-	   * Error Conditions:
-	   *  1) The user entered an invalid username (email address)
-	   *     or password when logging in.
-	   *  2) The user did not grant permission to F.aceBash to
-	   *     access their account (eg selected no instead of yes
-	   *     when asked to grant permission).
-	   *  3) The user is not connected to the internet.
-	   */
-	  if      (strcmp(content.c_str(), "001") == 0)
-	      cout << "Invalid Email or Password." << endl;
-
-	  else if (strcmp(content.c_str(), "002") == 0)
-	      cout << "User denied permission to F.aceBash." << endl;
-
-	  else if (strcmp(content.c_str(), "003") == 0)
-	      cout << "Not connected to the Internet." << endl;
-
-	  else // Something went wrong (maybe on Facebook's end)
-	      cout << "An unknown error occured." << endl;
-
-	}
-    }
-  else // The file could not be opened. Something went wrong on this end
-    {
+      {
+	 /*
+	  * Error Conditions:
+	  *  1) The user entered an invalid username (email address)
+	  *     or password when logging in.
+	  *  2) The user did not grant permission to F.aceBash to
+	  *     access their account (eg selected no instead of yes
+	  *     when asked to grant permission).
+	  *  3) The user is not connected to the internet.
+	  */
+	 if      (strcmp(content.c_str(), "001") == 0)
+	    cout << "Invalid Email or Password." << endl;
+	 
+	 else if (strcmp(content.c_str(), "002") == 0)
+	    cout << "User denied permission to F.aceBash." << endl;
+	 
+	 else if (strcmp(content.c_str(), "003") == 0)
+	    cout << "Not connected to the Internet." << endl;
+	 
+	 else // Something went wrong (maybe on Facebook's end)
+	    cout << "An unknown error occured." << endl;
+	 
+      }
+   }
+   else // The file could not be opened. Something went wrong on this end
+   {
       cerr << "Unable to login. Make sure you have proper "
 	   << "local permissions." << endl;
-    }
-
-  member27.close();
+   }
+   
+   member27.close();
 }
 
 /*
@@ -223,7 +223,7 @@ void ArgParse::Login()
  */
 void ArgParse::Logout()
 {
-  remove("member27");
+   remove("member27");
 }
 
 /*
@@ -235,52 +235,52 @@ void ArgParse::Logout()
  */
 void ArgParse::UpdateStatus()
 {
-  // Try to find a friend whose name matches what is being searched
-  // for.
-  string who;
-  if (count > 1)
-    {
+   // Try to find a friend whose name matches what is being searched
+   // for.
+   string who;
+   if (count > 1)
+   {
       who = getFriendID(arguments[1]);
       if (strcmp(who.c_str(), "\0") == 0)
-	{
-	  // Found more or less than one friend with that name?
-	  // Just return.
-	  return;
-	}
-    }
-  else
-    {
+      {
+	 // Found more or less than one friend with that name?
+	 // Just return.
+	 return;
+      }
+   }
+   else
+   {
       // No name passed as a parameter?
       // Default to the current user.
       who = "me";
-    }
-
-  stringstream ss;
-  string message = Utils::prompt(string("Status: "));
-  string url = string("https://graph.facebook.com/"+who+"/feed");
-  cURLpp::Forms formParts;
-  formParts.push_back(new cURLpp::FormParts::Content("message", message));
-
-  bool request_success = NetUtils::makeRequest(ss, url, formParts);
-
-  // If the request wasn't successfully made just return. Some
-  // function previous to this should have displayed some error
-  // message.
-  if (!request_success)
-    {
+   }
+   
+   stringstream ss;
+   string message = Utils::prompt(string("Status: "));
+   string url = string("https://graph.facebook.com/"+who+"/feed");
+   cURLpp::Forms formParts;
+   formParts.push_back(new cURLpp::FormParts::Content("message", message));
+   
+   bool request_success = NetUtils::makeRequest(ss, url, formParts);
+   
+   // If the request wasn't successfully made just return. Some
+   // function previous to this should have displayed some error
+   // message.
+   if (!request_success)
+   {
       return;
-    }
-
-  Json::Value root;
-  Json::Reader reader;
-  bool parsingSuccessful = reader.parse(ss.str(), root);
-  if (!parsingSuccessful)
-    {
+   }
+   
+   Json::Value root;
+   Json::Reader reader;
+   bool parsingSuccessful = reader.parse(ss.str(), root);
+   if (!parsingSuccessful)
+   {
       cerr << "Failed to parse response." << endl;
       cerr << ss.str() << endl;
-    }
-
-  NetUtils::showErrorMessage(root);
+   }
+   
+   NetUtils::showErrorMessage(root);
 }
 
 /*
@@ -293,59 +293,59 @@ void ArgParse::UpdateStatus()
  */
 void ArgParse::ShowNewsFeed()
 {
-  string friend_ID = "\0";
-  int how_many = 0;
-  
-  if (count > 1)
-    {
+   string friend_ID = "\0";
+   int how_many = 0;
+   
+   if (count > 1)
+   {
       int who_index = 0;
       if (argHas("--who"))
-	{
-	  who_index = argIndex("--who");
-	  if (who_index < count - 1)
-	    {
-	      friend_ID = getFriendID(arguments[who_index + 1]);
-	      if (strcmp(friend_ID.c_str(), "\0") == 0)
-		return;
-	    }
-	}
-
+      {
+	 who_index = argIndex("--who");
+	 if (who_index < count - 1)
+	 {
+	    friend_ID = getFriendID(arguments[who_index + 1]);
+	    if (strcmp(friend_ID.c_str(), "\0") == 0)
+	       return;
+	 }
+      }
+      
       int num_index = 0;
       if (argHas("--num"))
-	{
-	  num_index = argIndex("--num");
-	  if (num_index < count - 1)
-	    {
-	      how_many = atoi(arguments[num_index + 1].c_str());
-	    }
-	}
-    }
- 
-  Journal journal;
-  if (strcmp(friend_ID.c_str(), "\0") == 0)
-    journal = Journal(true, "me");
-  else
-    journal = Journal(true, friend_ID);
- 
-  if (how_many < 1)
-    {
+      {
+	 num_index = argIndex("--num");
+	 if (num_index < count - 1)
+	 {
+	    how_many = atoi(arguments[num_index + 1].c_str());
+	 }
+      }
+   }
+   
+   Journal journal;
+   if (strcmp(friend_ID.c_str(), "\0") == 0)
+      journal = Journal(true, "me");
+   else
+      journal = Journal(true, friend_ID);
+   
+   if (how_many < 1)
+   {
       how_many = journal.length();
-    }
-  else if (how_many > journal.length())
-    {
+   }
+   else if (how_many > journal.length())
+   {
       cout << "Invaild argument: Maximum value of " << journal.length() << endl;
       return;
-    }
-  
-  if (how_many < journal.length())
-    {
+   }
+   
+   if (how_many < journal.length())
+   {
       for (int i = how_many-1; i >= 0; i --)
-	cout << journal[i];
-    }
-  else
-    {
+	 cout << journal[i];
+   }
+   else
+   {
       cout << journal;
-    }
+   }
 }
 
 void ArgParse::AboutFriend()
@@ -369,24 +369,24 @@ void ArgParse::AboutMe()
  */
 void ArgParse::ShowHelpText()
 {
-  ShowVersion();
-  cout                                                                             << endl;
-  cout << "Usage: bin/Facebash [options]"                                          << endl;
-  cout                                                                             << endl;
-  cout << "Options:"                                                               << endl;
-  cout << "   -c [n],  --comment [n]"                                              << endl;
-  cout << "                    Adds comment to the nth most recent post."          << endl;
-  cout << "                    [default most recent]"                              << endl;
-  cout << "   -h, --help       Shows this message"                                 << endl;
-  cout << "   -l, --login      Logs a user into Facebook"                          << endl;
-  cout << "       --logout     Logs the user out of Facebook"                      << endl;
-  cout << "   -n [n], --show_news_feed [n]"                                        << endl;
-  cout << "                    Shows n most recent items from the current user's"  << endl;
-  cout << "                    news feed. [default to all in one page.]"           << endl;
-  cout << "   -s, --update_status"                                                 << endl;
-  cout << "                    Updates the current user's status"                  << endl;
-  cout << "   -v, --version    Displays version information"                       << endl;
-  cout                                                                             << endl;
+   ShowVersion();
+   cout                                                                             << endl;
+   cout << "Usage: bin/Facebash [options]"                                          << endl;
+   cout                                                                             << endl;
+   cout << "Options:"                                                               << endl;
+   cout << "   -c [n],  --comment [n]"                                              << endl;
+   cout << "                    Adds comment to the nth most recent post."          << endl;
+   cout << "                    [default most recent]"                              << endl;
+   cout << "   -h, --help       Shows this message"                                 << endl;
+   cout << "   -l, --login      Logs a user into Facebook"                          << endl;
+   cout << "       --logout     Logs the user out of Facebook"                      << endl;
+   cout << "   -n [n], --show_news_feed [n]"                                        << endl;
+   cout << "                    Shows n most recent items from the current user's"  << endl;
+   cout << "                    news feed. [default to all in one page.]"           << endl;
+   cout << "   -s, --update_status"                                                 << endl;
+   cout << "                    Updates the current user's status"                  << endl;
+   cout << "   -v, --version    Displays version information"                       << endl;
+   cout                                                                             << endl;
 }
 
 /*
@@ -395,8 +395,8 @@ void ArgParse::ShowHelpText()
  */
 void ArgParse::ShowVersion()
 {
-  cout << "F.acebash v" << version                 << endl;
-  cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
+   cout << "F.acebash v" << version                 << endl;
+   cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
 }
 
 /*
@@ -408,68 +408,68 @@ void ArgParse::ShowVersion()
  */
 string ArgParse::getFriendID(string name)
 {
-  // Query Facebook for a list of all the user's friends.
-  stringstream ss;
-  string url = string("https://graph.facebook.com/me/friends");
-  bool request_success = NetUtils::makeRequest(ss, url);
-
-  if (!request_success)
-    {
+   // Query Facebook for a list of all the user's friends.
+   stringstream ss;
+   string url = string("https://graph.facebook.com/me/friends");
+   bool request_success = NetUtils::makeRequest(ss, url);
+   
+   if (!request_success)
+   {
       return "\0";
-    }
-
-  // Parse said list.
-  Json::Value root;
-  Json::Reader reader;
-
-  bool parsingSuccessful = reader.parse(ss.str(), root);
-
-  // Make sure no errors occurred.
-  if (!parsingSuccessful)
-    {
+   }
+   
+   // Parse said list.
+   Json::Value root;
+   Json::Reader reader;
+   
+   bool parsingSuccessful = reader.parse(ss.str(), root);
+   
+   // Make sure no errors occurred.
+   if (!parsingSuccessful)
+   {
       cerr << "Failed to parse the document." << endl;
       return "\0";
-    }
-
-  int error_code = NetUtils::showErrorMessage(root);
-  if (error_code)
-    {
+   }
+   
+   int error_code = NetUtils::showErrorMessage(root);
+   if (error_code)
+   {
       bool relogin_success = relogin();
       if (!relogin_success)
-	{
-	  return "\0";
-	}
-    }
-
-  vector<string> ids (0);
-
-  // Search throught the returned friend list for all names matching
-  // the name parameter.
-  const Json::Value data = root["data"];
-  for (unsigned int i = 0; i < data.size(); i ++)
-    {
+      {
+	 return "\0";
+      }
+   }
+   
+   vector<string> ids (0);
+   
+   // Search throught the returned friend list for all names matching
+   // the name parameter.
+   const Json::Value data = root["data"];
+   for (unsigned int i = 0; i < data.size(); i ++)
+   {
       if (data[i]["name"].asString().find(name.c_str()) <= (unsigned int) -1)
-	{
-	  ids.push_back(data[i]["id"].asString());
-	}
-    }
-
-  // If the number of matches is not exactly one display an error
-  // message and return \0. Otherwise return the ID of the one match.
-  if (ids.size() > 1)
-    {
+      {
+	 ids.push_back(data[i]["id"].asString());
+      }
+   }
+   
+   // If the number of matches is not exactly one display an error
+   // message and return \0. Otherwise return the ID of the one match.
+   if (ids.size() > 1)
+   {
       cerr << "You have more than one friend with that name: " << name << endl;
       return "\0";
-    }
-  else if (ids.size() == 0)
-    {
+   }
+   else if (ids.size() == 0)
+   {
       cerr << "You don't have any friends with that name: " << name << endl;
       return "\0";
-    }
-  else
-    {
+   }
+   else
+   {
       return ids[0];
-    }
+   }
 }
 
 /*
@@ -478,5 +478,5 @@ string ArgParse::getFriendID(string name)
  */
 bool ArgParse::relogin()
 {
-  return false;
+   return false;
 }

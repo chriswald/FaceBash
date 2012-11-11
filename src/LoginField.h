@@ -21,21 +21,21 @@ using std::string;
 
 class LoginField
 {
- public:
-  LoginField() {}
-  ~LoginField() {}
-
-  void readUser(std::string prompt = std::string("Username: "));
-  void readPass(std::string prompt = std::string("Password: "));
-
-  std::string user() {return username;}
-  std::string pass() {return password;}
-
- private:
-  std::string username;
-  std::string password;
-
-  void SetStdinEcho(bool);
+public:
+   LoginField() {}
+   ~LoginField() {}
+   
+   void readUser(std::string prompt = std::string("Username: "));
+   void readPass(std::string prompt = std::string("Password: "));
+   
+   std::string user() {return username;}
+   std::string pass() {return password;}
+   
+private:
+   std::string username;
+   std::string password;
+   
+   void SetStdinEcho(bool);
 };
 
 #endif //__LOGIN_FIELD_H

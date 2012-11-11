@@ -7,29 +7,29 @@
  */
 bool NetUtils::makeRequest(stringstream & ss, const string & url)
 {
-  string token = authToken();
-
-  if (strcmp(token.c_str(), "\0") == 0)
-    {
+   string token = authToken();
+   
+   if (strcmp(token.c_str(), "\0") == 0)
+   {
       cout << "Please Log in." << endl;
       return false;
-    }
-
-  cURLpp::Easy request;
-  cURLpp::options::Url URL(url + string("?access_token=") + token);
-  request.setOpt(URL);
-
-  try
-    {
+   }
+   
+   cURLpp::Easy request;
+   cURLpp::options::Url URL(url + string("?access_token=") + token);
+   request.setOpt(URL);
+   
+   try
+   {
       ss << request;
-    }
-  catch (curlpp::LibcurlRuntimeError & e)
-    {
+   }
+   catch (curlpp::LibcurlRuntimeError & e)
+   {
       cout << e.what() << endl;
       return false;
-    }
-
-  return true;
+   }
+   
+   return true;
 }
 
 /*
@@ -38,32 +38,34 @@ bool NetUtils::makeRequest(stringstream & ss, const string & url)
  * writes the return to ss. Returns true if the request was
  * successful, false otherwise.
  */
-bool NetUtils::makeRequest(stringstream & ss, const string & url, const cURLpp::Forms & formParts)
+bool NetUtils::makeRequest(stringstream & ss,
+			   const string & url,
+			   const cURLpp::Forms & formParts)
 {
-  string token = authToken();
-
-  if (strcmp(token.c_str(), "\0") == 0)
-    {
+   string token = authToken();
+   
+   if (strcmp(token.c_str(), "\0") == 0)
+   {
       cout << "Please Log in." << endl;
       return false;
-    }
-
-  cURLpp::Easy request;
-  cURLpp::options::Url URL(url + string("?access_token=") + token);
-  request.setOpt(URL);
-  request.setOpt(new cURLpp::Options::HttpPost(formParts));
-
-  try
-    {
+   }
+   
+   cURLpp::Easy request;
+   cURLpp::options::Url URL(url + string("?access_token=") + token);
+   request.setOpt(URL);
+   request.setOpt(new cURLpp::Options::HttpPost(formParts));
+   
+   try
+   {
       ss << request;
-    }
-  catch (curlpp::LibcurlRuntimeError & e)
-    {
+   }
+   catch (curlpp::LibcurlRuntimeError & e)
+   {
       cout << e.what() << endl;
       return false;
-    }
-
-  return true;
+   }
+   
+   return true;
 }
 
 /*
@@ -71,31 +73,33 @@ bool NetUtils::makeRequest(stringstream & ss, const string & url, const cURLpp::
  * Makes a request to the given url and writes the return to
  * ss. Returns true if the request was successful, false otherwise.
  */
-bool NetUtils::makeRequest(stringstream & ss, const string & url, const string & args)
+bool NetUtils::makeRequest(stringstream & ss,
+			   const string & url,
+			   const string & args)
 {
-  string token = authToken();
-
-  if (strcmp(token.c_str(), "\0") == 0)
-    {
+   string token = authToken();
+   
+   if (strcmp(token.c_str(), "\0") == 0)
+   {
       cout << "Please Log in." << endl;
       return false;
-    }
-
-  cURLpp::Easy request;
-  cURLpp::options::Url URL(url + string("?access_token=") + token + string("&") + args);
-  request.setOpt(URL);
-
-  try
-    {
+   }
+   
+   cURLpp::Easy request;
+   cURLpp::options::Url URL(url + string("?access_token=") + token + string("&") + args);
+   request.setOpt(URL);
+   
+   try
+   {
       ss << request;
-    }
-  catch (curlpp::LibcurlRuntimeError & e)
-    {
+   }
+   catch (curlpp::LibcurlRuntimeError & e)
+   {
       cout << e.what() << endl;
       return false;
-    }
-
-  return true;
+   }
+   
+   return true;
 }
 
 /*
@@ -105,14 +109,14 @@ bool NetUtils::makeRequest(stringstream & ss, const string & url, const string &
  */
 int NetUtils::showErrorMessage(const Json::Value & root)
 {
-  string error_message = root["error"]["message"].asString();
-  if (strcmp(error_message.c_str(), "\0") != 0)
-    {
+   string error_message = root["error"]["message"].asString();
+   if (strcmp(error_message.c_str(), "\0") != 0)
+   {
       cout << error_message << endl;
       return root["error"]["code"].asInt();
-    }
-
-  return 0;
+   }
+   
+   return 0;
 }
 
 
@@ -123,17 +127,17 @@ int NetUtils::showErrorMessage(const Json::Value & root)
  */
 string NetUtils::authToken()
 {
-  string token;
-  ifstream fin;
-  fin.open("member27");
-  if (fin.is_open())
-    {
+   string token;
+   ifstream fin;
+   fin.open("member27");
+   if (fin.is_open())
+   {
       fin >> token;
       fin.close();
       return token;
-    }
-  else
-    {
+   }
+   else
+   {
       return "\0";
-    }
+   }
 }

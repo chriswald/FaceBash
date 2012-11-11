@@ -7,8 +7,8 @@ int main(int, char**);
 
 int main(int argc, char* argv[])
 {
-  ArgParse parse = ArgParse(argc, argv);
-  parse.ParseArgs();
-
-  return 0;
+   ArgParse parse = ArgParse(argc, argv);
+   parse.ParseArgs();
+   
+   return 0;
 }

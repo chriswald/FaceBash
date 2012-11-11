@@ -7,9 +7,9 @@
  */
 string Utils::prompt(string message)
 {
-  char * tmp;
-  tmp = readline(message.c_str());
-  string ret (tmp);
-  free (tmp);
-  return ret;
+   char * tmp;
+   tmp = readline(message.c_str());
+   string ret (tmp);
+   delete[] tmp;
+   return ret;
 }

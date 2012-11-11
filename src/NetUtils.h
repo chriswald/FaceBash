@@ -20,14 +20,22 @@ using std::stringstream;
 
 class NetUtils
 {
- public:
-  static bool makeRequest(stringstream & ss, const string & url);
-  static bool makeRequest(stringstream & ss, const string & url, const cURLpp::Forms & formParts);
-  static bool makeRequest(stringstream & ss, const string & url, const string & args);
-  static int showErrorMessage(const Json::Value & root);
-  
- private:
-  static string authToken();
+public:
+   static bool makeRequest(stringstream & ss,
+			   const string & url);
+   
+   static bool makeRequest(stringstream & ss,
+			   const string & url,
+			   const cURLpp::Forms & formParts);
+   
+   static bool makeRequest(stringstream & ss,
+			   const string & url,
+			   const string & args);
+   
+   static int showErrorMessage(const Json::Value & root);
+   
+private:
+   static string authToken();
 };
 
 #endif // __NET_UTILS_H

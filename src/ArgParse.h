@@ -44,37 +44,37 @@ const string version = ".1";
 
 class ArgParse
 {
- public:
-  ArgParse (int argc, char **argv);
-  ~ArgParse();
-
-  void ParseArgs();
-  bool argHas(string arg);
-  int  argIndex(string arg);
-
-  void Comment();
-  void Login();
-  void Logout();
-  void UpdateStatus();
-  void ShowNewsFeed();
-  void AboutFriend();
-  void ShowUpcomingBirthdays();
-  void AboutMe();
-
-  void ShowHelpText();
-  void ShowVersion();
-
- private:
-  string prompt(string message);
-  string getFriendID(string name);
-  void   formatNewsStory(ostream & os, Json::Value story, int index);
-  bool   relogin();
-
-  int     count;
-  string *arguments;
-
-  const static unsigned short int LINE_WIDTH = 70;
-  const static unsigned short int ERROR_CODE_LENGTH = 3;
+public:
+   ArgParse (int argc, char **argv);
+   ~ArgParse();
+   
+   void ParseArgs();
+   bool argHas(string arg);
+   int  argIndex(string arg);
+   
+   void Comment();
+   void Login();
+   void Logout();
+   void UpdateStatus();
+   void ShowNewsFeed();
+   void AboutFriend();
+   void ShowUpcomingBirthdays();
+   void AboutMe();
+   
+   void ShowHelpText();
+   void ShowVersion();
+   
+private:
+   string prompt(string message);
+   string getFriendID(string name);
+   void   formatNewsStory(ostream & os, Json::Value story, int index);
+   bool   relogin();
+   
+   int     count;
+   string *arguments;
+   
+   const static unsigned short int LINE_WIDTH = 70;
+   const static unsigned short int ERROR_CODE_LENGTH = 3;
 };
 
 #endif // __ARG_PARSE_H

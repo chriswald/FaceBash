@@ -2,20 +2,20 @@
 
 Comment::Comment(Json::Value value)
 {
-  val = value;
+   val = value;
 }
 
 int Comment::getNumLikes() const
 {
-  return val["likes"].asInt();
+   return val["likes"].asInt();
 }
 
 string Comment::getPostedBy() const
 {
-  return val["from"]["name"].asString();
+   return val["from"]["name"].asString();
 }
 
 string Comment::getText() const
 {
-  return val["message"].asString();
+   return val["message"].asString();
 }
