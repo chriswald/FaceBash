@@ -117,7 +117,7 @@ void ArgParse::Comment()
       if (argHas("--who"))
       {
 	 who_index = argIndex("--who");
-	 if (who_index < count - 1)
+	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
 	 {
 	    friend_ID = getFriendID(arguments[who_index + 1]);
 	    if (friend_ID == "\0")
@@ -131,15 +131,9 @@ void ArgParse::Comment()
 	 num_index = argIndex("--num");
 	 if (num_index < count - 1)
 	 {
-	    index = atoi(arguments[num_index].c_str());
+	    index = atoi(arguments[num_index + 1].c_str());
 	 }
       }
-   }
-   else
-   {
-      // I'm going to assume that some arguments need to be passed for
-      // this function to make any sense at all.
-      return;
    }
 
    journal.getNewsStories(friend_ID);
@@ -276,7 +270,7 @@ void ArgParse::UpdateStatus()
       if (argHas("--who"))
       {
 	 who_index = argIndex("--who");
-	 if (who_index < count - 1)
+	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
 	 {
 	    friend_ID = getFriendID(arguments[who_index + 1]);
 	    if (friend_ID == "\0")
@@ -329,7 +323,7 @@ void ArgParse::UpdateStatus()
  */
 void ArgParse::ShowNewsFeed()
 {
-   string friend_ID = "\0";
+   string friend_ID = "me";
    int how_many = 0;
    
    if (count > 1)
@@ -338,7 +332,7 @@ void ArgParse::ShowNewsFeed()
       if (argHas("--who"))
       {
 	 who_index = argIndex("--who");
-	 if (who_index < count - 1)
+	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
 	 {
 	    friend_ID = getFriendID(arguments[who_index + 1]);
 	    if (friend_ID == "\0")
@@ -357,11 +351,7 @@ void ArgParse::ShowNewsFeed()
       }
    }
    
-   Journal journal;
-   if (friend_ID == "\0")
-      journal = Journal(true, "me");
-   else
-      journal = Journal(true, friend_ID);
+   Journal journal (true, friend_ID);
    
    if (how_many < 1)
    {
