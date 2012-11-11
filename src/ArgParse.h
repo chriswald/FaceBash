@@ -2,13 +2,13 @@
 #define __ARG_PARSE_H
 
 #include <cstdio>
-#include <cstring>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>

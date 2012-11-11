@@ -92,7 +92,7 @@ int ArgParse::argIndex(string arg)
 {
    for (int i = 0; i < count; i ++)
    {
-      if (strcmp(arguments[i].c_str(), arg.c_str()) == 0)
+      if (arguments[i] == arg)
       {
 	 return i;
       }
@@ -194,13 +194,13 @@ void ArgParse::Login()
 	  *     when asked to grant permission).
 	  *  3) The user is not connected to the internet.
 	  */
-	 if      (strcmp(content.c_str(), "001") == 0)
+	 if      (content == "001")
 	    cout << "Invalid Email or Password." << endl;
 	 
-	 else if (strcmp(content.c_str(), "002") == 0)
+	 else if (content == "002")
 	    cout << "User denied permission to F.aceBash." << endl;
 	 
-	 else if (strcmp(content.c_str(), "003") == 0)
+	 else if (content == "003")
 	    cout << "Not connected to the Internet." << endl;
 	 
 	 else // Something went wrong (maybe on Facebook's end)
@@ -241,7 +241,7 @@ void ArgParse::UpdateStatus()
    if (count > 1)
    {
       who = getFriendID(arguments[1]);
-      if (strcmp(who.c_str(), "\0") == 0)
+      if (who == "\0")
       {
 	 // Found more or less than one friend with that name?
 	 // Just return.
@@ -305,7 +305,7 @@ void ArgParse::ShowNewsFeed()
 	 if (who_index < count - 1)
 	 {
 	    friend_ID = getFriendID(arguments[who_index + 1]);
-	    if (strcmp(friend_ID.c_str(), "\0") == 0)
+	    if (friend_ID == "\0")
 	       return;
 	 }
       }
@@ -322,7 +322,7 @@ void ArgParse::ShowNewsFeed()
    }
    
    Journal journal;
-   if (strcmp(friend_ID.c_str(), "\0") == 0)
+   if (friend_ID == "\0")
       journal = Journal(true, "me");
    else
       journal = Journal(true, friend_ID);

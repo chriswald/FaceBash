@@ -25,15 +25,15 @@ public:
    LoginField() {}
    ~LoginField() {}
    
-   void readUser(std::string prompt = std::string("Username: "));
-   void readPass(std::string prompt = std::string("Password: "));
+   void readUser(string prompt = string("Username: "));
+   void readPass(string prompt = string("Password: "));
    
-   std::string user() {return username;}
-   std::string pass() {return password;}
+   string user() {return username;}
+   string pass() {return password;}
    
 private:
-   std::string username;
-   std::string password;
+   string username;
+   string password;
    
    void SetStdinEcho(bool);
 };

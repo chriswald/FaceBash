@@ -1,9 +1,8 @@
 #ifndef __UTILS_H
 #define __UTILS_H
 
-//#include <cstdlib>
-#include <cstring>
 #include <iostream>
+#include <string>
 
 #include <readline/readline.h>
 

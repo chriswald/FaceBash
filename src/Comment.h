@@ -1,7 +1,7 @@
 #ifndef __COMMENT_H
 #define __COMMENT_H
 
-#include <cstring>
+#include <string>
 
 #include <json/json.h>
 

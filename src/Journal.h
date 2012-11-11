@@ -2,12 +2,14 @@
 #define __JOURNAL_H
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "NetUtils.h"
 #include "NewsStory.h"
 
 using std::ostream;
+using std::string;
 using std::vector;
 
 class Journal

@@ -9,7 +9,7 @@ bool NetUtils::makeRequest(stringstream & ss, const string & url)
 {
    string token = authToken();
    
-   if (strcmp(token.c_str(), "\0") == 0)
+   if (token == "\0")
    {
       cout << "Please Log in." << endl;
       return false;
@@ -44,7 +44,7 @@ bool NetUtils::makeRequest(stringstream & ss,
 {
    string token = authToken();
    
-   if (strcmp(token.c_str(), "\0") == 0)
+   if (token == "\0")
    {
       cout << "Please Log in." << endl;
       return false;
@@ -79,7 +79,7 @@ bool NetUtils::makeRequest(stringstream & ss,
 {
    string token = authToken();
    
-   if (strcmp(token.c_str(), "\0") == 0)
+   if (token == "\0")
    {
       cout << "Please Log in." << endl;
       return false;
@@ -110,7 +110,7 @@ bool NetUtils::makeRequest(stringstream & ss,
 int NetUtils::showErrorMessage(const Json::Value & root)
 {
    string error_message = root["error"]["message"].asString();
-   if (strcmp(error_message.c_str(), "\0") != 0)
+   if (error_message != "\0")
    {
       cout << error_message << endl;
       return root["error"]["code"].asInt();

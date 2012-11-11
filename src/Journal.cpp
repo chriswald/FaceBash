@@ -33,7 +33,7 @@ bool Journal::getNewsStories(string who)
    // Get the JSON from Facebook
    stringstream ss;
    string url = string("https://graph.facebook.com/") + who;
-   if (strcmp(who.c_str(), "me") == 0)
+   if (who == "me")
       url += string("/home");
    else
       url += string("/feed");
@@ -71,7 +71,7 @@ bool Journal::getNewsStories(string who)
       string content_type = posts[i]["type"].asString();
       
       // Make sure the post is a status and isn't empty
-      if (strcmp(content_type.c_str(), "status") == 0 &&
+      if (content_type == "status" &&
 	  posts[i]["message"].asString().length() > 0)
       {
 	 news_stories.push_back(NewsStory(posts[i], ++how_many));

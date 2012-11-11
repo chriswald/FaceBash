@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <cstring>
+#include <string>
 
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Options.hpp>
