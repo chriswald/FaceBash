@@ -64,6 +64,13 @@ void NewsStory::CommentOnStory(const string & message)
    NetUtils::showErrorMessage(root);
 }
 
+void NewsStory::LikeStory()
+{
+   stringstream ss;
+   string url = string("https://graph.facebook.com/") + ID + string("/likes");
+   bool request_success = NetUtils::postRequest(ss, url);
+}
+
 /*
  * Format News Story:
  * Formats a news story by printing a nice border, the poster, and the

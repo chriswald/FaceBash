@@ -31,6 +31,9 @@ public:
    static bool makeRequest(stringstream & ss,
 			   const string & url,
 			   const string & args);
+
+   static bool postRequest(stringstream & ss,
+			   const string & url);
    
    static int showErrorMessage(const Json::Value & root);
    

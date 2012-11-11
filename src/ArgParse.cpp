@@ -55,6 +55,9 @@ void ArgParse::ParseArgs()
    // The user want to log out of F.aceBash / Facebook.
    else if (                argHas("--logout"))
       Logout();
+
+   else if (argHas("-k") || argHas("--like"))
+      Like();
    
    // Show the user's news feed.
    else if (argHas("-n") || argHas("--show_news_feed"))
@@ -280,6 +283,79 @@ void ArgParse::Login()
 void ArgParse::Logout()
 {
    remove("member27");
+}
+
+void ArgParse::Like()
+{
+   // Get a new journal, but don't populate it.
+   Journal journal(false);
+
+   // Set some default values.
+   int index = 1;
+   string friend_ID = "me";
+
+   // See if there are additional arguments.
+   if (count > 1)
+   {
+      // Try and retrieve a friend's name to like a post on their wall
+      // instead of the user's news feed. Defaults to the user's news
+      // feed.
+      int who_index = 0;
+      if (argHas("--who"))
+      {
+	 who_index = argIndex("--who");
+	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
+	 {
+	    friend_ID = getFriendID(arguments[who_index + 1]);
+	    if (friend_ID == "\0")
+	       return;
+	 }
+      }
+
+      // Try and retrieve an index number correlating to which post to
+      // like. Defaults to the most recent.
+      int num_index = 0;
+      if (argHas("--num"))
+      {
+	 num_index = argIndex("--num");
+	 if (num_index < count - 1)
+	 {
+	    index = atoi(arguments[num_index + 1].c_str());
+	 }
+      }
+   }
+
+   // Populate the journal using either the found ID or the default
+   // ("me").
+   journal.getNewsStories(friend_ID);
+   
+   // Now that I know how many stories are in the journal, bounds
+   // check the index number to make sure that the story exists.
+   if (index > journal.length())
+   {
+      cerr << "Index out of bounds." << endl;
+      cerr << "Maximum value: " << journal.length() << endl;
+      return;
+   }
+   else if (index < 1)
+   {
+      cerr << "Index out of bounds." << endl;
+      cerr << "Minimum value: 1" << endl;
+      return;
+   }
+
+   NewsStory story = journal[index - 1];
+   cout << story;
+
+   string reply = Utils::prompt("Like? (y/n): ");
+   if (reply == "y" ||
+       reply == "Y" ||
+       reply == "yes" ||
+       reply == "Yes" ||
+       reply == "YES")
+   {
+      story.LikeStory();
+   }
 }
 
 /*

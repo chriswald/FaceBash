@@ -55,6 +55,7 @@ public:
    void Comment();
    void Login();
    void Logout();
+   void Like();
    void UpdateStatus();
    void ShowNewsFeed();
    void AboutFriend();

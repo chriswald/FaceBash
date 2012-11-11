@@ -28,6 +28,7 @@ public:
    string getID() const;
    
    void CommentOnStory(const string & message);
+   void LikeStory();
 
 private:
    void formatNewsStory(stringstream & ss) const;

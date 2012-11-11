@@ -102,6 +102,37 @@ bool NetUtils::makeRequest(stringstream & ss,
    return true;
 }
 
+bool NetUtils::postRequest(stringstream & ss,
+			   const string & url)
+{
+   string token = authToken();
+   
+   if (token == "\0")
+   {
+      cout << "Please Log in." << endl;
+      return false;
+   }
+
+   cURLpp::Easy request;
+   cURLpp::options::Url URL(url);
+   cURLpp::Forms form;
+   form.push_back(new cURLpp::FormParts::Content("access_token", token));
+   request.setOpt(URL);
+   request.setOpt(new cURLpp::Options::HttpPost(form));
+   
+   try
+   {
+      ss << request;
+   }
+   catch (curlpp::LibcurlRuntimeError & e)
+   {
+      cout << e.what() << endl;
+      return false;
+   }
+   
+   return true;
+}
+
 /*
  * Show Error Message:
  * If the Json document contains an error message display it and
