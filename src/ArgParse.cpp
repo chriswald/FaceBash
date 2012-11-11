@@ -88,31 +88,40 @@ bool ArgParse::argHas(string arg)
       return true;
 }
 
+/*
+ * Get Argument Index:
+ * Return the index of the requested argument, -1 if not found.
+ */
 int ArgParse::argIndex(string arg)
 {
    for (int i = 0; i < count; i ++)
-   {
       if (arguments[i] == arg)
-      {
 	 return i;
-      }
-   }
    return -1;
 }
 
 /*
  * Comment on Status:
- *
+ * Comment on a news story. User can specify the index of a comment as
+ * well as the user whose wall the story resides on. The index
+ * defaults to 1, or the most recent story. The wall defaults to the
+ * user's personal news feed.
  */
 void ArgParse::Comment()
 {
+   // Get a new journal, but don't populate it.
    Journal journal(false);
-   
+
+   // Set some default values.
    int index = 1;
    string friend_ID = "me";
 
+   // See if there are additional arguments
    if (count > 1)
    {
+      // Try and retrieve a friend's name to comment on a post on
+      // their wall instead of the user's news feed. Defaults to the
+      // user's news feed.
       int who_index = 0;
       if (argHas("--who"))
       {
@@ -125,6 +134,8 @@ void ArgParse::Comment()
 	 }
       }
 
+      // Try and retrieve an index number correlating to which post to
+      // comment on. Defaults to the most recent.
       int num_index = 0;
       if (argHas("--num"))
       {
@@ -136,8 +147,12 @@ void ArgParse::Comment()
       }
    }
 
+   // Populate the journal using either the found ID or the default
+   // ("me").
    journal.getNewsStories(friend_ID);
    
+   // Bounds check the index number to make sure that the story
+   // exists.
    if (index > journal.length())
    {
       cout << "Index out of bounds." << endl;
@@ -151,13 +166,13 @@ void ArgParse::Comment()
       return;
    }
 
-   journal.getNewsStories(friend_ID);
-   
-   NewsStory story = journal[index-1];
+   // Display the requested news story and prompt the user to enter a
+   // comment.
+   NewsStory story = journal[index - 1];
    cout << story;
-   
    string message = Utils::prompt("Comment: ");
    
+   // Send that comment to Facebook.
    story.CommentOnStory(message);
 }
 
