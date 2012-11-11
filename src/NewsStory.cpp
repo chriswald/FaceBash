@@ -68,7 +68,7 @@ void NewsStory::LikeStory()
 {
    stringstream ss;
    string url = string("https://graph.facebook.com/") + ID + string("/likes");
-   bool request_success = NetUtils::postRequest(ss, url);
+   NetUtils::postRequest(ss, url);
 }
 
 /*
