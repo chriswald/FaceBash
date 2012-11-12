@@ -520,13 +520,13 @@ void ArgParse::ShowHelpText()
    cout << "Usage: bin/Facebash [options]"                                          << endl;
    cout                                                                             << endl;
    cout << "Options:"                                                               << endl;
-   cout << "   -c [n],  --comment [n]"                                              << endl;
-   cout << "                    Adds comment to the nth most recent post."          << endl;
+   cout << "   -c,  --comment   Adds comment to the nth most recent post."          << endl;
    cout << "                    [default most recent]"                              << endl;
    cout << "   -h, --help       Shows this message"                                 << endl;
    cout << "   -l, --login      Logs a user into Facebook"                          << endl;
    cout << "       --logout     Logs the user out of Facebook"                      << endl;
-   cout << "   -n [n], --show_news_feed [n]"                                        << endl;
+   cout << "   -k, --like       Likes a specific news story."                       << endl;
+   cout << "   -n, --show_news_feed"                                                << endl;
    cout << "                    Shows n most recent items from the current user's"  << endl;
    cout << "                    news feed. [default to all in one page.]"           << endl;
    cout << "   -s, --update_status"                                                 << endl;
@@ -541,7 +541,7 @@ void ArgParse::ShowHelpText()
  */
 void ArgParse::ShowVersion()
 {
-   cout << "F.acebash v" << version                 << endl;
+   cout << "F.aceBash v" << version                 << endl;
    cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
 }
 
