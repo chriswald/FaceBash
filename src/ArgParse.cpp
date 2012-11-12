@@ -309,6 +309,7 @@ void ArgParse::Like()
    // Set some default values.
    int index = 1;
    string friend_ID = "me";
+   bool force_yes = false;
 
    // See if there are additional arguments.
    if (count > 1)
@@ -339,6 +340,9 @@ void ArgParse::Like()
 	    index = atoi(arguments[num_index + 1].c_str());
 	 }
       }
+
+      if (argHas("--force-yes"))
+	 force_yes = true;
    }
 
    // Populate the journal using either the found ID or the default
@@ -361,14 +365,22 @@ void ArgParse::Like()
    }
 
    NewsStory story = journal[index - 1];
-   cout << story;
+   
+   if (!force_yes)
+   {
+      cout << story;
 
-   string reply = Utils::prompt("Like? (y/n): ");
-   if (reply == "y" ||
-       reply == "Y" ||
-       reply == "yes" ||
-       reply == "Yes" ||
-       reply == "YES")
+      string reply = Utils::prompt("Like? (y/n): ");
+      if (reply == "y" ||
+	  reply == "Y" ||
+	  reply == "yes" ||
+	  reply == "Yes" ||
+	  reply == "YES")
+      {
+	 story.LikeStory();
+      }
+   }
+   else
    {
       story.LikeStory();
    }
