@@ -504,6 +504,9 @@ void ArgParse::ShowNewsFeed()
    if (how_many == -1)
       how_many = journal.length();
    
+   if (how_many == 0)
+      return;
+
    // Now that I know how many stories are in the journal, bounds
    // check the how_many number to make sure that all the stories
    // exist.
