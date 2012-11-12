@@ -118,6 +118,8 @@ void ArgParse::Comment()
    // Set some default values.
    int index = 1;
    string friend_ID = "me";
+   bool has_message_value = false;
+   string message;
 
    // See if there are additional arguments.
    if (count > 1)
@@ -148,6 +150,17 @@ void ArgParse::Comment()
 	    index = atoi(arguments[num_index + 1].c_str());
 	 }
       }
+
+      int val_index = 0;
+      if (argHas("--val"))
+      {
+	 val_index = argIndex("--val");
+	 if (val_index < count - 1)
+	 {
+	    message = arguments[val_index + 1];
+	    has_message_value = true;
+	 }
+      }
    }
 
    // Populate the journal using either the found ID or the default
@@ -172,9 +185,12 @@ void ArgParse::Comment()
    // Display the requested news story and prompt the user to enter a
    // comment.
    NewsStory story = journal[index - 1];
-   cout << story;
-   string message = Utils::prompt("Comment: ");
-   
+   if (!has_message_value)
+   {
+      cout << story;
+      string message = Utils::prompt("Comment: ");
+   }
+
    // Send that comment to Facebook.
    story.CommentOnStory(message);
 }
@@ -370,6 +386,9 @@ void ArgParse::UpdateStatus()
    // Try to find a friend whose name matches what is being searched
    // for.
    string friend_ID = "me";
+   string message;
+   bool has_message_value = false;
+
    if (count > 1)
    {
       int who_index = 0;
@@ -383,12 +402,24 @@ void ArgParse::UpdateStatus()
 	       return;
 	 }
       }
+
+      int val_index = 0;
+      if (argHas("--val"))
+      {
+	 val_index = argIndex("--val");
+	 if (val_index < count - 1)
+	 {
+	    message = arguments[val_index + 1];
+	    has_message_value = true;
+	 }
+      }
    }
    
    stringstream ss;
    
    // Prompt the user for the status they want to post.
-   string message = Utils::prompt(string("Status: "));
+   if (!has_message_value)
+      string message = Utils::prompt(string("Status: "));
    
    // Make request to post that status to the specified feed.
    string url = string("https://graph.facebook.com/"+friend_ID+"/feed");
