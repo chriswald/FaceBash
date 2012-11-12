@@ -35,6 +35,11 @@ string NewsStory::getID() const
    return ID;
 }
 
+int NewsStory::numComments()
+{
+   return num_comments;
+}
+
 /*
  * Comment on Story:
  * Adds the message to the news story as a comment by passing it to Facebook.
@@ -71,6 +76,11 @@ void NewsStory::LikeStory()
    NetUtils::postRequest(ss, url);
 }
 
+void NewsStory::LikeComment(int index)
+{
+   comments[index-1].Like();
+}
+
 /*
  * Format News Story:
  * Formats a news story by printing a nice border, the poster, and the
@@ -90,11 +100,11 @@ void NewsStory::formatNewsStory(stringstream & ss) const
       vector<string> lines = setLineWidth(message, LINE_WIDTH);
       
       // Write each individual portion of the story.
-      writeSeperatorLine(ss);
-      writeNameLine(ss, posted_by);
-      writeSeperatorLine(ss);
-      writeMessageLines(ss, lines);
-      writeSeperatorLine(ss);
+      writePostSeperatorLine(ss);
+      writePostNameLine(ss, posted_by);
+      writePostSeperatorLine(ss);
+      writePostMessageLines(ss, lines);
+      writePostSeperatorLine(ss);
 
       for (int i = 0; i < num_comments; i ++)
       {
@@ -102,8 +112,8 @@ void NewsStory::formatNewsStory(stringstream & ss) const
 	 if (c.getText().length() > 0)
 	 {
 	    vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - 5);
-	    writeCommentPostedBy(ss, c);
-	    writeCommentLines(ss, l);
+	    writeCommentNameLine(ss, c);
+	    writeCommentMessageLines(ss, l);
 	    writeCommentSeperatorLine(ss);
 	 }
       }
@@ -161,13 +171,84 @@ vector<string> NewsStory::setLineWidth(string message, int width) const
  * Writes each line from lines to os with leading characters and
  * trailing characters with enough spaces to evenly align everything.
  */
-void NewsStory::writeMessageLines(stringstream & ss, const vector<string> lines) const
+void NewsStory::writePostMessageLines(stringstream & ss, const vector<string> lines) const
+{
+   writeMessageLines(ss, lines, "|  ");
+}
+
+/*
+ * Write Name Line:
+ * Writes the name (left aligned) and index (right aligned) to os. The
+ * two values are written with a fixed width of LINE_WIDTH. Leading
+ * and trailing characters are also printed.
+ */
+void NewsStory::writePostNameLine(stringstream & ss, const string & name) const
+{
+   stringstream s;
+   s << index;
+   writeNameLine(ss, name, "| ", num_likes, s.str());
+}
+  
+/*
+ * Write Seperator Line:
+ * Writes a line of width LINE_WIDTH used as a filler / seperator
+ * between elements.
+ */
+void NewsStory::writePostSeperatorLine(stringstream & ss) const
+{
+   writeSeperatorLine(ss, "|");
+}
+
+void NewsStory::writeCommentNameLine(stringstream & ss, const Comment & c) const
+{
+   stringstream s;
+   s << index << "." << c.getIndex();
+   writeNameLine(ss, c.getPostedBy(), "     | ", c.getNumLikes(), s.str());
+}
+
+void NewsStory::writeCommentMessageLines(stringstream & ss, vector<string> lines) const
+{
+   writeMessageLines(ss, lines, "     |   ");
+}
+
+void NewsStory::writeCommentSeperatorLine(stringstream & ss) const
+{
+   writeSeperatorLine(ss, "     |");
+}
+
+void NewsStory::writeNameLine(stringstream & ss, const string & name, const string & prefix, int likes, const string & index) const
+{
+   stringstream tmp;
+   stringstream sindex;
+   sindex << index << " |";
+   tmp << prefix << name;
+   
+   if (likes > 0)
+   {
+      if (likes == 1)
+	 tmp << "   <1 Like>";
+      else
+	 tmp << "   <" << likes << " Likes>";
+   }
+   
+   unsigned int width = (LINE_WIDTH + 5) - (sindex.str().length());
+
+   for (unsigned int i = tmp.str().length(); i <= width; i ++)
+   {
+      tmp << " ";
+   }
+   
+   tmp << sindex.str() << endl;
+   ss << tmp.str();
+}
+
+void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & lines, const string & prefix) const
 {
    stringstream tmp;
    for (unsigned int i = 0; i < lines.size(); i ++)
    {
       stringstream stmp;
-      stmp << "|  " << lines[i];
+      stmp << prefix << lines[i];
       int len = stmp.str().length();
       for (unsigned int j = len; j < LINE_WIDTH+5; j ++)
 	 stmp << " ";
@@ -177,93 +258,10 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> lines)
    ss << tmp.str();
 }
 
-/*
- * Write Name Line:
- * Writes the name (left aligned) and index (right aligned) to os. The
- * two values are written with a fixed width of LINE_WIDTH. Leading
- * and trailing characters are also printed.
- */
-void NewsStory::writeNameLine(stringstream & ss, const string & name) const
+void NewsStory::writeSeperatorLine(stringstream & ss, const string & prefix) const
 {
    stringstream tmp;
-   stringstream sindex;
-   sindex << index << " ";
-   tmp << "| " << name.c_str();
-   
-   if (num_likes > 0)
-   {
-      if (num_likes == 1)
-	 tmp << "   <1 Like>";
-      else
-	 tmp << "   <" << num_likes << " Likes>";
-   }
-   
-   int name_len = tmp.str().length();
-   int indx_len = sindex.str().length();
-   
-   for (unsigned int i = name_len; i < LINE_WIDTH+5 - indx_len; i ++)
-      tmp << " ";
-   tmp << sindex.str() << "|" << endl;
-   
-   ss << tmp.str();
-}
-  
-/*
- * Write Seperator Line:
- * Writes a line of width LINE_WIDTH used as a filler / seperator
- * between elements.
- */
-void NewsStory::writeSeperatorLine(stringstream & ss) const
-{
-   stringstream tmp;
-   
-   tmp << "|";
-   for (unsigned int i = 1; i < LINE_WIDTH+5; i ++)
-      tmp << "-";
-   tmp << "|" << endl;
-   
-   ss << tmp.str();
-}
-
-void NewsStory::writeCommentPostedBy(stringstream & ss, const Comment & c) const
-{
-   stringstream tmp;
-   tmp << "     | " << c.getPostedBy();
-   
-   if (c.getNumLikes() > 0)
-   {
-      if (c.getNumLikes() == 1)
-	 tmp << "   <1 Like>";
-      else
-	 tmp << "   <" << c.getNumLikes() << " Likes>";
-   }
-   
-   for (unsigned int i = tmp.str().length(); i < LINE_WIDTH + 5; i ++)
-   {
-      tmp << " ";
-   }
-   
-   tmp << "|" << endl;
-   ss << tmp.str();
-}
-
-void NewsStory::writeCommentLines(stringstream & ss, vector<string> lines) const
-{
-   for (unsigned int i = 0; i < lines.size(); i ++)
-   {
-      stringstream tmp;
-      tmp << "     |   " << lines[i];
-      for (unsigned int j = tmp.str().length(); j < LINE_WIDTH + 5; j ++)
-	 tmp << " ";
-      tmp << "|" << endl;
-      ss << tmp.str();
-   }
-}
-
-void NewsStory::writeCommentSeperatorLine(stringstream & ss) const
-{
-   stringstream tmp;
-   tmp << "     |";
+   tmp << prefix;
    for (unsigned int i = tmp.str().length(); i < LINE_WIDTH + 5; i ++)
       tmp << "-";
    tmp << "|" << endl;
@@ -280,6 +278,6 @@ void NewsStory::get_comments()
    num_comments = story["comments"]["count"].asInt();
    for (int i = 0; i < num_comments; i ++)
    {
-      comments.push_back(Comment(story["comments"]["data"][i]));
+      comments.push_back(Comment(story["comments"]["data"][i], i+1));
    }
 }

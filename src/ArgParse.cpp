@@ -308,6 +308,7 @@ void ArgParse::Like()
 
    // Set some default values.
    int index = 1;
+   int sub_index = 0;
    string friend_ID = "me";
    bool force_yes = false;
 
@@ -337,7 +338,25 @@ void ArgParse::Like()
 	 num_index = argIndex("--num");
 	 if (num_index < count - 1)
 	 {
-	    index = atoi(arguments[num_index + 1].c_str());
+	    string tmp = arguments[num_index + 1];
+	    size_t period_index = tmp.find(".");
+	    if (period_index == string::npos)
+	    {
+	       index = atoi(tmp.substr(0, period_index).c_str());
+	    }
+	    else
+	    {
+	       if (period_index == 0)
+	       {
+		  string s = tmp.substr(1);
+		  sub_index = atoi(s.c_str());
+	       }
+	       else
+	       {
+		  index = atoi(tmp.substr(0, period_index).c_str());
+		  sub_index = atoi(tmp.substr(period_index+1).c_str());
+	       }
+	    }
 	 }
       }
 
@@ -365,6 +384,20 @@ void ArgParse::Like()
    }
 
    NewsStory story = journal[index - 1];
+   int max_comment_index = story.numComments();
+
+   if (sub_index > max_comment_index)
+   {
+      cerr << "Index out of bounds." << endl;
+      cerr << "Number of comments on this post: " << max_comment_index << endl;
+      return;
+   }
+   else if (sub_index < 0)
+   {
+      cerr << "Index out of bounds." << endl;
+      cerr << "Minimum value: 1 (or no value)" << endl;
+      return;
+   }
    
    if (!force_yes)
    {
@@ -377,12 +410,18 @@ void ArgParse::Like()
 	  reply == "Yes" ||
 	  reply == "YES")
       {
-	 story.LikeStory();
+	 if (sub_index == 0)
+	    story.LikeStory();
+	 else
+	    story.LikeComment(sub_index);
       }
    }
    else
    {
-      story.LikeStory();
+      if (sub_index == 0)
+	 story.LikeStory();
+      else
+	 story.LikeComment(sub_index);
    }
 }
 
@@ -471,6 +510,8 @@ void ArgParse::UpdateStatus()
 void ArgParse::ShowNewsFeed()
 {
    Journal journal (false);
+
+   bool show_size_message = false;
    
    // Set some default values.
    string friend_ID = "me";
@@ -524,9 +565,8 @@ void ArgParse::ShowNewsFeed()
    // exist.
    if (how_many > journal.length())
    {
-      cerr << "Index out of bounds." << endl;
-      cerr << "Maximum value: " << journal.length() << endl;
-      return;
+      show_size_message = true;
+      how_many = journal.length();
    }
    else if (how_many < 1)
    {
@@ -538,6 +578,9 @@ void ArgParse::ShowNewsFeed()
    // Display the requested number of news stories.
    for (int i = how_many-1; i >= 0; i --)
       cout << journal[i];
+
+   if (show_size_message)
+      cout << "Output truncated to " << journal.length() << endl;
 }
 
 void ArgParse::AboutFriend()

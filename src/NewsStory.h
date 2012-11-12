@@ -29,17 +29,32 @@ public:
    
    void CommentOnStory(const string & message);
    void LikeStory();
+   void LikeComment(int index);
+
+   int numComments();
 
 private:
    void formatNewsStory(stringstream & ss) const;
    vector<string> setLineWidth(string message, int width) const;
-   void writeSeperatorLine(stringstream & ss) const;
-   void writeNameLine(stringstream & ss, const string & name) const;
-   void writeMessageLines(stringstream & ss, const vector<string> lines) const;
-   void writeCommentPostedBy(stringstream & ss, const Comment & c) const;
-   void writeCommentLines(stringstream & ss, vector<string> lines) const;
+   void writePostNameLine(stringstream & ss, const string & name) const;
+   void writePostMessageLines(stringstream & ss, const vector<string> lines) const;
+   void writePostSeperatorLine(stringstream & ss) const;
+   void writeCommentNameLine(stringstream & ss, const Comment & c) const;
+   void writeCommentMessageLines(stringstream & ss, vector<string> lines) const;
    void writeCommentSeperatorLine(stringstream & ss) const;
+
+   void writeNameLine(stringstream & ss,
+		      const string & name,
+		      const string & prefix,
+		      int likes,
+		      const string & index) const;
    
+   void writeMessageLines(stringstream & ss,
+			  const vector<string> & lines,
+			  const string & prefix) const;
+   void writeSeperatorLine(stringstream & ss,
+			   const string & prefix) const;
+
    void get_num_likes();
    void get_comments();
    
