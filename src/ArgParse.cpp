@@ -683,9 +683,11 @@ string ArgParse::getFriendID(string name)
    const Json::Value data = root["data"];
    for (unsigned int i = 0; i < data.size(); i ++)
    {
-      if (data[i]["name"].asString().find(name.c_str()) < string::npos)
+      string curName = data[i]["name"].asString();
+      string curID   = data[i]["id"].asString();
+      if (curName.find(name.c_str()) < string::npos)
       {
-	 ids.push_back(data[i]["id"].asString());
+	 ids.push_back(curID);
       }
    }
    
