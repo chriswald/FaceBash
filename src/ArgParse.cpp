@@ -195,112 +195,6 @@ void ArgParse::Comment()
    story.CommentOnStory(message);
 }
 
-/*
- * Log In:
- * Handles all responsibilities associated with retrieving a valid
- * authentification token. The user is prompted for their email and
- * password, then the process is forked in order to call a python
- * script which handles the logging in. The parent process waits for
- * the script to exit, then runs a check to see if the
- * authentification token exists, informing the user whether the login
- * completed successfully or not based on the results of that check.
- */
-void ArgParse::Login()
-{
-   // Read login information from the user.
-   LoginField login = LoginField();
-   login.readUser("Email: ");
-   login.readPass();
-   
-   int status;
-   pid_t pid = fork();
-   
-   // Fork failed for some reason
-   if (pid < 0)
-   {
-      perror("Fork error");
-   }
-   // Child process
-   else if (pid == 0)
-   {
-      // Execute the login script by passing a username and password.
-      execl("/usr/bin/python2.7",
-	    "/usr/bin/python2.7",
-	    "scripts/login.py",
-	    login.user().c_str(),
-	    login.pass().c_str(),
-	    (char *) 0);
-   }
-   // Parent process
-   else
-   {
-      // Wait until the child process has finished execution.
-      if ((pid = wait(&status)) == -1)
-	 perror("wait error");
-   }
-   
-   // Checks to see whether the login was successful by open the
-   // member27 file and checking its contents. If something that looks
-   // like an authentification token is found that's good. Otherwise
-   // display a message relating to the error that was found.
-   std::ifstream member27;
-   member27.open("member27");
-   if (member27.is_open())
-   {
-      string content;
-      member27 >> content;
-      
-      // If the contents of member27 are longer than the maximum error
-      // code length then I must have an auth token.
-      if (content.length() > ERROR_CODE_LENGTH)
-      {
-	 cout << "Logged In." << endl;
-      }
-      else
-      {
-	 /*
-	  * Error Conditions:
-	  *  1) The user entered an invalid username (email address)
-	  *     or password when logging in.
-	  *  2) The user did not grant permission to F.aceBash to
-	  *     access their account (eg selected no instead of yes
-	  *     when asked to grant permission).
-	  *  3) The user is not connected to the internet.
-	  */
-	 if      (content == "001")
-	    cerr << "Invalid Email or Password." << endl;
-	 
-	 else if (content == "002")
-	    cerr << "User denied permission to F.aceBash." << endl;
-	 
-	 else if (content == "003")
-	    cerr << "Not connected to the Internet." << endl;
-	 
-	 else // Something went wrong (maybe on Facebook's end)
-	    cerr << "An unknown error occured." << endl;
-	 
-      }
-   }
-   // The file could not be opened. Something went wrong on this end
-   else
-   {
-      cerr << "Unable to login. Make sure you have proper "
-	   << "local permissions." << endl;
-   }
-   
-   // Make sure to close the file handle when I'm done.
-   member27.close();
-}
-
-/*
- * Log Out:
- * Really just deletes the file containing the authentication token.
- */
-void ArgParse::Logout()
-{
-   remove("member27");
-}
-
 void ArgParse::Like()
 {
    // Get a new journal, but don't populate it.
@@ -426,77 +320,109 @@ void ArgParse::Like()
 }
 
 /*
- * Update Status:
- * Handles all tasks associated with allowing a user to update his or
- * her status. Prompts the user for a status message, then polls for
- * the authentification token, then submits a POST to the Facebook
- * Graph API.
+ * Log In:
+ * Handles all responsibilities associated with retrieving a valid
+ * authentification token. The user is prompted for their email and
+ * password, then the process is forked in order to call a python
+ * script which handles the logging in. The parent process waits for
+ * the script to exit, then runs a check to see if the
+ * authentification token exists, informing the user whether the login
+ * completed successfully or not based on the results of that check.
  */
-void ArgParse::UpdateStatus()
+void ArgParse::Login()
 {
-   // Try to find a friend whose name matches what is being searched
-   // for.
-   string friend_ID = "me";
-   string message;
-   bool has_message_value = false;
-
-   if (count > 1)
+   // Read login information from the user.
+   LoginField login = LoginField();
+   login.readUser("Email: ");
+   login.readPass();
+   
+   int status;
+   pid_t pid = fork();
+   
+   // Fork failed for some reason
+   if (pid < 0)
    {
-      int who_index = 0;
-      if (argHas("--who"))
+      perror("Fork error");
+   }
+   // Child process
+   else if (pid == 0)
+   {
+      // Execute the login script by passing a username and password.
+      execl("/usr/bin/python2.7",
+	    "/usr/bin/python2.7",
+	    "scripts/login.py",
+	    login.user().c_str(),
+	    login.pass().c_str(),
+	    (char *) 0);
+   }
+   // Parent process
+   else
+   {
+      // Wait until the child process has finished execution.
+      if ((pid = wait(&status)) == -1)
+	 perror("wait error");
+   }
+   
+   // Checks to see whether the login was successful by open the
+   // member27 file and checking its contents. If something that looks
+   // like an authentification token is found that's good. Otherwise
+   // display a message relating to the error that was found.
+   std::ifstream member27;
+   member27.open("member27");
+   if (member27.is_open())
+   {
+      string content;
+      member27 >> content;
+      
+      // If the contents of member27 are longer than the maximum error
+      // code length then I must have an auth token.
+      if (content.length() > ERROR_CODE_LENGTH)
       {
-	 who_index = argIndex("--who");
-	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
-	 {
-	    friend_ID = getFriendID(arguments[who_index + 1]);
-	    if (friend_ID == "\0")
-	       return;
-	 }
+	 cout << "Logged In." << endl;
       }
-
-      int val_index = 0;
-      if (argHas("--val"))
+      else
       {
-	 val_index = argIndex("--val");
-	 if (val_index < count - 1)
-	 {
-	    message = arguments[val_index + 1];
-	    has_message_value = true;
-	 }
+	 /*
+	  * Error Conditions:
+	  *  1) The user entered an invalid username (email address)
+	  *     or password when logging in.
+	  *  2) The user did not grant permission to F.aceBash to
+	  *     access their account (eg selected no instead of yes
+	  *     when asked to grant permission).
+	  *  3) The user is not connected to the internet.
+	  */
+	 if      (content == "001")
+	    cerr << "Invalid Email or Password." << endl;
+	 
+	 else if (content == "002")
+	    cerr << "User denied permission to F.aceBash." << endl;
+	 
+	 else if (content == "003")
+	    cerr << "Not connected to the Internet." << endl;
+	 
+	 else // Something went wrong (maybe on Facebook's end)
+	    cerr << "An unknown error occured." << endl;
+	 
       }
    }
-   
-   stringstream ss;
-   
-   // Prompt the user for the status they want to post.
-   if (!has_message_value)
-      string message = Utils::prompt(string("Status: "));
-   
-   // Make request to post that status to the specified feed.
-   string url = string("https://graph.facebook.com/"+friend_ID+"/feed");
-   cURLpp::Forms formParts;
-   formParts.push_back(new cURLpp::FormParts::Content("message", message));
-   bool request_success = NetUtils::makeRequest(ss, url, formParts);
-   
-   // If the request wasn't successfully made just return. Some
-   // function previous to this should have displayed some error
-   // message.
-   if (!request_success)
+   // The file could not be opened. Something went wrong on this end
+   else
    {
-      return;
+      cerr << "Unable to login. Make sure you have proper "
+	   << "local permissions." << endl;
    }
    
-   // Make sure to display any errors that Facebook may have given us.
-   Json::Value root;
-   Json::Reader reader;
-   bool parsingSuccessful = reader.parse(ss.str(), root);
-   if (!parsingSuccessful)
-   {
-      cerr << "Failed to parse response." << endl;
-      cerr << ss.str() << endl;
-   }
-   
-   NetUtils::showErrorMessage(root);
+   // Make sure to close the file handle when I'm done.
+   member27.close();
+}
+
+/*
+ * Log Out:
+ * Really just deletes the file containing the authentication token.
+ */
+void ArgParse::Logout()
+{
+   remove("member27");
 }
 
 /*
@@ -581,6 +507,80 @@ void ArgParse::ShowNewsFeed()
 
    if (show_size_message)
       cout << "Output truncated to " << journal.length() << endl;
+}
+
+/*
+ * Update Status:
+ * Handles all tasks associated with allowing a user to update his or
+ * her status. Prompts the user for a status message, then polls for
+ * the authentification token, then submits a POST to the Facebook
+ * Graph API.
+ */
+void ArgParse::UpdateStatus()
+{
+   // Try to find a friend whose name matches what is being searched
+   // for.
+   string friend_ID = "me";
+   string message;
+   bool has_message_value = false;
+
+   if (count > 1)
+   {
+      int who_index = 0;
+      if (argHas("--who"))
+      {
+	 who_index = argIndex("--who");
+	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
+	 {
+	    friend_ID = getFriendID(arguments[who_index + 1]);
+	    if (friend_ID == "\0")
+	       return;
+	 }
+      }
+
+      int val_index = 0;
+      if (argHas("--val"))
+      {
+	 val_index = argIndex("--val");
+	 if (val_index < count - 1)
+	 {
+	    message = arguments[val_index + 1];
+	    has_message_value = true;
+	 }
+      }
+   }
+   
+   stringstream ss;
+   
+   // Prompt the user for the status they want to post.
+   if (!has_message_value)
+      string message = Utils::prompt(string("Status: "));
+   
+   // Make request to post that status to the specified feed.
+   string url = string("https://graph.facebook.com/"+friend_ID+"/feed");
+   cURLpp::Forms formParts;
+   formParts.push_back(new cURLpp::FormParts::Content("message", message));
+   bool request_success = NetUtils::makeRequest(ss, url, formParts);
+   
+   // If the request wasn't successfully made just return. Some
+   // function previous to this should have displayed some error
+   // message.
+   if (!request_success)
+   {
+      return;
+   }
+   
+   // Make sure to display any errors that Facebook may have given us.
+   Json::Value root;
+   Json::Reader reader;
+   bool parsingSuccessful = reader.parse(ss.str(), root);
+   if (!parsingSuccessful)
+   {
+      cerr << "Failed to parse response." << endl;
+      cerr << ss.str() << endl;
+   }
+   
+   NetUtils::showErrorMessage(root);
 }
 
 void ArgParse::AboutFriend()
