@@ -16,7 +16,7 @@ browser = mech.Browser()
 uri =  'https://www.facebook.com/dialog/oauth?'
 uri += 'client_id=103806206443210'
 uri += '&redirect_uri=http://chriswald.com/facebash.htm'
-uri += '&scope=user_about_me,friends_about_me,friends_birthday,user_likes,friends_likes,user_relationships,friends_relationships,user_status,friends_status,publish_stream,read_stream'
+uri += '&scope=user_about_me,friends_about_me,friends_birthday,user_likes,friends_likes,user_relationships,friends_relationships,user_status,friends_status,publish_stream,read_stream,user_photos,friends_photos'
 uri += '&response_type=token'
 
 # Pretend I'm not a bot by creating a cookie cache and setting the
