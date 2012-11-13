@@ -68,6 +68,11 @@ void ArgParse::ParseArgs()
    else if (argHas("-s") || argHas("--update_status"))
       UpdateStatus();
    
+   // Upload a batch of photos to the user's account under the
+   // desired album, "F.aceBash" by default.
+   else if (argHas("-u") || argHas("--upload-photos"))
+      UploadPhotos();
+
    // Show the version information (without help text).
    else if (argHas("-v") || argHas("--version"))
       ShowVersion();
@@ -583,6 +588,107 @@ void ArgParse::UpdateStatus()
    NetUtils::showErrorMessage(root);
 }
 
+void ArgParse::UploadPhotos()
+{
+   string album_name = "F.aceBash";
+   string album_id = "";
+   bool album_exists = false;
+
+   if (count > 1)
+   {
+      int album_index = 0;
+      if (argHas("--album"))
+      {
+	 album_index = argIndex("--album");
+	 if (album_index < count - 1)
+	 {
+	    album_name = arguments[album_index + 1];
+	 }
+      }
+   }
+
+   stringstream ss;
+   string get_albums_url = "https://graph.facebook.com/me/albums";
+   bool request_success = NetUtils::makeRequest(ss, get_albums_url);
+
+   // An error message should have been shown previous to this point.
+   if (!request_success)
+      return;
+
+   // Parse said list.
+   Json::Value root;
+   Json::Reader reader;
+   bool parsingSuccessful = reader.parse(ss.str(), root);
+   
+   // Make sure no errors occurred.
+   if (!parsingSuccessful)
+   {
+      cerr << "Failed to parse the document." << endl;
+      return;
+   }
+   
+   int error_code = NetUtils::showErrorMessage(root);
+   if (error_code)
+      return;
+
+   map<string, string> names;
+      
+   Json::Value data = root["data"];
+   for (unsigned int i = 0; i < data.size(); i ++)
+   {
+      string name = data[i]["name"].asString();
+      string id = data[i]["id"].asString();
+      names[name] = id;
+      if (name == album_name)
+	 album_exists = true;
+   }
+
+   if (!album_exists)
+   {
+      album_id = makeAlbum(album_name);
+      if (album_id == "\0")
+	 return;
+   }
+   else
+   {
+      album_id = names[album_name];
+   }
+
+   cout << album_name << " " << album_id << endl;
+}
+
+string ArgParse::makeAlbum(const string & name)
+{
+   stringstream ss;
+   string url ("https://graph.facebook.com/me/albums");
+   cURLpp::Forms formParts;
+   formParts.push_back(new cURLpp::FormParts::Content("name", name));
+   bool request_success = NetUtils::makeRequest(ss, url, formParts);
+   
+   // An error message should have been shown previous to this point.
+   if (!request_success)
+      return "\0";
+   
+   // Parse said list.
+   Json::Value root;
+   Json::Reader reader;
+   
+   bool parsingSuccessful = reader.parse(ss.str(), root);
+   
+   // Make sure no errors occurred.
+   if (!parsingSuccessful)
+   {
+      cerr << "Failed to parse the document." << endl;
+      return "\0";
+   }
+   
+   int error_code = NetUtils::showErrorMessage(root);
+   if (error_code)
+      return "\0";
+   
+   return root["id"].asString();
+}
+   
 void ArgParse::AboutFriend()
 {
 

@@ -55,11 +55,12 @@ public:
    int  argIndex(string arg);
    
    void Comment();
+   void Like();
    void Login();
    void Logout();
-   void Like();
-   void UpdateStatus();
    void ShowNewsFeed();
+   void UpdateStatus();
+   void UploadPhotos();
    void AboutFriend();
    void ShowUpcomingBirthdays();
    void AboutMe();
@@ -72,6 +73,7 @@ private:
    string getFriendID(string name);
    void   formatNewsStory(ostream & os, Json::Value story, int index);
    bool   relogin();
+   string makeAlbum(const string & name);
    
    int     count;
    string *arguments;
