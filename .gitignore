@@ -2,3 +2,8 @@
 *~
 bin/*
 member27
+*.jpg
+*.png
+*.tif
+*.gif
+*.bmp
