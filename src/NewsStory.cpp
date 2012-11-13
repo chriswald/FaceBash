@@ -88,7 +88,7 @@ void NewsStory::LikeStory()
       std::cerr << ss.str() << endl;
    }
    
-   NetUtils::showErrorMessage(root);
+   // NetUtils::showErrorMessage(root);
 }
 
 void NewsStory::LikeComment(int index)

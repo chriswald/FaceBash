@@ -45,6 +45,5 @@ void Comment::Like()
       std::cerr << ss.str() << endl;
    }
    
-   NetUtils::showErrorMessage(root);
-
+   // NetUtils::showErrorMessage(root);
 }
