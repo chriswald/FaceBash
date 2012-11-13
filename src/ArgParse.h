@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,6 +34,7 @@ using std::endl;
 using std::ifstream;
 using std::ostream;
 using std::ostringstream;
+using std::map;
 using std::setfill;
 using std::setw;
 using std::stack;

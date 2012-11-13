@@ -676,7 +676,7 @@ string ArgParse::getFriendID(string name)
       }
    }
    
-   vector<string> ids (0);
+   map<string, string> ids;
    
    // Search throught the returned friend list for all names matching
    // the name parameter.
@@ -687,7 +687,7 @@ string ArgParse::getFriendID(string name)
       string curID   = data[i]["id"].asString();
       if (curName.find(name.c_str()) < string::npos)
       {
-	 ids.push_back(curID);
+	 ids[curName] = curID;
       }
    }
    
@@ -695,17 +695,25 @@ string ArgParse::getFriendID(string name)
    // message and return \0. Otherwise return the ID of the one match.
    if (ids.size() > 1)
    {
-      cerr << "You have more than one friend with that name: " << name << endl;
+      cerr << "You have " << ids.size() << " friends with '" 
+	   << name << "' in their name." << endl;
+      map<string, string>::iterator itr = ids.begin();
+      int how_many = (ids.size() > 5 ? 5 : ids.size());
+      for (int i = 0; i < how_many; i ++, itr ++)
+      {
+	 cerr << itr->first << endl;
+      }
       return "\0";
    }
    else if (ids.size() == 0)
    {
-      cerr << "You don't have any friends with that name: " << name << endl;
+      cerr << "You don't have any friends with '" << name 
+	   << "' in their name." << endl;
       return "\0";
    }
    else
    {
-      return ids[0];
+      return ids.begin()->second;
    }
 }
 
