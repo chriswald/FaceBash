@@ -588,14 +588,31 @@ void ArgParse::UpdateStatus()
    NetUtils::showErrorMessage(root);
 }
 
+/*
+ * Upload Photos:
+ * Batch uploads photos to an album. User can specify photos to be
+ * uploaded, the name of the album to upload to, and the description
+ * of that album. The default album is "F.aceBash", with no
+ * description. The user can also choose to only display a list of
+ * existing albums. If the album exists already any specified message
+ * will be ignored. Images can be uploaded individually or batch.
+ */
 void ArgParse::UploadPhotos()
 {
+   // Set some meaningful default values.
    string album_name = "F.aceBash";
    string album_id = "";
+   string message = "";
    bool album_exists = false;
+   bool list_names = false;
+   int begin_img_index = 0;
+   int num_imgs = 0;
 
+   // Check for command line arguments. If none are found simply list
+   // existing album names.
    if (count > 1)
    {
+      // Retrieve the album title.
       int album_index = 0;
       if (argHas("--album"))
       {
@@ -605,88 +622,283 @@ void ArgParse::UploadPhotos()
 	    album_name = arguments[album_index + 1];
 	 }
       }
+
+      // Retrieve the album description message.
+      int msg_index = 0;
+      if (argHas("--val"))
+      {
+	 msg_index = argIndex("--val");
+	 if (msg_index < count - 1)
+	 {
+	    message = arguments[msg_index + 1];
+	 }
+      }
+
+      // Only list album names.
+      int list_index = 0;
+      if (argHas("--list"))
+      {
+	 list_index = argIndex("--list");
+	 list_names = true;
+      }
+
+      // Generate a list of files to be uploaded.
+      int img_index = 0;
+      if (argHas("--img"))
+      {
+	 img_index = argIndex("--img");
+	 if (img_index < count - 1)
+	 {
+	    begin_img_index = img_index + 1;
+	    for (int i = begin_img_index; i <= count; i ++)
+	    {
+	       if (i == album_index ||
+		   i == msg_index ||
+		   i == list_index ||
+		   i == count)
+	       {
+		  num_imgs = (i - 1) - img_index;
+		  break;
+	       }
+	    }
+	 }
+      }
+   }
+   else
+   {
+      list_names = true;
    }
 
+   // Get a listing of all of the user's albums.
+   map<string, string> names;
+   bool success = getAlbumNames(names);
+   if (!success)
+      return;
+
+   // If the --list flag was set display a list of all names and
+   // return.
+   map<string, string>::iterator itr;
+   if (list_names)
+   {
+      for (itr = names.begin(); itr != names.end(); itr ++)
+      {
+	 cout << itr->first << endl;
+      }
+      return;
+   }
+
+   // If I get here then the user must be trying to upload photos. I
+   // need to make sure that some photo files have been provided.
+   if (num_imgs == 0)
+   {
+      cerr << "No files specified!" << endl;
+      return;
+   }
+
+   // Iterate over the album names to see if one matches the requested
+   // name. If so retrieve its ID.
+   for (itr = names.begin(); itr != names.end(); itr ++)
+   {
+      if (itr->first == album_name)
+      {
+	 album_exists = true;
+	 album_id = itr->second;
+      }
+   }
+   
+   // If I didn't find the album requested, make it and retrieve its
+   // ID. Otherwise the ID was retrieved earlier. Just let the user
+   // know that any message provided won't be applied.
+   if (!album_exists)
+   {
+      bool success = makeAlbum(album_name, message, album_id);
+      if (!success)
+	 return;
+   }
+   else
+   {
+      if (message != "")
+	 cout << "Album exists, not applying message." << endl;
+   }
+   
+   // Let the user know which album is being uploaded to.
+   cout << "Album: " << album_name << endl;
+
+   // Parse the arguments, adding each image file to a vector.
+   vector<string> images;
+   for (int i = 0; i < num_imgs; i ++)
+      images.push_back(arguments[begin_img_index + i]);
+
+   // Upload all images to Facebook.
+   success = sendImagesToAlbum(album_id, images);
+   if (!success)
+      cerr << "File upload not completely successful." << endl;
+}
+
+/*
+ * Send Images to Facebook Album:
+ * Takes a vector of image files and uploads them to an album with the
+ * provided ID. Does no file type checking.
+ */
+bool ArgParse::sendImagesToAlbum(const string & ID, const vector<string> & files)
+{
+   // Keep track of overall operation success.
+   bool success = true;
+
+   // Iterate over all files sent.
+   for (unsigned int i = 0; i < files.size(); i ++)
+   {
+      // Keep track of success on this single upload operation.
+      bool small_success = true;
+
+      // Get the image's full name (with path) and simple name
+      // (without path).
+      string file = files[i];
+      string filename = file.substr(file.rfind("/") + 1);
+
+      // Display some diagnostic info to the user.
+      cout << "Uploading <" << filename << ">: ... " << std::flush;
+
+      // Add the file to a cURLpp form and send it on its way. The
+      // rest of the process is just book-keeping and error checking.
+      stringstream ss;
+      string url = string("https://graph.facebook.com/") + ID + string("/photos");
+      cURLpp::Forms formParts;
+      formParts.push_back(new cURLpp::FormParts::File(filename, file));
+      bool request_success = NetUtils::makeRequest(ss, url, formParts);
+
+      // An error message should have been shown previous to this point.
+      if (!request_success)
+	 small_success = false;
+      
+      // Make sure the process was still successful up to this point.
+      if (small_success)
+      {
+	 // Parse the returned information.
+	 Json::Value root;
+	 Json::Reader reader;
+	 bool parsingSuccessful = reader.parse(ss.str(), root);
+	 
+	 // Make sure no parsing errors occurred.
+	 if (!parsingSuccessful)
+	 {
+	    cerr << "Failed to parse the document." << endl;
+	    small_success = false;
+	 }
+	 else
+	 {
+	    // Show any Facebook generated error messages.
+	    int error_code = NetUtils::showErrorMessage(root);
+	    if (error_code)
+	       small_success = false;
+	 }
+      }
+
+      // If this single operation is successful finish the message
+      // that was show to the user with a helpful "Done". Otherwise
+      // display "Error" and set global success to false.
+      if (small_success)
+      {
+	 cout << "Done" << endl;
+      }
+      else
+      {
+	 cout << "Error" << endl;
+	 success = false;
+      }
+   }
+   return success;
+}
+
+/*
+ * Get Album Names:
+ * Generates a string string map where the album name is the key and
+ * the album ID is the value. Returns true if the operation was
+ * successful, false otherwise.
+ */
+bool ArgParse::getAlbumNames(map<string, string> & names)
+{
+   // Make a requst for the album listing to Facebook.
    stringstream ss;
    string get_albums_url = "https://graph.facebook.com/me/albums";
    bool request_success = NetUtils::makeRequest(ss, get_albums_url);
 
    // An error message should have been shown previous to this point.
    if (!request_success)
-      return;
+      return false;
 
-   // Parse said list.
+   // Parse the response.
    Json::Value root;
    Json::Reader reader;
    bool parsingSuccessful = reader.parse(ss.str(), root);
    
-   // Make sure no errors occurred.
+   // Make sure no parsing errors occurred.
    if (!parsingSuccessful)
    {
       cerr << "Failed to parse the document." << endl;
-      return;
+      return false;
    }
    
+   // Show any errors raised by Facebook.
    int error_code = NetUtils::showErrorMessage(root);
    if (error_code)
-      return;
+      return false;
 
-   map<string, string> names;
-      
+   // Parse the (now know to be valid) JSON for album names and IDs,
+   // storing each pair as a new element in the map.
    Json::Value data = root["data"];
    for (unsigned int i = 0; i < data.size(); i ++)
    {
       string name = data[i]["name"].asString();
       string id = data[i]["id"].asString();
       names[name] = id;
-      if (name == album_name)
-	 album_exists = true;
    }
 
-   if (!album_exists)
-   {
-      album_id = makeAlbum(album_name);
-      if (album_id == "\0")
-	 return;
-   }
-   else
-   {
-      album_id = names[album_name];
-   }
-
-   cout << album_name << " " << album_id << endl;
+   // Got to the end so everything must have been successful.
+   return true;
 }
 
-string ArgParse::makeAlbum(const string & name)
+/*
+ * Makes Album:
+ * Creates a new album on Facebook with the given name and
+ * message. Returns true on successful completion, false otherwise.
+ */
+bool ArgParse::makeAlbum(const string & name, const string & message, string & ID)
 {
+   // Build a form with the name and description message and POST that
+   // request to Facebook.
    stringstream ss;
    string url ("https://graph.facebook.com/me/albums");
    cURLpp::Forms formParts;
    formParts.push_back(new cURLpp::FormParts::Content("name", name));
+   if (message.length() > 0)
+      formParts.push_back(new cURLpp::FormParts::Content("message", message));
    bool request_success = NetUtils::makeRequest(ss, url, formParts);
    
    // An error message should have been shown previous to this point.
    if (!request_success)
-      return "\0";
+      return false;
    
-   // Parse said list.
+   // Parse response from Facebook.
    Json::Value root;
    Json::Reader reader;
    
    bool parsingSuccessful = reader.parse(ss.str(), root);
    
-   // Make sure no errors occurred.
+   // Make sure no parsing errors occurred.
    if (!parsingSuccessful)
    {
       cerr << "Failed to parse the document." << endl;
-      return "\0";
+      return false;
    }
    
+   // Show any errors reported by Facebook.
    int error_code = NetUtils::showErrorMessage(root);
    if (error_code)
-      return "\0";
+      return false;
    
-   return root["id"].asString();
+   ID = root["id"].asString();
+   return true;
 }
    
 void ArgParse::AboutFriend()
@@ -726,6 +938,8 @@ void ArgParse::ShowHelpText()
    cout << "                    news feed. [default to all in one page.]"           << endl;
    cout << "   -s, --update_status"                                                 << endl;
    cout << "                    Updates the current user's status"                  << endl;
+   cout << "   -u, --upload_photo"                                                  << endl;
+   cout << "                    Batch uploads photos to Facebook."                  << endl;
    cout << "   -v, --version    Displays version information"                       << endl;
    cout                                                                             << endl;
 }

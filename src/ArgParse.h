@@ -73,8 +73,10 @@ private:
    string getFriendID(string name);
    void   formatNewsStory(ostream & os, Json::Value story, int index);
    bool   relogin();
-   string makeAlbum(const string & name);
-   
+   bool   makeAlbum(const string & name, const string & message, string & ID);
+   bool   getAlbumNames(map<string, string> & names);
+   bool   sendImagesToAlbum(const string & ID, const vector<string> & files);
+
    int     count;
    string *arguments;
    
