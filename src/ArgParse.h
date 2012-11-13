@@ -42,7 +42,7 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
-const string version = ".2";
+const string version = ".3";
 
 class ArgParse
 {
