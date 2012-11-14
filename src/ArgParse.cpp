@@ -70,7 +70,7 @@ void ArgParse::ParseArgs()
    
    // Upload a batch of photos to the user's account under the
    // desired album, "F.aceBash" by default.
-   else if (argHas("-u") || argHas("--upload-photos"))
+   else if (argHas("-u") || argHas("--upload"))
       UploadPhotos();
 
    // Show the version information (without help text).
@@ -607,16 +607,22 @@ void ArgParse::UploadPhotos()
    bool list_names = false;
    int begin_img_index = 0;
    int num_imgs = 0;
+   int begin_vid_index = 0;
+   int num_vids = 0;
 
    // Check for command line arguments. If none are found simply list
    // existing album names.
    if (count > 1)
    {
+      int album_index = argIndex("--album");
+      int msg_index   = argIndex("--val");
+      int list_index  = argIndex("--list");
+      int img_index   = argIndex("--img");
+      int vid_index   = argIndex("--vid");
+
       // Retrieve the album title.
-      int album_index = 0;
       if (argHas("--album"))
       {
-	 album_index = argIndex("--album");
 	 if (album_index < count - 1)
 	 {
 	    album_name = arguments[album_index + 1];
@@ -624,10 +630,8 @@ void ArgParse::UploadPhotos()
       }
 
       // Retrieve the album description message.
-      int msg_index = 0;
       if (argHas("--val"))
       {
-	 msg_index = argIndex("--val");
 	 if (msg_index < count - 1)
 	 {
 	    message = arguments[msg_index + 1];
@@ -635,29 +639,47 @@ void ArgParse::UploadPhotos()
       }
 
       // Only list album names.
-      int list_index = 0;
       if (argHas("--list"))
       {
-	 list_index = argIndex("--list");
 	 list_names = true;
       }
 
-      // Generate a list of files to be uploaded.
-      int img_index = 0;
+      // Generate a list of images to be uploaded.
       if (argHas("--img"))
       {
-	 img_index = argIndex("--img");
 	 if (img_index < count - 1)
 	 {
 	    begin_img_index = img_index + 1;
 	    for (int i = begin_img_index; i <= count; i ++)
 	    {
 	       if (i == album_index ||
-		   i == msg_index ||
-		   i == list_index ||
+		   i == msg_index   ||
+		   i == list_index  ||
+		   i == vid_index   ||
 		   i == count)
 	       {
 		  num_imgs = (i - 1) - img_index;
+		  break;
+	       }
+	    }
+	 }
+      }
+
+      // Generate a list of videos to be uploaded.
+      if (argHas("--vid"))
+      {
+	 if (vid_index < count - 1)
+	 {
+	    begin_vid_index = vid_index + 1;
+	    for (int i = begin_vid_index; i <= count; i ++)
+	    {
+	       if (i == album_index ||
+		   i == msg_index   ||
+		   i == list_index  ||
+		   i == img_index   ||
+		   i == count)
+	       {
+		  num_vids = (i - 1) - vid_index;
 		  break;
 	       }
 	    }
@@ -689,50 +711,66 @@ void ArgParse::UploadPhotos()
 
    // If I get here then the user must be trying to upload photos. I
    // need to make sure that some photo files have been provided.
-   if (num_imgs == 0)
+   if (num_imgs == 0 && num_vids == 0)
    {
       cerr << "No files specified!" << endl;
       return;
    }
 
-   // Iterate over the album names to see if one matches the requested
-   // name. If so retrieve its ID.
-   for (itr = names.begin(); itr != names.end(); itr ++)
+   if (num_imgs > 0)
    {
-      if (itr->first == album_name)
+      // Iterate over the album names to see if one matches the requested
+      // name. If so retrieve its ID.
+      for (itr = names.begin(); itr != names.end(); itr ++)
       {
-	 album_exists = true;
-	 album_id = itr->second;
+	 if (itr->first == album_name)
+	 {
+	    album_exists = true;
+	    album_id = itr->second;
+	 }
       }
-   }
-   
-   // If I didn't find the album requested, make it and retrieve its
-   // ID. Otherwise the ID was retrieved earlier. Just let the user
-   // know that any message provided won't be applied.
-   if (!album_exists)
-   {
-      bool success = makeAlbum(album_name, message, album_id);
+      
+      // If I didn't find the album requested, make it and retrieve its
+      // ID. Otherwise the ID was retrieved earlier. Just let the user
+      // know that any message provided won't be applied.
+      if (!album_exists)
+      {
+	 bool success = makeAlbum(album_name, message, album_id);
+	 if (!success)
+	    return;
+      }
+      else
+      {
+	 if (message != "")
+	    cout << "Album exists, not applying message." << endl;
+      }
+      
+      // Let the user know which album is being uploaded to.
+      cout << "Album: " << album_name << endl;
+
+      // Parse the arguments, adding each image file to a vector.
+      vector<string> images;
+      for (int i = 0; i < num_imgs; i ++)
+	 images.push_back(arguments[begin_img_index + i]);
+
+      // Upload all images to Facebook.
+      success = sendImagesToAlbum(album_id, images);
       if (!success)
-	 return;
+	 cerr << "Image upload was not completely successful." << endl;
    }
-   else
+
+   if (num_vids > 0)
    {
-      if (message != "")
-	 cout << "Album exists, not applying message." << endl;
+      // Parse the arguments, add each video file to a vector.
+      vector<string> videos;
+      for (int i = 0; i < num_vids; i ++)
+	 videos.push_back(arguments[begin_vid_index + i]);
+      
+      // Upload all videos to Facebook.
+      success = sendVideosToFacebook(videos);
+      if (!success)
+	 cerr << "Video upload was not completely successful." << endl;
    }
-   
-   // Let the user know which album is being uploaded to.
-   cout << "Album: " << album_name << endl;
-
-   // Parse the arguments, adding each image file to a vector.
-   vector<string> images;
-   for (int i = 0; i < num_imgs; i ++)
-      images.push_back(arguments[begin_img_index + i]);
-
-   // Upload all images to Facebook.
-   success = sendImagesToAlbum(album_id, images);
-   if (!success)
-      cerr << "File upload not completely successful." << endl;
 }
 
 /*
@@ -763,6 +801,81 @@ bool ArgParse::sendImagesToAlbum(const string & ID, const vector<string> & files
       // rest of the process is just book-keeping and error checking.
       stringstream ss;
       string url = string("https://graph.facebook.com/") + ID + string("/photos");
+      cURLpp::Forms formParts;
+      formParts.push_back(new cURLpp::FormParts::File(filename, file));
+      bool request_success = NetUtils::makeRequest(ss, url, formParts);
+
+      // An error message should have been shown previous to this point.
+      if (!request_success)
+	 small_success = false;
+      
+      // Make sure the process was still successful up to this point.
+      if (small_success)
+      {
+	 // Parse the returned information.
+	 Json::Value root;
+	 Json::Reader reader;
+	 bool parsingSuccessful = reader.parse(ss.str(), root);
+	 
+	 // Make sure no parsing errors occurred.
+	 if (!parsingSuccessful)
+	 {
+	    cerr << "Failed to parse the document." << endl;
+	    small_success = false;
+	 }
+	 else
+	 {
+	    // Show any Facebook generated error messages.
+	    int error_code = NetUtils::showErrorMessage(root);
+	    if (error_code)
+	       small_success = false;
+	 }
+      }
+
+      // If this single operation is successful finish the message
+      // that was show to the user with a helpful "Done". Otherwise
+      // display "Error" and set global success to false.
+      if (small_success)
+      {
+	 cout << "Done" << endl;
+      }
+      else
+      {
+	 cout << "Error" << endl;
+	 success = false;
+      }
+   }
+   return success;
+}
+
+/*
+ * Send Videos to Facebook:
+ * Takes a vector of video files and uploads them to Facebook. Does no
+ * file type checking.
+ */
+bool ArgParse::sendVideosToFacebook(const vector<string> & files)
+{
+   // Keep track of overall operation success.
+   bool success = true;
+
+   // Iterate over all files sent.
+   for (unsigned int i = 0; i < files.size(); i ++)
+   {
+      // Keep track of success on this single upload operation.
+      bool small_success = true;
+
+      // Get the image's full name (with path) and simple name
+      // (without path).
+      string file = files[i];
+      string filename = file.substr(file.rfind("/") + 1);
+
+      // Display some diagnostic info to the user.
+      cout << "Uploading <" << filename << ">: ... " << std::flush;
+
+      // Add the file to a cURLpp form and send it on its way. The
+      // rest of the process is just book-keeping and error checking.
+      stringstream ss;
+      string url = "https://graph.facebook.com/me/videos";
       cURLpp::Forms formParts;
       formParts.push_back(new cURLpp::FormParts::File(filename, file));
       bool request_success = NetUtils::makeRequest(ss, url, formParts);
@@ -938,8 +1051,7 @@ void ArgParse::ShowHelpText()
    cout << "                    news feed. [default to all in one page.]"           << endl;
    cout << "   -s, --update_status"                                                 << endl;
    cout << "                    Updates the current user's status"                  << endl;
-   cout << "   -u, --upload_photo"                                                  << endl;
-   cout << "                    Batch uploads photos to Facebook."                  << endl;
+   cout << "   -u, --upload     Batch uploads photos and videos to Facebook."       << endl;
    cout << "   -v, --version    Displays version information"                       << endl;
    cout                                                                             << endl;
 }

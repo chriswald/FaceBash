@@ -76,6 +76,7 @@ private:
    bool   makeAlbum(const string & name, const string & message, string & ID);
    bool   getAlbumNames(map<string, string> & names);
    bool   sendImagesToAlbum(const string & ID, const vector<string> & files);
+   bool   sendVideosToFacebook(const vector<string> & files);
 
    int     count;
    string *arguments;
