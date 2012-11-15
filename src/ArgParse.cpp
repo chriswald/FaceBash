@@ -136,7 +136,7 @@ void ArgParse::Comment()
       if (argHas("--who"))
       {
 	 who_index = argIndex("--who");
-	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
+	 if (who_index < count - 1)
 	 {
 	    friend_ID = getFriendID(arguments[who_index + 1]);
 	    if (friend_ID == "\0")
@@ -193,8 +193,10 @@ void ArgParse::Comment()
    if (!has_message_value)
    {
       cout << story;
-      string message = Utils::prompt("Comment: ");
+      message = Utils::prompt("Comment: ");
    }
+
+   cout << message << endl;
 
    // Send that comment to Facebook.
    story.CommentOnStory(message);
@@ -221,7 +223,7 @@ void ArgParse::Like()
       if (argHas("--who"))
       {
 	 who_index = argIndex("--who");
-	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
+	 if (who_index < count - 1)
 	 {
 	    friend_ID = getFriendID(arguments[who_index + 1]);
 	    if (friend_ID == "\0")
@@ -442,6 +444,8 @@ void ArgParse::ShowNewsFeed()
 {
    Journal journal (false);
 
+   // Set to true if the requested output is higher than the available
+   // output.
    bool show_size_message = false;
 
    // Set some default values.
@@ -460,17 +464,9 @@ void ArgParse::ShowNewsFeed()
 	 who_index = argIndex("--who");
 	 if (who_index < count - 1)
 	 {
-	    string arg = arguments[who_index + 1];
-	    if (arg == "me")
-	    {
-	       friend_ID = "me";
-	    }
-	    else
-	    {
-	       friend_ID = getFriendID(arguments[who_index + 1]);
-	       if (friend_ID == "\0")
-		  return;
-	    }
+	    friend_ID = getFriendID(arguments[who_index + 1]);
+	    if (friend_ID == "\0")
+	       return;
 	 }
       }
       
@@ -533,7 +529,7 @@ void ArgParse::UpdateStatus()
 {
    // Try to find a friend whose name matches what is being searched
    // for.
-   string friend_ID = "me";
+   string friend_ID = "\0";
    string message;
    bool has_message_value = false;
 
@@ -543,7 +539,7 @@ void ArgParse::UpdateStatus()
       if (argHas("--who"))
       {
 	 who_index = argIndex("--who");
-	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
+	 if (who_index < count - 1)
 	 {
 	    friend_ID = getFriendID(arguments[who_index + 1]);
 	    if (friend_ID == "\0")
@@ -1083,6 +1079,9 @@ void ArgParse::ShowVersion()
  */
 string ArgParse::getFriendID(string name)
 {
+   if (name == "me")
+      return name;
+
    // Query Facebook for a list of all the user's friends.
    stringstream ss;
    string url = string("https://graph.facebook.com/me/friends");

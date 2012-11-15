@@ -32,11 +32,11 @@ bool Journal::getNewsStories(string who)
 {
    // Get the JSON from Facebook
    stringstream ss;
-   string url = string("https://graph.facebook.com/") + who;
-   if (who == "me")
-      url += string("/home");
+   string url = string("https://graph.facebook.com/");
+   if (who == "\0")
+      url += string("me/home");
    else
-      url += string("/feed");
+      url += who + string("/feed");
    bool request_success = NetUtils::makeRequest(ss, url);
    
    // If the request wasn't successfully made just return. Some
@@ -72,7 +72,7 @@ bool Journal::getNewsStories(string who)
       
       // Make sure the post is a status and isn't empty
       if (content_type == "status" &&
-	  posts[i]["message"].asString().length() > 0)
+          posts[i]["message"].asString().length() > 0)
       {
 	 news_stories.push_back(NewsStory(posts[i], ++how_many));
       }
