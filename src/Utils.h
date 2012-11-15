@@ -1,6 +1,7 @@
 #ifndef __UTILS_H
 #define __UTILS_H
 
+#include <cstdlib>
 #include <iostream>
 #include <string>
 
