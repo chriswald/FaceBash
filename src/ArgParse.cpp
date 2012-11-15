@@ -529,7 +529,7 @@ void ArgParse::UpdateStatus()
 {
    // Try to find a friend whose name matches what is being searched
    // for.
-   string friend_ID = "\0";
+   string friend_ID = "me";
    string message;
    bool has_message_value = false;
 
@@ -563,7 +563,7 @@ void ArgParse::UpdateStatus()
    
    // Prompt the user for the status they want to post.
    if (!has_message_value)
-      string message = Utils::prompt(string("Status: "));
+      message = Utils::prompt(string("Status: "));
    
    // Make request to post that status to the specified feed.
    string url = string("https://graph.facebook.com/"+friend_ID+"/feed");
