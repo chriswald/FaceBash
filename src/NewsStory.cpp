@@ -113,7 +113,22 @@ void NewsStory::formatNewsStory(stringstream & ss) const
 
       if      (type == "link")
       {
-	 message = story["story"].asString();
+	 message = story["link"].asString() + string("\n") 
+	         + story["story"].asString();
+	 
+	 string description = story["description"].asString();
+	 string caption = story["caption"].asString();
+	 string submessage;
+	 
+	 if (caption.length() != 0)
+	 {
+	    submessage = caption;
+	    if (description.length() != 0)
+	       submessage += string(": ") + description;
+	 }
+	 else
+	    submessage = description;
+	 message += string("\n") + submessage;
       }
       else if (type == "photo")
       {
@@ -132,7 +147,7 @@ void NewsStory::formatNewsStory(stringstream & ss) const
       }
    }
    
-   vector<string> lines = setLineWidth(message, LINE_WIDTH);
+   vector<string> lines = setLineWidth(message, LINE_WIDTH - 5);
       
    // Write each individual portion of the story.
    writePostSeperatorLine(ss);
@@ -146,7 +161,7 @@ void NewsStory::formatNewsStory(stringstream & ss) const
       Comment c = comments[i];
       if (c.getText().length() > 0)
       {
-	 vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - 5);
+	 vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - 10);
 	 writeCommentNameLine(ss, c);
 	 writeCommentMessageLines(ss, l);
 	 writeCommentSeperatorLine(ss);
@@ -171,7 +186,8 @@ vector<string> NewsStory::setLineWidth(string message, int width) const
       new_lines.push_back(line);
       nl_index = remainder.find("\n");
    }
-   new_lines.push_back(remainder);
+   if (remainder.length() > 0)
+      new_lines.push_back(remainder);
    
    // Run through each of those lines and make sure it does not
    // exceed LINE_WIDTH. Split it into sub lines until it does.
@@ -265,7 +281,7 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name, const stri
 	 tmp << "   <" << likes << " Likes>";
    }
    
-   unsigned int width = (LINE_WIDTH + 5) - (sindex.str().length());
+   unsigned int width = (LINE_WIDTH) - (sindex.str().length());
 
    for (unsigned int i = tmp.str().length(); i <= width; i ++)
    {
@@ -284,7 +300,7 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
       stringstream stmp;
       stmp << prefix << lines[i];
       int len = stmp.str().length();
-      for (unsigned int j = len; j < LINE_WIDTH+5; j ++)
+      for (unsigned int j = len; j < LINE_WIDTH; j ++)
 	 stmp << " ";
       stmp << "|" << endl;
       tmp << stmp.str();
@@ -292,21 +308,33 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
    ss << tmp.str();
 }
 
+/*
+ * Write Seperator Line:
+ * Writes a prefix followed by all dashes up to the line width.
+ */
 void NewsStory::writeSeperatorLine(stringstream & ss, const string & prefix) const
 {
    stringstream tmp;
    tmp << prefix;
-   for (unsigned int i = tmp.str().length(); i < LINE_WIDTH + 5; i ++)
+   for (unsigned int i = tmp.str().length(); i < LINE_WIDTH; i ++)
       tmp << "-";
    tmp << "|" << endl;
    ss << tmp.str();
 }
 
+/*
+ * Get Number of Likes:
+ * Stores how many likes a status has.
+ */
 void NewsStory::get_num_likes()
 {
    num_likes = story["likes"]["count"].asInt();
 }
 
+/*
+ * Get Comments:
+ * Populates the comments vector.
+ */
 void NewsStory::get_comments()
 {
    num_comments = story["comments"]["count"].asInt();
