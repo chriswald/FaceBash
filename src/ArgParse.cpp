@@ -730,11 +730,7 @@ void ArgParse::UploadPhotos()
 	    begin_vid_index = vid_index + 1;
 	    for (int i = begin_vid_index; i <= count; i ++)
 	    {
-	       if (i == album_index ||
-		   i == msg_index   ||
-		   i == list_index  ||
-		   i == img_index   ||
-		   i == count)
+	       if (arguments[i][0] == '-' || i == count)
 	       {
 		  num_vids = (i - 1) - vid_index;
 		  break;
