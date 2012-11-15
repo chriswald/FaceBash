@@ -210,7 +210,7 @@ void ArgParse::Like()
    // Set some default values.
    int index = 1;
    int sub_index = 0;
-   string friend_ID = "me";
+   string friend_ID = "\0";
    bool force_yes = false;
 
    // See if there are additional arguments.
