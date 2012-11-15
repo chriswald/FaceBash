@@ -122,7 +122,7 @@ void ArgParse::Comment()
 
    // Set some default values.
    int index = 1;
-   string friend_ID = "me";
+   string friend_ID = "\0";
    bool has_message_value = false;
    string message;
 
