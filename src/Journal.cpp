@@ -68,14 +68,7 @@ bool Journal::getNewsStories(string who)
    unsigned int how_many = 0;
    for (unsigned int i = 0; i < posts.size(); i ++)
    {
-      string content_type = posts[i]["type"].asString();
-      
-      // Make sure the post is a status and isn't empty
-      if (content_type == "status" &&
-          posts[i]["message"].asString().length() > 0)
-      {
-	 news_stories.push_back(NewsStory(posts[i], ++how_many));
-      }
+      news_stories.push_back(NewsStory(posts[i], ++how_many));
    }
    
    return true;

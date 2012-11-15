@@ -105,36 +105,55 @@ void NewsStory::formatNewsStory(stringstream & ss) const
 {
    string message = story["message"].asString();
    string posted_by = story["from"]["name"].asString();
-   
-   // This conditional is probably unnecessarry since the same
-   // condition is being checked in ShowNewsFeed, but its also not
-   // hurting anything so I'll keep it.
-   if (message.length() > 0)
-   {
-      
-      vector<string> lines = setLineWidth(message, LINE_WIDTH);
-      
-      // Write each individual portion of the story.
-      writePostSeperatorLine(ss);
-      writePostNameLine(ss, posted_by);
-      writePostSeperatorLine(ss);
-      writePostMessageLines(ss, lines);
-      writePostSeperatorLine(ss);
 
-      for (int i = 0; i < num_comments; i ++)
+   if (message.length() == 0)
+   {
+      string type = story["type"].asString();
+      string status_type = story["status_type"].asString();
+
+      if      (type == "link")
       {
-	 Comment c = comments[i];
-	 if (c.getText().length() > 0)
+	 message = story["story"].asString();
+      }
+      else if (type == "photo")
+      {
+	 message = story["story"].asString();
+      }
+      else if (type == "status")
+      {
+	 message = story["story"].asString();
+      }
+      else if (type == "video")
+      {
+	 if (status_type == "added_video")
 	 {
-	    vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - 5);
-	    writeCommentNameLine(ss, c);
-	    writeCommentMessageLines(ss, l);
-	    writeCommentSeperatorLine(ss);
+	    message = posted_by + string(" uploaded a video.");
 	 }
       }
-      
-      ss << endl;
    }
+   
+   vector<string> lines = setLineWidth(message, LINE_WIDTH);
+      
+   // Write each individual portion of the story.
+   writePostSeperatorLine(ss);
+   writePostNameLine(ss, posted_by);
+   writePostSeperatorLine(ss);
+   writePostMessageLines(ss, lines);
+   writePostSeperatorLine(ss);
+   
+   for (int i = 0; i < num_comments; i ++)
+   {
+      Comment c = comments[i];
+      if (c.getText().length() > 0)
+      {
+	 vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - 5);
+	 writeCommentNameLine(ss, c);
+	 writeCommentMessageLines(ss, l);
+	 writeCommentSeperatorLine(ss);
+      }
+   }
+   
+   ss << endl;
 }
 
 vector<string> NewsStory::setLineWidth(string message, int width) const
