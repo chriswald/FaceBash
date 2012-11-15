@@ -443,9 +443,9 @@ void ArgParse::ShowNewsFeed()
    Journal journal (false);
 
    bool show_size_message = false;
-   
+
    // Set some default values.
-   string friend_ID = "me";
+   string friend_ID = "\0";
    int how_many = -1;
    
    // See if there are additional arguments.
@@ -458,11 +458,19 @@ void ArgParse::ShowNewsFeed()
       if (argHas("--who"))
       {
 	 who_index = argIndex("--who");
-	 if (who_index < count - 1 && arguments[who_index + 1] != "me")
+	 if (who_index < count - 1)
 	 {
-	    friend_ID = getFriendID(arguments[who_index + 1]);
-	    if (friend_ID == "\0")
-	       return;
+	    string arg = arguments[who_index + 1];
+	    if (arg == "me")
+	    {
+	       friend_ID = "me";
+	    }
+	    else
+	    {
+	       friend_ID = getFriendID(arguments[who_index + 1]);
+	       if (friend_ID == "\0")
+		  return;
+	    }
 	 }
       }
       
