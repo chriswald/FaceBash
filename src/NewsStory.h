@@ -35,12 +35,12 @@ public:
 
 private:
    void formatNewsStory(stringstream & ss) const;
-   vector<string> setLineWidth(string message, int width) const;
+   vector<string> setLineWidth(const string & message, int width) const;
    void writePostNameLine(stringstream & ss, const string & name) const;
-   void writePostMessageLines(stringstream & ss, const vector<string> lines) const;
+   void writePostMessageLines(stringstream & ss, const vector<string> & lines) const;
    void writePostSeperatorLine(stringstream & ss) const;
    void writeCommentNameLine(stringstream & ss, const Comment & c) const;
-   void writeCommentMessageLines(stringstream & ss, vector<string> lines) const;
+   void writeCommentMessageLines(stringstream & ss, const vector<string> & lines) const;
    void writeCommentSeperatorLine(stringstream & ss) const;
 
    void writeNameLine(stringstream & ss,
@@ -58,7 +58,7 @@ private:
    void get_num_likes();
    void get_comments();
    
-   const static unsigned int LINE_WIDTH = 70;
+   const static unsigned short int LINE_WIDTH = 70;
    
    Json::Value story;
    int index;

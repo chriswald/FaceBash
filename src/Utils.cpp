@@ -5,7 +5,7 @@
  * Displays a prompt to the user and waits for input, returned as a
  * string.
  */
-string Utils::prompt(string message)
+string Utils::prompt(const string & message)
 {
    char * tmp;
    tmp = readline(message.c_str());

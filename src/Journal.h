@@ -15,12 +15,12 @@ using std::vector;
 class Journal
 {
 public:
-   Journal(bool get_stories_now = false, string who = string("me"));
+   Journal(bool get_stories_now = false, string who = string("\0"));
    ~Journal();
    friend ostream & operator<<(ostream & os, const Journal j);
    int length();
-   NewsStory operator[](int index);
-   bool getNewsStories(string who);
+   NewsStory & operator[](int index);
+   bool getNewsStories(const string & who);
    
 private:
    vector<NewsStory> news_stories;

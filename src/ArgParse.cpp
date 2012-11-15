@@ -71,7 +71,7 @@ void ArgParse::ParseArgs()
    // Upload a batch of photos to the user's account under the
    // desired album, "F.aceBash" by default.
    else if (argHas("-u") || argHas("--upload"))
-      UploadPhotos();
+      Upload();
 
    // Show the version information (without help text).
    else if (argHas("-v") || argHas("--version"))
@@ -629,7 +629,7 @@ void ArgParse::UpdateStatus()
 }
 
 /*
- * Upload Photos:
+ * Upload:
  * Batch uploads photos to an album. User can specify photos to be
  * uploaded, the name of the album to upload to, and the description
  * of that album. The default album is "F.aceBash", with no
@@ -658,7 +658,7 @@ void ArgParse::UpdateStatus()
  *   files. No code is implemented client-side to check valid file
  *   types.
  */
-void ArgParse::UploadPhotos()
+void ArgParse::Upload()
 {
    // Set some meaningful default values.
    string album_name = "F.aceBash";
@@ -677,7 +677,6 @@ void ArgParse::UploadPhotos()
    {
       int album_index = argIndex("--album");
       int msg_index   = argIndex("--val");
-      int list_index  = argIndex("--list");
       int img_index   = argIndex("--img");
       int vid_index   = argIndex("--vid");
 

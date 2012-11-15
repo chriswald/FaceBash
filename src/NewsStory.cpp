@@ -35,6 +35,10 @@ string NewsStory::getID() const
    return ID;
 }
 
+/*
+ * Number of Comments:
+ * Returns the number of comments on a news story.
+ */
 int NewsStory::numComments()
 {
    return num_comments;
@@ -171,7 +175,7 @@ void NewsStory::formatNewsStory(stringstream & ss) const
    ss << endl;
 }
 
-vector<string> NewsStory::setLineWidth(string message, int width) const
+vector<string> NewsStory::setLineWidth(const string & message, int width) const
 {
    vector<string> lines;
    string remainder = message;
@@ -221,7 +225,7 @@ vector<string> NewsStory::setLineWidth(string message, int width) const
  * Writes each line from lines to os with leading characters and
  * trailing characters with enough spaces to evenly align everything.
  */
-void NewsStory::writePostMessageLines(stringstream & ss, const vector<string> lines) const
+void NewsStory::writePostMessageLines(stringstream & ss, const vector<string> & lines) const
 {
    writeMessageLines(ss, lines, "|  ");
 }
@@ -256,7 +260,7 @@ void NewsStory::writeCommentNameLine(stringstream & ss, const Comment & c) const
    writeNameLine(ss, c.getPostedBy(), "     | ", c.getNumLikes(), s.str());
 }
 
-void NewsStory::writeCommentMessageLines(stringstream & ss, vector<string> lines) const
+void NewsStory::writeCommentMessageLines(stringstream & ss, const vector<string> & lines) const
 {
    writeMessageLines(ss, lines, "     |   ");
 }

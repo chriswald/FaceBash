@@ -35,7 +35,7 @@ private:
    string username;
    string password;
    
-   void SetStdinEcho(bool);
+   void SetStdinEcho(bool enable);
 };
 
 #endif //__LOGIN_FIELD_H

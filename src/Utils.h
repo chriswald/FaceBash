@@ -15,10 +15,7 @@ using std::string;
 class Utils
 {
 public:
-   static string prompt(string message);
-   
-private:
-   static char* line_read;
+   static string prompt(const string & message);
 };
 
 #endif // __UTILS_H

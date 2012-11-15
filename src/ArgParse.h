@@ -59,7 +59,7 @@ public:
    void Logout();
    void ShowNewsFeed();
    void UpdateStatus();
-   void UploadPhotos();
+   void Upload();
    void AboutFriend();
    void ShowUpcomingBirthdays();
    void AboutMe();
@@ -68,9 +68,6 @@ public:
    void ShowVersion();
    
 private:
-   string prompt(string message);
-   string getFriendID(string name);
-   void   formatNewsStory(ostream & os, Json::Value story, int index);
    bool   relogin();
    bool   makeAlbum(const string & name, const string & message, string & ID);
    bool   getAlbumNames(map<string, string> & names);
@@ -80,7 +77,6 @@ private:
    int     count;
    string *arguments;
    
-   const static unsigned short int LINE_WIDTH = 70;
    const static unsigned short int ERROR_CODE_LENGTH = 3;
 };
 

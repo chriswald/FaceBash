@@ -23,12 +23,13 @@ int Journal::length()
    return news_stories.size();
 }
 
-NewsStory Journal::operator[](int index)
+NewsStory & Journal::operator[](int index)
 {
-   return news_stories[index];
+   NewsStory & tmp = news_stories[index];
+   return tmp;
 }
 
-bool Journal::getNewsStories(string who)
+bool Journal::getNewsStories(const string & who)
 {
    // Get the JSON from Facebook
    stringstream ss;
