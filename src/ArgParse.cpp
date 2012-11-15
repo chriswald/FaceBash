@@ -138,8 +138,7 @@ void ArgParse::Comment()
 	 who_index = argIndex("--who");
 	 if (who_index < count - 1)
 	 {
-	    friend_ID = getFriendID(arguments[who_index + 1]);
-	    if (friend_ID == "\0")
+	    if (!NetUtils::getFriendID(arguments[who_index + 1], friend_ID))
 	       return;
 	 }
       }
@@ -225,8 +224,7 @@ void ArgParse::Like()
 	 who_index = argIndex("--who");
 	 if (who_index < count - 1)
 	 {
-	    friend_ID = getFriendID(arguments[who_index + 1]);
-	    if (friend_ID == "\0")
+	    if (!NetUtils::getFriendID(arguments[who_index + 1], friend_ID))
 	       return;
 	 }
       }
@@ -464,8 +462,7 @@ void ArgParse::ShowNewsFeed()
 	 who_index = argIndex("--who");
 	 if (who_index < count - 1)
 	 {
-	    friend_ID = getFriendID(arguments[who_index + 1]);
-	    if (friend_ID == "\0")
+	    if (!NetUtils::getFriendID(arguments[who_index + 1], friend_ID))
 	       return;
 	 }
       }
@@ -541,8 +538,7 @@ void ArgParse::UpdateStatus()
 	 who_index = argIndex("--who");
 	 if (who_index < count - 1)
 	 {
-	    friend_ID = getFriendID(arguments[who_index + 1]);
-	    if (friend_ID == "\0")
+	    if (!NetUtils::getFriendID(arguments[who_index + 1], friend_ID))
 	       return;
 	 }
       }
@@ -1068,92 +1064,6 @@ void ArgParse::ShowVersion()
 {
    cout << "F.aceBash v" << version                 << endl;
    cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
-}
-
-/*
- * Get Friend's ID:
- * Queries Facebook for the active user's friend list, then search
- * that list for all friends whose names contain the name
- * parameter, agregating the ID's of all matches. If more than one
- * match is found an error message is shown and NULL is returned.
- */
-string ArgParse::getFriendID(string name)
-{
-   if (name == "me")
-      return name;
-
-   // Query Facebook for a list of all the user's friends.
-   stringstream ss;
-   string url = string("https://graph.facebook.com/me/friends");
-   bool request_success = NetUtils::makeRequest(ss, url);
-   
-   if (!request_success)
-   {
-      return "\0";
-   }
-   
-   // Parse said list.
-   Json::Value root;
-   Json::Reader reader;
-   
-   bool parsingSuccessful = reader.parse(ss.str(), root);
-   
-   // Make sure no errors occurred.
-   if (!parsingSuccessful)
-   {
-      cerr << "Failed to parse the document." << endl;
-      return "\0";
-   }
-   
-   int error_code = NetUtils::showErrorMessage(root);
-   if (error_code)
-   {
-      bool relogin_success = relogin();
-      if (!relogin_success)
-      {
-	 return "\0";
-      }
-   }
-   
-   map<string, string> ids;
-   
-   // Search throught the returned friend list for all names matching
-   // the name parameter.
-   const Json::Value data = root["data"];
-   for (unsigned int i = 0; i < data.size(); i ++)
-   {
-      string curName = data[i]["name"].asString();
-      string curID   = data[i]["id"].asString();
-      if (curName.find(name.c_str()) < string::npos)
-      {
-	 ids[curName] = curID;
-      }
-   }
-   
-   // If the number of matches is not exactly one display an error
-   // message and return \0. Otherwise return the ID of the one match.
-   if (ids.size() > 1)
-   {
-      cerr << "You have " << ids.size() << " friends with '" 
-	   << name << "' in their name." << endl;
-      map<string, string>::iterator itr = ids.begin();
-      int how_many = (ids.size() > 5 ? 5 : ids.size());
-      for (int i = 0; i < how_many; i ++, itr ++)
-      {
-	 cerr << itr->first << endl;
-      }
-      return "\0";
-   }
-   else if (ids.size() == 0)
-   {
-      cerr << "You don't have any friends with '" << name 
-	   << "' in their name." << endl;
-      return "\0";
-   }
-   else
-   {
-      return ids.begin()->second;
-   }
 }
 
 /*

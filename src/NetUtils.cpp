@@ -172,3 +172,110 @@ string NetUtils::authToken()
       return "\0";
    }
 }
+
+/*
+ * Get Friend's ID:
+ * Queries Facebook for the active user's friend list, then search
+ * that list for all friends whose names contain the name
+ * parameter, agregating the ID's of all matches. If more than one
+ * match is found an error message is shown and NULL is returned.
+ */
+bool NetUtils::getFriendID(const string & name, string & ID)
+{
+   if (name == "me")
+   {
+      ID = name;
+      return true;
+   }
+
+   // Query Facebook for a list of all the user's friends.
+   Json::Value root;
+   if (!queryForFriends(root))
+      return false;
+
+   map<string, string> ids;
+   
+   // Search throught the returned friend list for all names matching
+   // the name parameter.
+   searchForName(root, ids, name);
+   
+   // If the number of matches is not exactly one display an error
+   // message and return \0. Otherwise return the ID of the one match.
+   if (ids.size() > 1)
+   {
+      cerr << "You have " << ids.size() << " friends with '" 
+	   << name << "' in their name." << endl;
+      map<string, string>::iterator itr = ids.begin();
+      int how_many = (ids.size() > 5 ? 5 : ids.size());
+      for (int i = 0; i < how_many; i ++, itr ++)
+      {
+	 cerr << itr->first << endl;
+      }
+      return false;
+   }
+   else if (ids.size() == 0)
+   {
+      cerr << "You don't have any friends with '" << name 
+	   << "' in their name." << endl;
+      return false;
+   }
+   else
+   {
+      ID = ids.begin()->second;
+      return true;
+   }
+}
+
+bool NetUtils::queryForFriends(Json::Value & root)
+{
+   stringstream ss;
+   string url = string("https://graph.facebook.com/me/friends");
+   bool request_success = NetUtils::makeRequest(ss, url);
+   
+   if (!request_success)
+   {
+      return false;
+   }
+   
+   // Parse said list.
+   Json::Reader reader;
+   
+   bool parsingSuccessful = reader.parse(ss.str(), root);
+   
+   // Make sure no errors occurred.
+   if (!parsingSuccessful)
+   {
+      cerr << "Failed to parse the document." << endl;
+      return false;
+   }
+   
+   int error_code = NetUtils::showErrorMessage(root);
+   if (error_code)
+   {
+      return false;
+   }
+
+   return true;
+}
+
+void NetUtils::searchForName(const Json::Value & root,
+			     map<string, string> & ids,
+			     const string & name)
+{
+   string lname = name;
+   transform(name.begin(), name.end(), lname.begin(), tolower);
+
+   const Json::Value data = root["data"];
+   for (unsigned int i = 0; i < data.size(); i ++)
+   {
+      string curName  = data[i]["name"].asString();
+      string lcurName = curName;
+      string curID    = data[i]["id"].asString();
+      transform(curName.begin(), curName.end(), lcurName.begin(), tolower);
+
+      if (lcurName.find(lname.c_str()) < string::npos)
+      {
+	 ids[curName] = curID;
+      }
+   }
+}

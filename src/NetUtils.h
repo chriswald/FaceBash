@@ -1,8 +1,10 @@
 #ifndef __NET_UTILS_H
 #define __NET_UTILS_H
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
 
@@ -12,11 +14,14 @@
 
 #include <json/json.h>
 
+using std::cerr;
 using std::cout;
 using std::endl;
 using std::ifstream;
+using std::map;
 using std::string;
 using std::stringstream;
+using std::transform;
 
 class NetUtils
 {
@@ -36,9 +41,15 @@ public:
 			   const string & url);
    
    static int showErrorMessage(const Json::Value & root);
+
+   static bool getFriendID(const string & name, string & ID);
    
 private:
    static string authToken();
+   static bool queryForFriends(Json::Value & root);
+   static void searchForName(const Json::Value & root,
+			     map<string, string> & ids,
+			     const string & name);
 };
 
 #endif // __NET_UTILS_H
