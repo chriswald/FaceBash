@@ -113,7 +113,17 @@ int ArgParse::argIndex(string arg)
  * Comment on a news story. User can specify the index of a comment as
  * well as the user whose wall the story resides on. The index
  * defaults to 1, or the most recent story. The wall defaults to the
- * user's personal news feed.
+ * user's personal news feed. Responds to the following arguments:
+ * who [name] - The name of the friend whose wall the item is on. Can
+ *   be a friend's name, "me", or blank. If "me" is passed user's own
+ *   wall is used. If left blank the user's news feed is used.
+ * num [number] - The index number of the post to comment on. This
+ *   number is shown in the head line of each post. It is used in
+ *   combination with the "who" parameter to specify posts on
+ *   different walls.
+ * val [message] - The text of the comment. If this is provided the
+ *   user is not prompted for input and the chosen post is not
+ *   displayed.
  */
 void ArgParse::Comment()
 {
@@ -199,6 +209,26 @@ void ArgParse::Comment()
    story.CommentOnStory(message);
 }
 
+/*
+ * Like:
+ * Tells Facebook to add your stamp of approval to a status or
+ * comment. Responds to the following arguments:
+ * who [name] - The name of the friend whose wall the item is on. Can
+ *   be a friend's name, "me", or blank. If "me" is passed user's own
+ *   wall is used. If left blank the user's news feed is used.
+ * num [number] - The index value of the item to Like. This is
+ *   displayed next to the item. This number has a specific format of
+ *   x(.y) where the first number, x, is the index of the post to Like
+ *   and y is the index of the comment to Like if applicable. If no x
+ *   is provided, but a .y is, the system assumes a value of x=1 and
+ *   tries to Like comment 1.y. If no .y is provided the system tries
+ *   to Like post x. If x. is provided the system ignores the '.' and
+ *   tries to like post x. If no value is provided the system assumes
+ *   a value of 1, and so tries to Like post 1 on the specified
+ *   stream.
+ * force-yes - If present the system skips the confirmation step and
+ *   automatically Likes the specified item.
+ */
 void ArgParse::Like()
 {
    // Get a new journal, but don't populate it.
@@ -434,7 +464,14 @@ void ArgParse::Logout()
  * text so that posts that don't make sense will be filtered out. If
  * the user passes a number in the arguments that many stories will be
  * shown. This can be used to be sure the most recent stories don't
- * get pushed out of view.
+ * get pushed out of view. Responds to the following arguments:
+ * who [name] - The name of the friend whose wall the item is on. Can
+ *   be a friend's name, "me", or blank. If "me" is passed user's own
+ *   wall is used. If left blank the user's news feed is used.
+ * num [number] - The maximum number of posts to show. Must be greater
+ *   than zero. If the provided number is greater than the number of
+ *   available posts only the available posts are shown and the user
+ *   is informed that output ended early.
  */
 void ArgParse::ShowNewsFeed()
 {
@@ -518,7 +555,12 @@ void ArgParse::ShowNewsFeed()
  * Handles all tasks associated with allowing a user to update his or
  * her status. Prompts the user for a status message, then polls for
  * the authentification token, then submits a POST to the Facebook
- * Graph API.
+ * Graph API. Responds to the following arguments:
+ * who [name] - The name of the friend whose wall the item is on. Can
+ *   be a friend's name, "me", or blank. If "me" is passed user's own
+ *   wall is used. If left blank the user's news feed is used.
+ * val [message] - The text of the status update. If this is provided
+ *   the user is not promped for input.
  */
 void ArgParse::UpdateStatus()
 {
@@ -594,6 +636,27 @@ void ArgParse::UpdateStatus()
  * description. The user can also choose to only display a list of
  * existing albums. If the album exists already any specified message
  * will be ignored. Images can be uploaded individually or batch.
+ * Responds to the following arguments:
+ * album [name] - The name of the album to upload photos to. If none
+ *   provided "F.aceBash" is used by default. If the specified album
+ *   does not exist it is created. Videos do not get uploaded to
+ *   albums so if only videos are being uploaded this argument is not
+ *   needed and will just be ignored if provided.
+ * val [message] - The description to apply to the album. If a new
+ *   album is created this message is passed as the description of the
+ *   new album. If the album alread exists this value is ignored and
+ *   the user is notified.
+ * list - If this flag is set all other arguments are ignored and the
+ *   only action taken is to display the names of all existing
+ *   albums.
+ * img [files...] - This specifies the list of files to upload to
+ *   whichever album has been specified. This list can contain any
+ *   number of image files. No code is implemented client-side to
+ *   check valid file types.
+ * vid [files...] - This specifies the list of files to upload to
+ *   Facebook as videos. This list can contain any number of video
+ *   files. No code is implemented client-side to check valid file
+ *   types.
  */
 void ArgParse::UploadPhotos()
 {
@@ -650,11 +713,7 @@ void ArgParse::UploadPhotos()
 	    begin_img_index = img_index + 1;
 	    for (int i = begin_img_index; i <= count; i ++)
 	    {
-	       if (i == album_index ||
-		   i == msg_index   ||
-		   i == list_index  ||
-		   i == vid_index   ||
-		   i == count)
+	       if (arguments[i][0] == '-' || i == count)
 	       {
 		  num_imgs = (i - 1) - img_index;
 		  break;
