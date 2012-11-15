@@ -195,8 +195,6 @@ void ArgParse::Comment()
       message = Utils::prompt("Comment: ");
    }
 
-   cout << message << endl;
-
    // Send that comment to Facebook.
    story.CommentOnStory(message);
 }
