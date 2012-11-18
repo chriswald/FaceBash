@@ -74,6 +74,8 @@ private:
    bool   sendImagesToAlbum(const string & ID, const vector<string> & files);
    bool   sendVideosToFacebook(const vector<string> & files);
 
+   void   parseRange(const string & arg);
+
    int     count;
    string *arguments;
    

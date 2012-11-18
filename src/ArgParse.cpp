@@ -510,6 +510,7 @@ void ArgParse::ShowNewsFeed()
 	 num_index = argIndex("--num");
 	 if (num_index < count - 1)
 	 {
+	    parseRange(arguments[num_index + 1]);
 	    how_many = atoi(arguments[num_index + 1].c_str());
 	 }
       }
@@ -1125,4 +1126,69 @@ void ArgParse::ShowVersion()
 bool ArgParse::relogin()
 {
    return false;
+}
+
+void ArgParse::parseRange(const string & argument)
+{
+   string arg = argument;
+
+   vector<int> indices;
+   string unit = "";
+
+   int lasti = 0;
+   int thisi = 0;
+
+   bool dorange = false;
+
+   string::iterator itr;
+   for (itr = arg.begin(); itr != arg.end(); itr ++)
+   {
+      if (*itr == ',')
+      {
+	 lasti = thisi;
+	 thisi = atoi(unit.c_str());
+	 if (dorange)
+	 {
+	    for (int i = lasti; i <= thisi; i ++)
+	       indices.push_back(i);
+	    dorange = false;
+	 }
+	 else
+	 {
+	    indices.push_back(thisi);
+	 }
+	 unit = "";
+      }
+      else if (*itr == '-')
+      {
+	 lasti = thisi;
+	 thisi = atoi(unit.c_str());
+	 unit = "";
+	 dorange = true;
+      }
+      else
+      {
+	 unit += *itr;
+      }
+   }
+
+   if (unit.length() > 0)
+   {
+      lasti = thisi;
+      thisi = atoi(unit.c_str());
+      if (dorange)
+      {
+	 for (int i = lasti; i <= thisi; i ++)
+	    indices.push_back(i);
+	 dorange = false;
+      }
+      else
+      {
+	 indices.push_back(thisi);
+      }
+   }
+   /*
+   for (unsigned int i = 0; i < indices.size(); i ++)
+      cout << indices[i] << endl;
+   */
 }
