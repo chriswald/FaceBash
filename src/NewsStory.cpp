@@ -107,47 +107,73 @@ void NewsStory::LikeComment(int index)
  */
 void NewsStory::formatNewsStory(stringstream & ss) const
 {
-   string message = story["message"].asString();
+   string message;
    string posted_by = story["from"]["name"].asString();
 
-   if (message.length() == 0)
+   string type = story["type"].asString();
+   string status_type = story["status_type"].asString();
+   
+   if      (type == "link")
    {
-      string type = story["type"].asString();
-      string status_type = story["status_type"].asString();
+      message = posted_by + string(" posted a link");
+      if (story["application"]["name"].asString().length() > 0)
+	 message += string(" from ")
+	    + story["application"]["name"].asString() + string("\n");
+      else
+	 message += string(":\n");
+      
+      if (story["link"].asString().length() > 0)
+	 message += story["link"].asString() + string("\n");
+      
+      if (story["message"].asString().length() > 0)
+	 message += story["message"].asString() + string("\n");
 
-      if      (type == "link")
+      if (story["story"].asString().length() > 0)
+	 message += story["story"].asString();
+      
+      string description = story["description"].asString();
+      string caption = story["caption"].asString();
+      string submessage;
+      
+      if (caption.length() != 0)
       {
-	 message = story["link"].asString() + string("\n") 
-	         + story["story"].asString();
-	 
-	 string description = story["description"].asString();
-	 string caption = story["caption"].asString();
-	 string submessage;
-	 
-	 if (caption.length() != 0)
-	 {
-	    submessage = caption;
-	    if (description.length() != 0)
-	       submessage += string(": ") + description;
-	 }
-	 else
-	    submessage = description;
+	 submessage = caption;
+	 if (description.length() != 0)
+	    submessage += string(": ") + description;
+      }
+      else
+	 submessage = description;
+      
+      if (submessage.length() > 0)
 	 message += string("\n") + submessage;
-      }
-      else if (type == "photo")
-      {
+   }
+   else if (type == "photo")
+   {
+      if (story["story"].asString().length() > 0)
+	 message = story["story"].asString() + string("\n");
+      else
+	 message = posted_by + string(" posted a photo:\n");
+      
+      if (story["message"].asString().length() > 0)
+	 message += story["message"].asString();
+   }
+   else if (type == "status")
+   {
+      if (story["message"].asString().length() > 0)
+	 message = story["message"].asString();
+      else
 	 message = story["story"].asString();
-      }
-      else if (type == "status")
+   }
+   else if (type == "video")
+   {
+      if (status_type == "added_video")
       {
-	 message = story["story"].asString();
+	 message = posted_by + string(" uploaded a video.");
       }
-      else if (type == "video")
+      else if (status_type == "shared_story")
       {
-	 if (status_type == "added_video")
-	 {
-	    message = posted_by + string(" uploaded a video.");
-	 }
+	 if (story["message"].asString().length() > 0)
+	    message = story["message"].asString() + string("\n");
       }
    }
    
