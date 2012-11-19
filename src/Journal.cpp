@@ -38,8 +38,9 @@ bool Journal::getNewsStories(const string & who)
       url += string("me/home");
    else
       url += who + string("/feed");
+
    bool request_success = NetUtils::makeRequest(ss, url);
-   
+
    // If the request wasn't successfully made just return. Some
    // function previous to this should have displayed some error
    // message.

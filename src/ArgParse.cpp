@@ -483,7 +483,8 @@ void ArgParse::ShowNewsFeed()
 
    // Set some default values.
    string friend_ID = "\0";
-   int how_many = -1;
+   bool size_spec = false;
+   set<int> indices;
    
    // See if there are additional arguments.
    if (count > 1)
@@ -510,8 +511,10 @@ void ArgParse::ShowNewsFeed()
 	 num_index = argIndex("--num");
 	 if (num_index < count - 1)
 	 {
-	    parseRange(arguments[num_index + 1]);
-	    how_many = atoi(arguments[num_index + 1].c_str());
+	    size_spec = true;
+	    bool b = parseRange(arguments[num_index + 1], indices);
+	    if (!b)
+	       return;
 	 }
       }
    }
@@ -520,18 +523,10 @@ void ArgParse::ShowNewsFeed()
    // ("me").
    journal.getNewsStories(friend_ID);
 
-   // If no number of stories was read signal to display all available
-   // news stories.
-   if (how_many == -1)
-      how_many = journal.length();
-   
-   if (how_many == 0)
-      return;
-
    // Now that I know how many stories are in the journal, bounds
    // check the how_many number to make sure that all the stories
    // exist.
-   if (how_many > journal.length())
+   /*if (how_many > journal.length())
    {
       show_size_message = true;
       how_many = journal.length();
@@ -541,11 +536,27 @@ void ArgParse::ShowNewsFeed()
       cerr << "Index out of bounds." << endl;
       cerr << "Minimum value: 1" << endl;
       return;
+      }*/
+
+   if (size_spec)
+   {
+      set<int>::reverse_iterator itr;
+      for (itr = indices.rbegin(); itr != indices.rend(); itr ++)
+      {
+	 if (*itr > journal.length())
+	 {
+	    show_size_message = true;
+	 }
+	 else
+	 {
+	    cout << journal[(*itr) - 1];
+	 }
+      }
    }
-   
-   // Display the requested number of news stories.
-   for (int i = how_many-1; i >= 0; i --)
-      cout << journal[i];
+   else
+   {
+      cout << journal;
+   }
 
    if (show_size_message)
       cout << "Output truncated to " << journal.length() << endl;
@@ -1128,11 +1139,11 @@ bool ArgParse::relogin()
    return false;
 }
 
-void ArgParse::parseRange(const string & argument)
+bool ArgParse::parseRange(const string & argument, set<int> & list)
 {
    string arg = argument;
 
-   vector<int> indices;
+   set<int> indices;
    string unit = "";
 
    int lasti = 0;
@@ -1150,12 +1161,16 @@ void ArgParse::parseRange(const string & argument)
 	 if (dorange)
 	 {
 	    for (int i = lasti; i <= thisi; i ++)
-	       indices.push_back(i);
+	    {
+	       if (i > 0)
+		  indices.insert(i);
+	    }
 	    dorange = false;
 	 }
 	 else
 	 {
-	    indices.push_back(thisi);
+	    if (thisi > 0)
+	       indices.insert(thisi);
 	 }
 	 unit = "";
       }
@@ -1166,9 +1181,14 @@ void ArgParse::parseRange(const string & argument)
 	 unit = "";
 	 dorange = true;
       }
-      else
+      else if (*itr >= '0' && *itr <= '9')
       {
 	 unit += *itr;
+      }
+      else
+      {
+	 cerr << "Parser error. Unknown character '" << *itr << "'" << endl;
+	 return false;
       }
    }
 
@@ -1179,16 +1199,20 @@ void ArgParse::parseRange(const string & argument)
       if (dorange)
       {
 	 for (int i = lasti; i <= thisi; i ++)
-	    indices.push_back(i);
+	 {
+	    if (i > 0)
+	       indices.insert(i);
+	 }
 	 dorange = false;
       }
       else
       {
-	 indices.push_back(thisi);
+	 if (thisi > 0)
+	    indices.insert(thisi);
       }
    }
-   /*
-   for (unsigned int i = 0; i < indices.size(); i ++)
-      cout << indices[i] << endl;
-   */
+
+   list = indices;
+
+   return true;
 }

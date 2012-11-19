@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,6 +35,7 @@ using std::endl;
 using std::ifstream;
 using std::ostream;
 using std::ostringstream;
+using std::set;
 using std::setfill;
 using std::setw;
 using std::stack;
@@ -74,7 +76,7 @@ private:
    bool   sendImagesToAlbum(const string & ID, const vector<string> & files);
    bool   sendVideosToFacebook(const vector<string> & files);
 
-   void   parseRange(const string & arg);
+   bool   parseRange(const string & arg, set<int> & list);
 
    int     count;
    string *arguments;
