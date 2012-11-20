@@ -1181,6 +1181,11 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
 	 unit = "";
 	 dorange = true;
       }
+      else if (*itr == '*')
+      {
+	 dorange = true;
+	 unit = "";
+      }
       else if (*itr >= '0' && *itr <= '9')
       {
 	 unit += *itr;
