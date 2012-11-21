@@ -157,6 +157,10 @@ void NewsStory::formatNewsStory(stringstream & ss) const
       if (story["message"].asString().length() > 0)
 	 message += story["message"].asString();
    }
+   else if (type == "question")
+   {
+      message = story["story"].asString();
+   }
    else if (type == "status")
    {
       if (story["message"].asString().length() > 0)
@@ -174,6 +178,12 @@ void NewsStory::formatNewsStory(stringstream & ss) const
       {
 	 if (story["message"].asString().length() > 0)
 	    message = story["message"].asString() + string("\n");
+      }
+      else
+      {
+	 string n = story["from"]["name"].asString();
+	 message = n + string(" posted a video.\n\n");
+	 message += story["message"].asString();
       }
    }
    

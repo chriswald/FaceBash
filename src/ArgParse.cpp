@@ -23,6 +23,13 @@ ArgParse::~ArgParse()
    delete[] arguments;
 }
 
+/*void ArgParse::AddFunction(string sarg, string larg, void (*fnct)())
+{
+   short_args.push_back(sarg);
+   long_args.push_back(larg);
+   functions.push_back(fnct);
+   }*/
+
 /*
  * Parse Arguments:
  * Searches the provided arguments for meaningful inputs and calls
@@ -523,21 +530,6 @@ void ArgParse::ShowNewsFeed()
    // ("me").
    journal.getNewsStories(friend_ID);
 
-   // Now that I know how many stories are in the journal, bounds
-   // check the how_many number to make sure that all the stories
-   // exist.
-   /*if (how_many > journal.length())
-   {
-      show_size_message = true;
-      how_many = journal.length();
-   }
-   else if (how_many < 1)
-   {
-      cerr << "Index out of bounds." << endl;
-      cerr << "Minimum value: 1" << endl;
-      return;
-      }*/
-
    if (size_spec)
    {
       set<int>::reverse_iterator itr;
@@ -559,7 +551,8 @@ void ArgParse::ShowNewsFeed()
    }
 
    if (show_size_message)
-      cout << "Output truncated to " << journal.length() << endl;
+      cout << "Output truncated. Only " << journal.length()
+	   << " stories exist in this stream." << endl;
 }
 
 /*
