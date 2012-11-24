@@ -1109,7 +1109,7 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
    string arg = argument;
 
    set<int> indices;
-   const string DEFAULT_UNIT = "0";
+   const string DEFAULT_UNIT = "";
    string unit = DEFAULT_UNIT;
 
    int lasti = 0;
@@ -1149,14 +1149,21 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
       }
       else if (*itr == '*')
       {
-	 lasti = atoi(unit.c_str()) - 1;
-	 thisi = Journal::MAX_SIZE;
-	 for (int i = lasti; i <= thisi; i ++)
+	 if (unit == DEFAULT_UNIT)
 	 {
-	    if (i >= 0)
-	       indices.insert(i);
+	    dorange = true;
 	 }
-	 unit = DEFAULT_UNIT;
+	 else
+	 {
+	    lasti = atoi(unit.c_str()) - 1;
+	    thisi = Journal::MAX_SIZE;
+	    for (int i = lasti; i <= thisi; i ++)
+	    {
+	       if (i >= 0)
+		  indices.insert(i);
+	    }
+	    unit = DEFAULT_UNIT;
+	 }
       }
       else if (*itr >= '0' && *itr <= '9')
       {
