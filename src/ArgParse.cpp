@@ -1104,15 +1104,6 @@ void ArgParse::ShowVersion()
    cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
 }
 
-/*
- * ReLogin:
- * Uuuhhhhhh, yeah this might do something at some point.
- */
-bool ArgParse::relogin()
-{
-   return false;
-}
-
 bool ArgParse::parseRange(const string & argument, set<int> & list)
 {
    string arg = argument;
