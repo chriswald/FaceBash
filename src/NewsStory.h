@@ -1,6 +1,7 @@
 #ifndef __NEWS_STORY_H
 #define __NEWS_STORY_H
 
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -16,6 +17,8 @@
 
 using std::endl;
 using std::ostream;
+using std::setfill;
+using std::setw;
 using std::stringstream;
 using std::string;
 using std::vector;

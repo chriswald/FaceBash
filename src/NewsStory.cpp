@@ -311,24 +311,21 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name, const stri
    stringstream tmp;
    stringstream sindex;
    sindex << index << " |";
-   tmp << prefix << name;
    
+   unsigned int width = LINE_WIDTH - sindex.str().length();
+
+   stringstream likes_str;
    if (likes > 0)
    {
       if (likes == 1)
-	 tmp << "   <1 Like>";
+	 likes_str << "   <1 Like>";
       else
-	 tmp << "   <" << likes << " Likes>";
+	 likes_str << "   <" << likes << " Likes>";
    }
-   
-   unsigned int width = (LINE_WIDTH) - (sindex.str().length());
 
-   for (unsigned int i = tmp.str().length(); i <= width; i ++)
-   {
-      tmp << " ";
-   }
-   
-   tmp << sindex.str() << endl;
+   tmp << setw(width) << std::left << prefix + name + likes_str.str()
+       << sindex.str() << endl;
+
    ss << tmp.str();
 }
 
@@ -338,11 +335,8 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
    for (unsigned int i = 0; i < lines.size(); i ++)
    {
       stringstream stmp;
-      stmp << prefix << lines[i];
-      int len = stmp.str().length();
-      for (unsigned int j = len; j < LINE_WIDTH; j ++)
-	 stmp << " ";
-      stmp << "|" << endl;
+      stmp << std::left << setw(LINE_WIDTH - 1)
+	   << prefix + lines[i] << "|" << endl;
       tmp << stmp.str();
    }
    ss << tmp.str();
@@ -355,10 +349,8 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
 void NewsStory::writeSeperatorLine(stringstream & ss, const string & prefix) const
 {
    stringstream tmp;
-   tmp << prefix;
-   for (unsigned int i = tmp.str().length(); i < LINE_WIDTH; i ++)
-      tmp << "-";
-   tmp << "|" << endl;
+   tmp << std::left << setw(LINE_WIDTH - 1) << setfill('-')
+       << prefix << "|" << endl;
    ss << tmp.str();
 }
 
