@@ -1118,7 +1118,8 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
    string arg = argument;
 
    set<int> indices;
-   string unit = "";
+   const string DEFAULT_UNIT = "0";
+   string unit = DEFAULT_UNIT;
 
    int lasti = 0;
    int thisi = 0;
@@ -1146,13 +1147,13 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
 	    if (thisi >= 0)
 	       indices.insert(thisi);
 	 }
-	 unit = "";
+	 unit = DEFAULT_UNIT;
       }
       else if (*itr == '-')
       {
 	 lasti = thisi;
 	 thisi = atoi(unit.c_str()) - 1;
-	 unit = "";
+	 unit = DEFAULT_UNIT;
 	 dorange = true;
       }
       else if (*itr == '*')
@@ -1164,7 +1165,7 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
 	    if (i >= 0)
 	       indices.insert(i);
 	 }
-	 unit = "";
+	 unit = DEFAULT_UNIT;
       }
       else if (*itr >= '0' && *itr <= '9')
       {
