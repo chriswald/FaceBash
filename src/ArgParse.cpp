@@ -1104,22 +1104,46 @@ void ArgParse::ShowVersion()
    cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
 }
 
+/*
+ * Parse Number Range:
+ * Parses a range of numbers. Sets of numbers are comma delimited. A
+ * set can be one number, an set span, or an arbitrary span. A set
+ * span is two '-' seperated numbers where each number is the range is
+ * added to the list inclusivly. An arbitrary span is one number with
+ * a '*' either before or after it. If the '*' is before the number,
+ * then all numbers between 0 and the following number inclusively are
+ * added to the list. If the '*' is after the number, all numbers
+ * between the number and Journal::MAX_SIZE inclusivly are added to
+ * the list.
+ */
 bool ArgParse::parseRange(const string & argument, set<int> & list)
 {
+   // Assign this to a local variable so I can use an iterator.
    string arg = argument;
 
+   // Use a set to store the indicies so duplicates will be
+   // automatically ignored.
    set<int> indices;
+
+   // Set up the unit variable to hold the number being parsed.
    const string DEFAULT_UNIT = "";
    string unit = DEFAULT_UNIT;
 
+   // Have some memory of previous entries. This is useful for
+   // creating ranges.
    int lasti = 0;
    int thisi = 0;
 
+   // Decide whether the previous number should be applied to a
+   // range.
    bool dorange = false;
 
+   // Finally parse through the entire argument.
    string::iterator itr;
    for (itr = arg.begin(); itr != arg.end(); itr ++)
    {
+      // If the current character is a comma update lasti and thisi
+      // and insert numbers inclusivly over a range if applicable.
       if (*itr == ',')
       {
 	 lasti = thisi;
@@ -1140,6 +1164,9 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
 	 }
 	 unit = DEFAULT_UNIT;
       }
+
+      // If the current character is a dash just update lasti and
+      // thisi, signal that a range is being entered and reset unit.
       else if (*itr == '-')
       {
 	 lasti = thisi;
@@ -1147,10 +1174,17 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
 	 unit = DEFAULT_UNIT;
 	 dorange = true;
       }
+
+      // If the current character is an asterisk check to see if it is
+      // before a number or after. If it is before signal for a range
+      // starting at zero. If it is after do a range from the previous
+      // number to Journal::MAX_SIZE and reset everything.
       else if (*itr == '*')
       {
 	 if (unit == DEFAULT_UNIT)
 	 {
+	    lasti = thisi;
+	    thisi = 0;
 	    dorange = true;
 	 }
 	 else
@@ -1165,10 +1199,16 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
 	    unit = DEFAULT_UNIT;
 	 }
       }
+
+      // If the current character is a number add it to the end of
+      // unit.
       else if (*itr >= '0' && *itr <= '9')
       {
 	 unit += *itr;
       }
+
+      // If the current character is something else alert the user and
+      // stop execution, returning false.
       else
       {
 	 cerr << "Parser error. Unknown character '" << *itr << "'" << endl;
@@ -1176,6 +1216,8 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
       }
    }
 
+   // Now clean up anything left at the end. Do a range if needed or
+   // just add the last number to the list.
    if (unit.length() > 0)
    {
       lasti = thisi;
@@ -1198,5 +1240,6 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
 
    list = indices;
 
+   // Opperation completed successfully.
    return true;
 }
