@@ -15,6 +15,8 @@ using std::vector;
 class Journal
 {
 public:
+   const static int MAX_SIZE = 25;
+
    Journal(bool get_stories_now = false, string who = string("\0"));
    ~Journal();
    friend ostream & operator<<(ostream & os, const Journal j);

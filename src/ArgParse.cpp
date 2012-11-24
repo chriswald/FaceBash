@@ -23,13 +23,6 @@ ArgParse::~ArgParse()
    delete[] arguments;
 }
 
-/*void ArgParse::AddFunction(string sarg, string larg, void (*fnct)())
-{
-   short_args.push_back(sarg);
-   long_args.push_back(larg);
-   functions.push_back(fnct);
-   }*/
-
 /*
  * Parse Arguments:
  * Searches the provided arguments for meaningful inputs and calls
@@ -484,10 +477,6 @@ void ArgParse::ShowNewsFeed()
 {
    Journal journal (false);
 
-   // Set to true if the requested output is higher than the available
-   // output.
-   bool show_size_message = false;
-
    // Set some default values.
    string friend_ID = "\0";
    bool size_spec = false;
@@ -535,13 +524,9 @@ void ArgParse::ShowNewsFeed()
       set<int>::reverse_iterator itr;
       for (itr = indices.rbegin(); itr != indices.rend(); itr ++)
       {
-	 if (*itr > journal.length())
+	 if (*itr < journal.length())
 	 {
-	    show_size_message = true;
-	 }
-	 else
-	 {
-	    cout << journal[(*itr) - 1];
+	    cout << journal[(*itr)];
 	 }
       }
    }
@@ -549,10 +534,6 @@ void ArgParse::ShowNewsFeed()
    {
       cout << journal;
    }
-
-   if (show_size_message)
-      cout << "Output truncated. Only " << journal.length()
-	   << " stories exist in this stream." << endl;
 }
 
 /*
@@ -1150,19 +1131,19 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
       if (*itr == ',')
       {
 	 lasti = thisi;
-	 thisi = atoi(unit.c_str());
+	 thisi = atoi(unit.c_str()) - 1;
 	 if (dorange)
 	 {
 	    for (int i = lasti; i <= thisi; i ++)
 	    {
-	       if (i > 0)
+	       if (i >= 0)
 		  indices.insert(i);
 	    }
 	    dorange = false;
 	 }
 	 else
 	 {
-	    if (thisi > 0)
+	    if (thisi >= 0)
 	       indices.insert(thisi);
 	 }
 	 unit = "";
@@ -1170,13 +1151,19 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
       else if (*itr == '-')
       {
 	 lasti = thisi;
-	 thisi = atoi(unit.c_str());
+	 thisi = atoi(unit.c_str()) - 1;
 	 unit = "";
 	 dorange = true;
       }
       else if (*itr == '*')
       {
-	 dorange = true;
+	 lasti = atoi(unit.c_str()) - 1;
+	 thisi = Journal::MAX_SIZE;
+	 for (int i = lasti; i <= thisi; i ++)
+	 {
+	    if (i >= 0)
+	       indices.insert(i);
+	 }
 	 unit = "";
       }
       else if (*itr >= '0' && *itr <= '9')
@@ -1193,19 +1180,19 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
    if (unit.length() > 0)
    {
       lasti = thisi;
-      thisi = atoi(unit.c_str());
+      thisi = atoi(unit.c_str()) - 1;
       if (dorange)
       {
 	 for (int i = lasti; i <= thisi; i ++)
 	 {
-	    if (i > 0)
+	    if (i >= 0)
 	       indices.insert(i);
 	 }
 	 dorange = false;
       }
       else
       {
-	 if (thisi > 0)
+	 if (thisi >= 0)
 	    indices.insert(thisi);
       }
    }
