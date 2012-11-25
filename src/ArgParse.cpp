@@ -423,6 +423,7 @@ void ArgParse::Login()
 	  *     access their account (eg selected no instead of yes
 	  *     when asked to grant permission).
 	  *  3) The user is not connected to the internet.
+	  *  4) The user sent a SIGINT to the process during login.
 	  */
 	 if      (content == "001")
 	    cerr << "Invalid Email or Password." << endl;
@@ -432,6 +433,9 @@ void ArgParse::Login()
 	 
 	 else if (content == "003")
 	    cerr << "Not connected to the Internet." << endl;
+
+	 else if (content == "004")
+	    cerr << "Login process interrupted." << endl;
 	 
 	 else // Something went wrong (maybe on Facebook's end)
 	    cerr << "An unknown error occured." << endl;
