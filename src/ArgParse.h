@@ -54,6 +54,7 @@ public:
    void ParseArgs();
    bool argHas(string arg);
    int  argIndex(string arg);
+   bool isCommand(string arg);
    
    void Comment();
    void Like();
@@ -80,6 +81,8 @@ private:
 
    int     count;
    string *arguments;
+   int     cmdcount;
+   string *commands;
    
    const static unsigned short int ERROR_CODE_LENGTH = 3;
 };

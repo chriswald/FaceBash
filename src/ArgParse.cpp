@@ -8,10 +8,36 @@
  */
 ArgParse::ArgParse(int argc, char **argv)
 {
+   vector<string> cmds;
+
    count = argc-1;
    arguments = new string[count];
    for (int i = 0; i < count; i ++)
-      arguments[i] = string(argv[i+1]);
+   {
+      string tmp = string(argv[i+1]);
+      arguments[i] = tmp;
+      if (tmp[0] == '-')
+      {
+	 if (tmp[1] == '-')
+	    cmds.push_back(tmp.substr(2));
+	 else
+	 {
+	    for (unsigned int j = 1; j < tmp.length(); j ++)
+	    {
+	       string push = "";
+	       push += tmp[j];
+	       cmds.push_back(push);
+	    }
+	 }
+      }
+   }
+
+   cmdcount = cmds.size();
+   commands = new string[cmdcount];
+   for (int i = 0; i < cmdcount; i ++)
+   {
+      commands[i] = cmds[i];
+   }
 }
 
 /*
@@ -21,6 +47,7 @@ ArgParse::ArgParse(int argc, char **argv)
 ArgParse::~ArgParse()
 {
    delete[] arguments;
+   delete[] commands;
 }
 
 /*
@@ -38,49 +65,38 @@ void ArgParse::ParseArgs()
       ShowHelpText();
       return;
    }
-   
-   // Add a comment to a specified post.
-   if      (argHas("-c") || argHas("--comment"))
-      Comment();
-   
-   // The user specifically requested the help text. This also displays
-   // the version info.
-   else if (argHas("-h") || argHas("--help"))
-      ShowHelpText();
-   
-   // The user wants to login to F.aceBash / Facebook.
-   else if (argHas("-l") || argHas("--login"))
-      Login();
-   
-   // The user want to log out of F.aceBash / Facebook.
-   else if (                argHas("--logout"))
-      Logout();
 
-   else if (argHas("-k") || argHas("--like"))
-      Like();
-   
-   // Show the user's news feed.
-   else if (argHas("-n") || argHas("--show_news_feed"))
-      ShowNewsFeed();
-   
-   // Allow the user to post a status on either their own wall or the
-   // wall of a friend.
-   else if (argHas("-s") || argHas("--update_status"))
-      UpdateStatus();
-   
-   // Upload a batch of photos to the user's account under the
-   // desired album, "F.aceBash" by default.
-   else if (argHas("-u") || argHas("--upload"))
-      Upload();
+   for (int i = 0; i < cmdcount; i ++)
+   {
+      string cmd = commands[i];
+      
+      if      (cmd == "c" || cmd == "--comment")
+	 Comment();
+      
+      else if (cmd == "h" || cmd == "help")
+	 ShowHelpText();
 
-   // Show the version information (without help text).
-   else if (argHas("-v") || argHas("--version"))
-      ShowVersion();
-   
-   // The user entered some argument that isn't supported or
-   // recognized. Show the help text (with version information).
-   else
-      ShowHelpText();
+      else if (cmd == "l" || cmd == "login")
+	 Login();
+
+      else if (              cmd == "logout")
+	 Logout();
+
+      else if (cmd == "k" || cmd == "like")
+	 Like();
+
+      else if (cmd == "n" || cmd == "show_news_feed")
+	 ShowNewsFeed();
+
+      else if (cmd == "s" || cmd == "update_status")
+	 UpdateStatus();
+
+      else if (cmd == "u" || cmd == "upload")
+	 Upload();
+
+      else if (cmd == "v" || cmd == "version")
+	 ShowVersion();
+   }
 }
 
 /*
