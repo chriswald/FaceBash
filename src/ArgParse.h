@@ -79,10 +79,12 @@ private:
 
    bool   parseRange(const string & arg, set<int> & list);
 
+   void   addCommand(const string & command, int times);
+
    int     count;
    string *arguments;
    int     cmdcount;
-   string *commands;
+   vector<string> commands;
    
    const static unsigned short int ERROR_CODE_LENGTH = 3;
 };

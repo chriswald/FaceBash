@@ -22,21 +22,26 @@ ArgParse::ArgParse(int argc, char **argv)
 	    cmds.push_back(tmp.substr(2));
 	 else
 	 {
+	    int times_to_add = 0;
+	    string command_to_add = "";
 	    for (unsigned int j = 1; j < tmp.length(); j ++)
 	    {
-	       string push = "";
-	       push += tmp[j];
-	       cmds.push_back(push);
+	       if (tmp[j] >= '0' && tmp[j] <= '9')
+	       {
+		  times_to_add = times_to_add * 10 + (tmp[j] - '0');
+	       }
+	       else
+	       {
+		  if (command_to_add.length() > 0)
+		  {
+		     addCommand(command_to_add, times_to_add);
+		  }
+		  command_to_add = tmp[j];
+	       }
 	    }
+	    addCommand(command_to_add, times_to_add);
 	 }
       }
-   }
-
-   cmdcount = cmds.size();
-   commands = new string[cmdcount];
-   for (int i = 0; i < cmdcount; i ++)
-   {
-      commands[i] = cmds[i];
    }
 }
 
@@ -47,7 +52,16 @@ ArgParse::ArgParse(int argc, char **argv)
 ArgParse::~ArgParse()
 {
    delete[] arguments;
-   delete[] commands;
+}
+
+void ArgParse::addCommand(const string & command, int times)
+{
+   int times_added = 0;
+   do
+   {
+      commands.push_back(command);
+      times_added ++;
+   } while (times_added < times);
 }
 
 /*
@@ -66,7 +80,7 @@ void ArgParse::ParseArgs()
       return;
    }
 
-   for (int i = 0; i < cmdcount; i ++)
+   for (unsigned int i = 0; i < commands.size(); i ++)
    {
       string cmd = commands[i];
       
@@ -1098,7 +1112,7 @@ void ArgParse::ShowHelpText()
    cout << "Usage: bin/Facebash [options]"                                          << endl;
    cout                                                                             << endl;
    cout << "Options:"                                                               << endl;
-   cout << "   -c,  --comment   Adds comment to the nth most recent post."          << endl;
+   cout << "   -c, --comment    Adds comment to the nth most recent post."          << endl;
    cout << "                    [default most recent]"                              << endl;
    cout << "   -h, --help       Shows this message"                                 << endl;
    cout << "   -l, --login      Logs a user into Facebook"                          << endl;
