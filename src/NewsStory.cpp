@@ -311,8 +311,6 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name, const stri
    stringstream tmp;
    stringstream sindex;
    sindex << index << " |";
-   
-   unsigned int width = LINE_WIDTH - sindex.str().length();
 
    stringstream likes_str;
    if (likes > 0)
@@ -323,8 +321,12 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name, const stri
 	 likes_str << "   <" << likes << " Likes>";
    }
 
-   tmp << setw(width) << std::left << prefix + name + likes_str.str()
-       << sindex.str() << endl;
+   string text = prefix + name + likes_str.str();
+   int text_length = utf8::distance(text.begin(), text.end());
+
+   unsigned int width = LINE_WIDTH - text_length;
+
+   tmp << text << setw(width) << std::right << sindex.str() << endl;
 
    ss << tmp.str();
 }
@@ -335,8 +337,9 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
    for (unsigned int i = 0; i < lines.size(); i ++)
    {
       stringstream stmp;
-      stmp << std::left << setw(LINE_WIDTH - 1)
-	   << prefix + lines[i] << "|" << endl;
+      string text = prefix + lines[i];
+      int width = LINE_WIDTH - utf8::distance(text.begin(), text.end());
+      stmp << text << setw(width) << "|" << endl;
       tmp << stmp.str();
    }
    ss << tmp.str();

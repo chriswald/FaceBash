@@ -14,6 +14,7 @@
 
 #include "Comment.h"
 #include "NetUtils.h"
+#include "utf8.h"
 
 using std::endl;
 using std::ostream;
