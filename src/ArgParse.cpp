@@ -112,8 +112,6 @@ void ArgParse::ParseArgs()
 
       else if (cmd == "v" || cmd == "version")
 	 ShowVersion();
-      else
-	 cerr << cmd << endl;
    }
 }
 
