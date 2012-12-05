@@ -19,7 +19,9 @@ ArgParse::ArgParse(int argc, char **argv)
       if (tmp[0] == '-')
       {
 	 if (tmp[1] == '-')
-	    cmds.push_back(tmp.substr(2));
+	 {
+	    addCommand(tmp.substr(2), 1);
+	 }
 	 else
 	 {
 	    int times_to_add = 0;
@@ -84,7 +86,7 @@ void ArgParse::ParseArgs()
    {
       string cmd = commands[i];
       
-      if      (cmd == "c" || cmd == "--comment")
+      if      (cmd == "c" || cmd == "comment")
 	 Comment();
       
       else if (cmd == "h" || cmd == "help")
@@ -110,6 +112,8 @@ void ArgParse::ParseArgs()
 
       else if (cmd == "v" || cmd == "version")
 	 ShowVersion();
+      else
+	 cerr << cmd << endl;
    }
 }
 
@@ -502,10 +506,9 @@ void ArgParse::Logout()
  * who [name] - The name of the friend whose wall the item is on. Can
  *   be a friend's name, "me", or blank. If "me" is passed user's own
  *   wall is used. If left blank the user's news feed is used.
- * num [number] - The maximum number of posts to show. Must be greater
- *   than zero. If the provided number is greater than the number of
- *   available posts only the available posts are shown and the user
- *   is informed that output ended early.
+ * num [number] - A range of numbers representing the posts to
+ *   show. See documentation on parseRange for information on
+ *   formatting a range.
  */
 void ArgParse::ShowNewsFeed()
 {
@@ -1141,7 +1144,7 @@ void ArgParse::ShowVersion()
 /*
  * Parse Number Range:
  * Parses a range of numbers. Sets of numbers are comma delimited. A
- * set can be one number, an set span, or an arbitrary span. A set
+ * set can be one number, a fixed span, or an arbitrary span. A fixed
  * span is two '-' seperated numbers where each number is the range is
  * added to the list inclusivly. An arbitrary span is one number with
  * a '*' either before or after it. If the '*' is before the number,
