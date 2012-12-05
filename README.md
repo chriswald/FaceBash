@@ -3,8 +3,7 @@ F.aceBash
 
 A command line Facebook client for the tech oriented socialite.
 
-The initial design of this program was to keep it as light weight as possible, however some packages are required to build F.aceBash. I will try to list the sub dependenci\
-es of each package, however they may not be accurate.
+The initial design of this program was to keep it as light weight as possible, however some packages are required to build F.aceBash. I will try to list the sub dependencies of each package, however they may not be accurate.
 
 * Python 2.7 (for the login script)
 * libboost
