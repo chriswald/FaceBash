@@ -1,5 +1,11 @@
+#
+# Install Boost development libraries, curl development libraries, python 2.7 and g++
+#
 sudo apt-get install -y --force-yes libboost-dev libcurl4-openssl-dev python2.7 g++
 
+#
+# Install cURLpp
+#
 wget http://curlpp.googlecode.com/files/curlpp-0.7.3.tar.gz
 tar -xzf curlpp-0.7.3.tar.gz
 rm curlpp-0.7.3.tar.gz
@@ -11,12 +17,17 @@ make install
 cd ..
 rm -rf curlpp/
 
+#
+# Install easy_install and use that to install Mechanize
+#
 wget http://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11-py2.7.egg
 sudo chmod +x setuptools-0.6c11-py2.7.egg
 ./setuptools-0.6c11-py2.7.egg
 sudo easy_install mechanize
 rm setuptools-0.6c11-py2.7.egg
-
+#
+# Download JsonCpp. Download and install Scons. Use Scons to build JsonCpp. Copy JsonCpp .a and .so files to proper lib directory.
+#
 wget http://iweb.dl.sourceforge.net/project/jsoncpp/jsoncpp/0.5.0/jsoncpp-src-0.5.0.tar.gz
 tar -xzf jsoncpp-src-0.5.0.tar.gz
 rm jsoncpp-src-0.5.0.tar.gz
@@ -39,6 +50,9 @@ sudo ln -sf /usr/local/lib/libjson_linux-gcc-*_libmt.so /usr/local/lib/libjson.s
 cd ../../..
 sudo rm -rf jsoncpp/ scons/
 
+#
+# Install Ncurses
+#
 wget ftp://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
 tar -xzf ncurses*.tar.gz
 rm ncurses*.tar.gz
@@ -50,6 +64,9 @@ sudo make install
 cd ..
 rm -rf ncurses
 
+#
+# Install GNU Readline
+#
 wget ftp://ftp.cwru.edu/pub/bash/readline-6.2.tar.gz
 tar -xzf readline-6.2.tar.gz
 rm -f readline-6.2.tar.gz
@@ -61,7 +78,8 @@ sudo make install
 cd ..
 rm -rf readline/
 
-mkdir bin
-
+#
+# Run ldconfig so that all new libraries are recognized.
+#
 sudo bash -c "echo /usr/local/lib/ > /etc/ld.so.conf.d/local.conf"
 sudo /sbin/ldconfig
