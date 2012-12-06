@@ -413,9 +413,11 @@ void ArgParse::Login()
    else if (pid == 0)
    {
       // Execute the login script by passing a username and password.
+      string script = PKGPYEXECDIR;
+      script += "/login.pyc";
       execl("/usr/bin/python2.7",
 	    "/usr/bin/python2.7",
-	    "scripts/login.py",
+	    script.c_str(),
 	    login.user().c_str(),
 	    login.pass().c_str(),
 	    (char *) 0);
@@ -1110,7 +1112,7 @@ void ArgParse::ShowHelpText()
 {
    ShowVersion();
    cout                                                                             << endl;
-   cout << "Usage: bin/Facebash [options]"                                          << endl;
+   cout << "Usage: facebash [options]"                                              << endl;
    cout                                                                             << endl;
    cout << "Options:"                                                               << endl;
    cout << "   -c, --comment    Adds comment to the nth most recent post."          << endl;
@@ -1135,7 +1137,7 @@ void ArgParse::ShowHelpText()
  */
 void ArgParse::ShowVersion()
 {
-   cout << "F.aceBash v" << version                 << endl;
+   cout << PROG << " v" << PKGVERSION               << endl;
    cout << "Copyright (c) 2012 Christopher J. Wald" << endl;
 }
 

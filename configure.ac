@@ -4,8 +4,11 @@
 AC_PREREQ([2.69])
 AC_INIT([F.aceBash], [0.3], [wald.j.chris@gmail.com])
 AM_INIT_AUTOMAKE([F.aceBash], [0.3])
+AM_PATH_PYTHON([2.7], [], [
+   echo "**** Python 2.7 or later is required for this program."
+   exit -1])
 AC_CONFIG_SRCDIR([src/ArgParse.h])
-#AC_CONFIG_HEADERS([src/config.h])
+#AC_CONFIG_HEADERS([src/configure.h])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -51,5 +54,5 @@ AC_TYPE_UINT8_T
 # Checks for library functions.
 AC_FUNC_FORK
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile scripts/Makefile])
 AC_OUTPUT
