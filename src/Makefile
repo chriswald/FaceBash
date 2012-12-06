@@ -104,7 +104,7 @@ CXX = g++
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"F.aceBash\" -DPACKAGE_TARNAME=\"f-acebash\" -DPACKAGE_VERSION=\"0.3\" -DPACKAGE_STRING=\"F.aceBash\ 0.3\" -DPACKAGE_BUGREPORT=\"wald.j.chris@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"F.aceBash\" -DVERSION=\"0.3\" -DHAVE_LIBCURL=1 -DHAVE_LIBCURLPP=1 -DHAVE_LIBJSON=1 -DHAVE_LIBNCURSES=1 -DHAVE_LIBREADLINE=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STDLIB_H=1 -DHAVE_TERMIOS_H=1 -DHAVE_UNISTD_H=1 -DHAVE__BOOL=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1
+DEFS = -DPACKAGE_NAME=\"F.aceBash\" -DPACKAGE_TARNAME=\"f-acebash\" -DPACKAGE_VERSION=\"0.4\" -DPACKAGE_STRING=\"F.aceBash\ 0.4\" -DPACKAGE_BUGREPORT=\"wald.j.chris@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"F.aceBash\" -DVERSION=\"0.4\" -DHAVE_LIBCURL=1 -DHAVE_LIBCURLPP=1 -DHAVE_LIBJSON=1 -DHAVE_LIBNCURSES=1 -DHAVE_LIBREADLINE=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STDLIB_H=1 -DHAVE_TERMIOS_H=1 -DHAVE_UNISTD_H=1 -DHAVE__BOOL=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1
 DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
@@ -128,10 +128,10 @@ OBJEXT = o
 PACKAGE = F.aceBash
 PACKAGE_BUGREPORT = wald.j.chris@gmail.com
 PACKAGE_NAME = F.aceBash
-PACKAGE_STRING = F.aceBash 0.3
+PACKAGE_STRING = F.aceBash 0.4
 PACKAGE_TARNAME = f-acebash
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.3
+PACKAGE_VERSION = 0.4
 PATH_SEPARATOR = :
 PYTHON = /usr/bin/python
 PYTHON_EXEC_PREFIX = ${exec_prefix}
@@ -141,7 +141,7 @@ PYTHON_VERSION = 2.7
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
-VERSION = 0.3
+VERSION = 0.4
 abs_builddir = /home/chris/FaceBash/src
 abs_srcdir = /home/chris/FaceBash/src
 abs_top_builddir = /home/chris/FaceBash
@@ -190,7 +190,7 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 AUTOMAKE_OPTIONS = foreign
-facebash_SOURCES = ArgParse.cpp ArgParse.h Comment.cpp Comment.h config.h facebash.cpp Journal.cpp Journal.h LoginField.cpp LoginField.h NetUtils.cpp NetUtils.h NewsStory.cpp NewsStory.h Utils.cpp Utils.h utf8.h utf8/checked.h utf8/unchecked.h utf8/core.h
+facebash_SOURCES = ArgParse.cpp ArgParse.h Comment.cpp Comment.h facebash.cpp Journal.cpp Journal.h LoginField.cpp LoginField.h NetUtils.cpp NetUtils.h NewsStory.cpp NewsStory.h Utils.cpp Utils.h utf8.h utf8/checked.h utf8/unchecked.h utf8/core.h
 all: all-am
 
 .SUFFIXES:
