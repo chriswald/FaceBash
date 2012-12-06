@@ -14,6 +14,8 @@
 
 #include <json/json.h>
 
+#include "Utils.h"
+
 using std::cerr;
 using std::cout;
 using std::endl;
