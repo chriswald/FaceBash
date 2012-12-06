@@ -9,6 +9,7 @@ INVALID_LOGIN     = '001'
 PERMISSION_DENIED = '002'
 BAD_CONNECTION    = '003'
 INTERRUPTED       = '004'
+BAD_ARGUMENTS     = '005'
 UNKNOW_ERROR      = '999'
 
 def signal_handler(signal, frame):
@@ -26,6 +27,10 @@ def write_file(return_val):
     f.close()
 
 def main():
+
+    if not len(sys.argv) == 3:
+        write_file(BAD_ARGUMENTS)
+        exit(0)
 
     # Instantiate a Browser
     browser = mech.Browser()

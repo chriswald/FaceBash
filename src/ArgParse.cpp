@@ -470,6 +470,9 @@ void ArgParse::Login()
 
 	 else if (content == "004")
 	    cerr << "Login process interrupted." << endl;
+
+	 else if (content == "005")
+	    cerr << "Bad arguments. Reinstalling may help." << endl;
 	 
 	 else // Something went wrong (maybe on Facebook's end)
 	    cerr << "An unknown error occured." << endl;
