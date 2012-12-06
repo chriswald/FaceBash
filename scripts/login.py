@@ -16,13 +16,24 @@ def signal_handler(signal, frame):
     write_file(INTERRUPTED)
     exit(0)
 
+def ensuredir(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
 def write_file(return_val):
+    home_dir = os.path.expanduser('~')
+    file_dir = os.path.join(home_dir, '.facebash')
+    
+    ensuredir(file_dir)
+
+    outfile = os.path.join(file_dir, 'member27') 
+
     try:
-        os.remove('member27')
+        os.remove(outfile)
     except OSError:
         pass
 
-    f = open('member27', 'w+')
+    f = open(outfile, 'w+')
     f.write(return_val + '\n')
     f.close()
 

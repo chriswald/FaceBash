@@ -16,6 +16,7 @@ class Utils
 {
 public:
    static string prompt(const string & message);
+   static string authFile();
 };
 
 #endif // __UTILS_H

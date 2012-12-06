@@ -435,7 +435,8 @@ void ArgParse::Login()
    // like an authentification token is found that's good. Otherwise
    // display a message relating to the error that was found.
    std::ifstream member27;
-   member27.open("member27");
+   string filename = Utils::authFile();
+   member27.open(filename.c_str());
    if (member27.is_open())
    {
       string content;

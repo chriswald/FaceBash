@@ -175,7 +175,14 @@ Comment.o: Comment.cpp Comment.h /usr/include/c++/4.7/string \
  /usr/local/include/curlpp/internal/CurlHandle.hpp \
  /usr/local/include/curlpp/internal/OptionList.hpp \
  /usr/local/include/curlpp/internal/../OptionBase.hpp \
- /usr/local/include/curlpp/Easy.inl
+ /usr/local/include/curlpp/Easy.inl Utils.h \
+ /usr/local/include/readline/readline.h \
+ /usr/local/include/readline/rlstdc.h \
+ /usr/local/include/readline/rltypedefs.h \
+ /usr/local/include/readline/keymaps.h \
+ /usr/local/include/readline/chardefs.h /usr/include/string.h \
+ /usr/include/x86_64-linux-gnu/bits/string3.h \
+ /usr/local/include/readline/tilde.h
 
 Comment.h:
 
@@ -626,3 +633,21 @@ NetUtils.h:
 /usr/local/include/curlpp/internal/../OptionBase.hpp:
 
 /usr/local/include/curlpp/Easy.inl:
+
+Utils.h:
+
+/usr/local/include/readline/readline.h:
+
+/usr/local/include/readline/rlstdc.h:
+
+/usr/local/include/readline/rltypedefs.h:
+
+/usr/local/include/readline/keymaps.h:
+
+/usr/local/include/readline/chardefs.h:
+
+/usr/include/string.h:
+
+/usr/include/x86_64-linux-gnu/bits/string3.h:
+
+/usr/local/include/readline/tilde.h:

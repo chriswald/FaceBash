@@ -175,7 +175,14 @@ NewsStory.o: NewsStory.cpp NewsStory.h /usr/include/c++/4.7/iomanip \
  /usr/include/c++/4.7/bits/codecvt.h /usr/include/c++/4.7/cstdio \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/basic_file.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++io.h \
- /usr/include/c++/4.7/bits/fstream.tcc utf8.h utf8/checked.h utf8/core.h \
+ /usr/include/c++/4.7/bits/fstream.tcc Utils.h \
+ /usr/local/include/readline/readline.h \
+ /usr/local/include/readline/rlstdc.h \
+ /usr/local/include/readline/rltypedefs.h \
+ /usr/local/include/readline/keymaps.h \
+ /usr/local/include/readline/chardefs.h /usr/include/string.h \
+ /usr/include/x86_64-linux-gnu/bits/string3.h \
+ /usr/local/include/readline/tilde.h utf8.h utf8/checked.h utf8/core.h \
  /usr/include/c++/4.7/iterator \
  /usr/include/c++/4.7/bits/stream_iterator.h utf8/unchecked.h
 
@@ -632,6 +639,24 @@ NetUtils.h:
 /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++io.h:
 
 /usr/include/c++/4.7/bits/fstream.tcc:
+
+Utils.h:
+
+/usr/local/include/readline/readline.h:
+
+/usr/local/include/readline/rlstdc.h:
+
+/usr/local/include/readline/rltypedefs.h:
+
+/usr/local/include/readline/keymaps.h:
+
+/usr/local/include/readline/chardefs.h:
+
+/usr/include/string.h:
+
+/usr/include/x86_64-linux-gnu/bits/string3.h:
+
+/usr/local/include/readline/tilde.h:
 
 utf8.h:
 

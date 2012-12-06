@@ -160,7 +160,8 @@ string NetUtils::authToken()
 {
    string token;
    ifstream fin;
-   fin.open("member27");
+   string filename = Utils::authFile();
+   fin.open(filename.c_str());
    if (fin.is_open())
    {
       fin >> token;
