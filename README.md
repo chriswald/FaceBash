@@ -36,6 +36,8 @@ Commands
                     --who person  The name of the friend whose wall the post to be commented on is on. Use "me" if the post to be commented on is on your own wall.
     -h, --help      Shows the version number and help text.
     -l, --login     Prompts the user to enter credentials to log into Facebook.
+                    --user email  The email address (user name) to log into Facebook with.
+                    --pass pass   The password to log in with. It is recommended not to use this flag as the password will be visible in history as well as 'w' and 'who' (among other) commands, but it can be useful for scripting. Don't say you weren't warned.
         --logout    Logs the user out of Facebook.
     -k, --like      Likes a post or comment.
                     --num number  A number in the form [post index].[comment index] . If no post index is given 1, or the most recent post, is assumed. If no comment index is given (even if a period is provided) only the post index is used.
