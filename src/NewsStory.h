@@ -59,6 +59,8 @@ private:
    void writeSeperatorLine(stringstream & ss,
 			   const string & prefix) const;
 
+   void formatOnStoryType(string & message) const;
+
    void get_num_likes();
    void get_comments();
    
