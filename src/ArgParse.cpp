@@ -319,7 +319,7 @@ void ArgParse::Like()
 	 }
       }
 
-      if (argHas("--force-yes"))
+      if (argHas("--force-yes") || argHas("--force_yes"))
 	 force_yes = true;
    }
 
