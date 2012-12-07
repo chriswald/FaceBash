@@ -29,21 +29,26 @@ int Comment::getIndex() const
 void Comment::Like()
 {
    stringstream ss;
-   string url = string("https://graph.facebook.com/") + val["id"].asString() + string("/likes");
+   string url = string("https://graph.facebook.com/")
+              + val["id"].asString()
+              + string("/likes");
    bool request_success = NetUtils::postRequest(ss, url);
 
    if (!request_success)
       return;
 
-   // Make sure to display any errors that Facebook may have given us.
-   Json::Value root;
-   Json::Reader reader;
-   bool parsingSuccessful = reader.parse(ss.str(), root);
-   if (!parsingSuccessful)
+   if (ss.str() != "true")
    {
-      std::cerr << "Failed to parse response." << endl;
-      std::cerr << ss.str() << endl;
-   }
+      // Make sure to display any errors that Facebook may have given us.
+      Json::Value root;
+      Json::Reader reader;
+      bool parsingSuccessful = reader.parse(ss.str(), root);
+      if (!parsingSuccessful)
+      {
+	 std::cerr << "Failed to parse response." << endl;
+	 std::cerr << ss.str() << endl;
+      }
    
-   // NetUtils::showErrorMessage(root);
+      NetUtils::showErrorMessage(root);
+   }
 }

@@ -82,17 +82,20 @@ void NewsStory::LikeStory()
    if (!request_success)
       return;
 
-   // Make sure to display any errors that Facebook may have given us.
-   Json::Value root;
-   Json::Reader reader;
-   bool parsingSuccessful = reader.parse(ss.str(), root);
-   if (!parsingSuccessful)
+   if (ss.str() != "true")
    {
-      std::cerr << "Failed to parse response." << endl;
-      std::cerr << ss.str() << endl;
+      // Make sure to display any errors that Facebook may have given us.
+      Json::Value root;
+      Json::Reader reader;
+      bool parsingSuccessful = reader.parse(ss.str(), root);
+      if (!parsingSuccessful)
+      {
+	 std::cerr << "Failed to parse response." << endl;
+	 std::cerr << ss.str() << endl;
+      }
+
+      NetUtils::showErrorMessage(root);
    }
-   
-   // NetUtils::showErrorMessage(root);
 }
 
 void NewsStory::LikeComment(int index)
