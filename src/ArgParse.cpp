@@ -497,7 +497,7 @@ void ArgParse::Login()
  */
 void ArgParse::Logout()
 {
-   remove("member27");
+   remove(Utils::authFile().c_str());
 }
 
 /*
