@@ -392,14 +392,57 @@ void ArgParse::Like()
  * script which handles the logging in. The parent process waits for
  * the script to exit, then runs a check to see if the
  * authentification token exists, informing the user whether the login
- * completed successfully or not based on the results of that check.
+ * completed successfully or not based on the results of that
+ * check. Responds to the following arguments:
+ * user [username] - The user name to login with. This should be an
+ *   email address.
+ * pass [password] - The user's password. It is recommended not to use
+ *   this flag as the password will be visible in history as well as
+ *   'w' and 'who' (among other) commands, but can be useful for
+ *   scripting. Don't say you weren't warned.
  */
 void ArgParse::Login()
 {
+   string user = "\0";
+   string pass = "\0";
+
+   if (count > 1)
+   {
+      int user_index = 0;
+      if (argHas("--user"))
+      {
+	 user_index = argIndex("--user");
+	 if (user_index < count - 1)
+	 {
+	    user = string(arguments[user_index+1]);
+	 }
+      }
+
+      int pass_index = 0;
+      if (argHas("--pass"))
+      {
+	 pass_index = argIndex("--pass");
+	 if (pass_index < count - 1)
+	 {
+	    pass = string(arguments[pass_index+1]);
+	 }
+      }
+   }
+
    // Read login information from the user.
    LoginField login = LoginField();
-   login.readUser("Email: ");
-   login.readPass();
+
+   if (user == "\0")
+   {
+      login.readUser("Email: ");
+      user = login.user();
+   }
+
+   if (pass == "\0")
+   {
+      login.readPass();
+      pass = login.pass();
+   }
    
    int status;
    pid_t pid = fork();
@@ -418,8 +461,8 @@ void ArgParse::Login()
       execl("/usr/bin/python2.7",
 	    "/usr/bin/python2.7",
 	    script.c_str(),
-	    login.user().c_str(),
-	    login.pass().c_str(),
+	    user.c_str(),
+	    pass.c_str(),
 	    (char *) 0);
    }
    // Parent process
