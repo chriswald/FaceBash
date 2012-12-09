@@ -20,7 +20,8 @@ Installation
 ============
 
 To install dependencies run `install_deps.sh` as super user. If that fails you may have to install the dependencies manually.
-Create a `bin/` directory and run `make`.
+
+To build and install run `./configure`, `make`, and `make install`.
 
 Features
 ========
