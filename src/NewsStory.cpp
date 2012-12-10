@@ -201,7 +201,7 @@ void NewsStory::formatOnStoryType(string & message) const
    }
    else if (type == "video")
    {
-      message = posted_by + string(" uploaded a video.\n");
+      message = posted_by + string(" posted a video.\n");
       if (story["message"].asString().length() > 0)
 	 message += story["message"].asString() + string("\n");
       
