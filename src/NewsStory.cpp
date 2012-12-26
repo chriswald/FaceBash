@@ -115,7 +115,7 @@ void NewsStory::formatNewsStory(stringstream & ss) const
 
    formatOnStoryType(message);
    
-   vector<string> lines = setLineWidth(message, LINE_WIDTH - 5);
+   vector<string> lines = setLineWidth(message, LINE_WIDTH - 6);
       
    // Write each individual portion of the story.
    writePostSeperatorLine(ss);
@@ -210,22 +210,22 @@ void NewsStory::formatOnStoryType(string & message) const
    }
 }
 
-vector<string> NewsStory::setLineWidth(const string & message, int width) const
+vector<string> NewsStory::setLineWidth(const string & message, unsigned int width) const
 {
    vector<string> lines;
    string remainder = message;
    
    vector<string> new_lines;
    // Break the message body at newlines.
-   int nl_index = remainder.find("\n");
-   while (nl_index != -1 && nl_index != (int) remainder.length())
+   size_t nl_index = remainder.find("\n");
+   while (nl_index != string::npos && nl_index != linelength(remainder))
    {
       string line = remainder.substr(0, nl_index);
       remainder = remainder.substr(nl_index + 1);
       new_lines.push_back(line);
       nl_index = remainder.find("\n");
    }
-   if (remainder.length() > 0)
+   if (linelength(remainder) > 0)
       new_lines.push_back(remainder);
    
    // Run through each of those lines and make sure it does not
@@ -233,10 +233,10 @@ vector<string> NewsStory::setLineWidth(const string & message, int width) const
    for (unsigned int j = 0; j < new_lines.size(); j ++)
    {
       string new_line = new_lines[j];
-      while (new_line.length() > (unsigned int) width)
+      while (linelength(new_line) > width)
       {
-	 int space_index = new_line.substr(0, width).rfind(" ");
-	 if (space_index == -1)
+	 size_t space_index = new_line.substr(0, width).rfind(" ");
+	 if (space_index == string::npos)
 	 {
 	    string line = new_line.substr(0, width);
 	    new_line = new_line.substr(width + 1);
@@ -321,8 +321,7 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name, const stri
    }
 
    string text = prefix + name + likes_str.str();
-   int text_length = utf8::distance(text.begin(), text.end());
-
+   int text_length = linelength(text);
    unsigned int width = LINE_WIDTH - text_length;
 
    tmp << text << setw(width) << std::right << sindex.str() << endl;
@@ -337,7 +336,8 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
    {
       stringstream stmp;
       string text = prefix + lines[i];
-      int width = LINE_WIDTH - utf8::distance(text.begin(), text.end());
+      int distance = linelength(text);
+      int width = LINE_WIDTH - distance;
       stmp << text << setw(width) << "|" << endl;
       tmp << stmp.str();
    }
@@ -376,4 +376,28 @@ void NewsStory::get_comments()
    {
       comments.push_back(Comment(story["comments"]["data"][i], i+1));
    }
+}
+
+/*
+ * Line Length:
+ * Tries to retrieve utf8 length of a line, falling back to byte
+ * length on failure.
+ */
+size_t NewsStory::linelength(const string & str) const
+{
+   size_t length = 0;
+   try
+   {
+      length = utf8::distance(str.begin(), str.end());
+   }
+   catch (utf8::not_enough_room)
+   {
+      length = str.length();
+   }
+   catch (utf8::invalid_utf8)
+   {
+      length = str.length();
+   }
+
+   return length;
 }
