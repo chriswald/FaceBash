@@ -113,9 +113,12 @@ void NewsStory::formatNewsStory(stringstream & ss) const
    string message;
    string posted_by = story["from"]["name"].asString();
 
+   const int MESSAGE_PADDING = 6;
+   const int COMMENT_PADDING = 13;
+
    formatOnStoryType(message);
    
-   vector<string> lines = setLineWidth(message, LINE_WIDTH - 6);
+   vector<string> lines = setLineWidth(message, LINE_WIDTH - MESSAGE_PADDING);
       
    // Write each individual portion of the story.
    writePostSeperatorLine(ss);
@@ -129,7 +132,7 @@ void NewsStory::formatNewsStory(stringstream & ss) const
       Comment c = comments[i];
       if (c.getText().length() > 0)
       {
-	 vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - 10);
+	 vector<string> l = setLineWidth(c.getText(), LINE_WIDTH - COMMENT_PADDING);
 	 writeCommentNameLine(ss, c);
 	 writeCommentMessageLines(ss, l);
 	 writeCommentSeperatorLine(ss);
@@ -139,6 +142,11 @@ void NewsStory::formatNewsStory(stringstream & ss) const
    ss << endl;
 }
 
+/*
+ * Format On Story Type:
+ * Formats the message (content) portion based on the type of post,
+ * (eg video, link, photo, etc.).
+ */
 void NewsStory::formatOnStoryType(string & message) const
 {
    string posted_by = story["from"]["name"].asString();
@@ -210,6 +218,14 @@ void NewsStory::formatOnStoryType(string & message) const
    }
 }
 
+/*
+ * Set Line Width:
+ * Takes a string and breaks it into a vector of strings no longer
+ * than width. The string is broken at new lines first, then at a
+ * space character that would make the line as close to width without
+ * going over. If the line doesn't have a space character satisfying
+ * that requirement the line is broken at width.
+ */
 vector<string> NewsStory::setLineWidth(const string & message, unsigned int width) const
 {
    vector<string> lines;
@@ -256,7 +272,7 @@ vector<string> NewsStory::setLineWidth(const string & message, unsigned int widt
 }
 
 /*
- * Write Message Line:
+ * Write Post Message Line:
  * Writes each line from lines to os with leading characters and
  * trailing characters with enough spaces to evenly align everything.
  */
@@ -266,7 +282,7 @@ void NewsStory::writePostMessageLines(stringstream & ss, const vector<string> & 
 }
 
 /*
- * Write Name Line:
+ * Write Post Name Line:
  * Writes the name (left aligned) and index (right aligned) to os. The
  * two values are written with a fixed width of LINE_WIDTH. Leading
  * and trailing characters are also printed.
@@ -279,7 +295,7 @@ void NewsStory::writePostNameLine(stringstream & ss, const string & name) const
 }
   
 /*
- * Write Seperator Line:
+ * Write Post Seperator Line:
  * Writes a line of width LINE_WIDTH used as a filler / seperator
  * between elements.
  */
@@ -288,6 +304,12 @@ void NewsStory::writePostSeperatorLine(stringstream & ss) const
    writeSeperatorLine(ss, "|");
 }
 
+/*
+ * Write Comment Name Line:
+ * Writes the name (left aligned) and index (right aligned) to os. The
+ * two values are written with a fixed width of LINE_WIDTH. Leading
+ * and trailing characters are also printed.
+ */
 void NewsStory::writeCommentNameLine(stringstream & ss, const Comment & c) const
 {
    stringstream s;
@@ -295,16 +317,32 @@ void NewsStory::writeCommentNameLine(stringstream & ss, const Comment & c) const
    writeNameLine(ss, c.getPostedBy(), "     | ", c.getNumLikes(), s.str());
 }
 
+/*
+ * Write Comment Message Line:
+ * Writes each line from lines to os with leading characters and
+ * trailing characters with enough spaces to evenly align everything.
+ */
 void NewsStory::writeCommentMessageLines(stringstream & ss, const vector<string> & lines) const
 {
    writeMessageLines(ss, lines, "     |   ");
 }
 
+/*
+ * Write Comment Seperator Line:
+ * Writes a line of width LINE_WIDTH used as a filler / seperator
+ * between elements.
+ */
 void NewsStory::writeCommentSeperatorLine(stringstream & ss) const
 {
    writeSeperatorLine(ss, "     |");
 }
 
+/*
+ * Write Name Line:
+ * Writes the name (left aligned) and index (right aligned) to os. The
+ * two values are written with a fixed width of LINE_WIDTH. Leading
+ * and trailing characters are also printed.
+ */
 void NewsStory::writeNameLine(stringstream & ss, const string & name, const string & prefix, int likes, const string & index) const
 {
    stringstream tmp;
@@ -329,6 +367,11 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name, const stri
    ss << tmp.str();
 }
 
+/*
+ * Write Message Line:
+ * Writes each line from lines to os with leading characters and
+ * trailing characters with enough spaces to evenly align everything.
+ */
 void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & lines, const string & prefix) const
 {
    stringstream tmp;
@@ -345,8 +388,9 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
 }
 
 /*
- * Write Seperator Line:
- * Writes a prefix followed by all dashes up to the line width.
+ * Write Comment Seperator Line:
+ * Writes a line of width LINE_WIDTH used as a filler / seperator
+ * between elements.
  */
 void NewsStory::writeSeperatorLine(stringstream & ss, const string & prefix) const
 {
