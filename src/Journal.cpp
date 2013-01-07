@@ -2,6 +2,7 @@
 
 Journal::Journal(bool get_stories_now, string who)
 {
+   plain_format = false;
    if (get_stories_now)
       getNewsStories(who);
 }
@@ -70,8 +71,13 @@ bool Journal::getNewsStories(const string & who)
    unsigned int how_many = 0;
    for (unsigned int i = 0; i < posts.size(); i ++)
    {
-      news_stories.push_back(NewsStory(posts[i], ++how_many));
+      news_stories.push_back(NewsStory(posts[i], ++how_many, plain_format));
    }
    
    return true;
+}
+
+void Journal::setFormatStyle(bool plain)
+{
+   plain_format = plain;
 }

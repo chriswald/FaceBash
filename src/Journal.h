@@ -23,8 +23,10 @@ public:
    int length();
    NewsStory & operator[](int index);
    bool getNewsStories(const string & who);
+   void setFormatStyle(bool plain);
    
 private:
+   bool plain_format;
    vector<NewsStory> news_stories;
 };
 

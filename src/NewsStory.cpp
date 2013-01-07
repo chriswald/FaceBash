@@ -4,8 +4,9 @@
  * Creates a new NewsStory object and sets its ID, number of likes, and number
  * of comments.
  */
-NewsStory::NewsStory(const Json::Value & news_story, unsigned int i)
+NewsStory::NewsStory(const Json::Value & news_story, unsigned int i, bool plain)
 {
+   plain_format = plain;
    story = news_story;
    index = i;
    ID = news_story["id"].asString();
@@ -119,7 +120,7 @@ void NewsStory::formatNewsStory(stringstream & ss) const
    formatOnStoryType(message);
    
    vector<string> lines = setLineWidth(message, LINE_WIDTH - MESSAGE_PADDING);
-      
+
    // Write each individual portion of the story.
    writePostSeperatorLine(ss);
    writePostNameLine(ss, posted_by);
@@ -229,6 +230,13 @@ void NewsStory::formatOnStoryType(string & message) const
 vector<string> NewsStory::setLineWidth(const string & message, unsigned int width) const
 {
    vector<string> lines;
+
+   if (plain_format)
+   {
+      lines.push_back(message);
+      return lines;
+   }
+
    string remainder = message;
    
    vector<string> new_lines;
@@ -358,11 +366,19 @@ void NewsStory::writeNameLine(stringstream & ss, const string & name, const stri
 	 likes_str << "   <" << likes << " Likes>";
    }
 
-   string text = prefix + name + likes_str.str();
+   string text;
+   if (plain_format)
+      text = name + likes_str.str();
+   else
+      text = prefix + name + likes_str.str();
+
    int text_length = linelength(text);
    unsigned int width = LINE_WIDTH - text_length;
 
-   tmp << text << setw(width) << std::right << sindex.str() << endl;
+   if (plain_format)
+      tmp << text << endl;
+   else
+      tmp << text << setw(width) << std::right << sindex.str() << endl;
 
    ss << tmp.str();
 }
@@ -378,10 +394,24 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
    for (unsigned int i = 0; i < lines.size(); i ++)
    {
       stringstream stmp;
-      string text = prefix + lines[i];
-      int distance = linelength(text);
-      int width = LINE_WIDTH - distance;
-      stmp << text << setw(width) << "|" << endl;
+
+      string text;
+      if (plain_format)
+	 text = lines[i];
+      else
+	 text = prefix + lines[i];
+      
+      if (plain_format)
+      {
+	 stmp << text << endl;
+      }
+      else
+      {
+	 int distance = linelength(text);
+	 int width = LINE_WIDTH - distance;
+	 stmp << text << setw(width) << "|" << endl;
+      }
+
       tmp << stmp.str();
    }
    ss << tmp.str();
@@ -394,6 +424,9 @@ void NewsStory::writeMessageLines(stringstream & ss, const vector<string> & line
  */
 void NewsStory::writeSeperatorLine(stringstream & ss, const string & prefix) const
 {
+   if (plain_format)
+      return;
+
    stringstream tmp;
    tmp << std::left << setw(LINE_WIDTH - 1) << setfill('-')
        << prefix << "|" << endl;

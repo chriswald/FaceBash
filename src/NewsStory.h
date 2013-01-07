@@ -27,7 +27,7 @@ using std::vector;
 class NewsStory
 {
 public:
-   NewsStory(const Json::Value & news_story, unsigned int i);
+   NewsStory(const Json::Value & news_story, unsigned int i, bool plain);
    friend ostream & operator<<(ostream & os, const NewsStory & news);
    string getID() const;
    
@@ -68,6 +68,8 @@ private:
 
    const static unsigned short int LINE_WIDTH = 70;
    
+   bool plain_format;
+
    Json::Value story;
    int index;
    string ID;

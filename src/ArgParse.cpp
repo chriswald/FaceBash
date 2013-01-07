@@ -565,7 +565,8 @@ void ArgParse::ShowNewsFeed()
    string friend_ID = "\0";
    bool size_spec = false;
    set<int> indices;
-   
+   bool plain_format = false;
+
    // See if there are additional arguments.
    if (count > 1)
    {
@@ -597,10 +598,16 @@ void ArgParse::ShowNewsFeed()
 	       return;
 	 }
       }
+
+      if (argHas("--plain"))
+      {
+	 plain_format = true;
+      }
    }
 
    // Populate the journal using either the found ID or the default
    // ("me").
+   journal.setFormatStyle(plain_format);
    journal.getNewsStories(friend_ID);
 
    if (size_spec)
