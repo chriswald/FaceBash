@@ -166,6 +166,7 @@ void ArgParse::Comment()
    int index = 1;
    string friend_ID = "\0";
    bool has_message_value = false;
+   bool plain_format = false;
    string message;
 
    // See if there are additional arguments.
@@ -207,10 +208,16 @@ void ArgParse::Comment()
 	    has_message_value = true;
 	 }
       }
+
+      if (argHas("--plain"))
+      {
+	 plain_format = true;
+      }
    }
 
    // Populate the journal using either the found ID or the default
    // ("me").
+   journal.setFormatStyle(plain_format);
    journal.getNewsStories(friend_ID);
    
    // Now that I know how many stories are in the journal, bounds
@@ -271,6 +278,7 @@ void ArgParse::Like()
    int sub_index = 0;
    string friend_ID = "\0";
    bool force_yes = false;
+   bool plain_format = false;
 
    // See if there are additional arguments.
    if (count > 1)
@@ -321,10 +329,16 @@ void ArgParse::Like()
 
       if (argHas("--force-yes") || argHas("--force_yes"))
 	 force_yes = true;
+
+      if (argHas("--plain"))
+      {
+	 plain_format = true;
+      }
    }
 
    // Populate the journal using either the found ID or the default
    // ("me").
+   journal.setFormatStyle(plain_format);
    journal.getNewsStories(friend_ID);
    
    // Now that I know how many stories are in the journal, bounds
