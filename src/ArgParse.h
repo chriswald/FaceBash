@@ -28,7 +28,6 @@
 #include "NewsStory.h"
 #include "Utils.h"
 
-using std::cerr;
 using std::cin;
 using std::cout;
 using std::endl;

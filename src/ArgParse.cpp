@@ -224,14 +224,14 @@ void ArgParse::Comment()
    // check the index number to make sure that the story exists.
    if (index > journal.length())
    {
-      cerr << "Index out of bounds." << endl;
-      cerr << "Maximum value: " << journal.length() << endl;
+      cout << "Index out of bounds." << endl;
+      cout << "Maximum value: " << journal.length() << endl;
       return;
    }
    else if (index < 1)
    {
-      cerr << "Index out of bounds." << endl;
-      cerr << "Minimum value: 1" << endl;
+      cout << "Index out of bounds." << endl;
+      cout << "Minimum value: 1" << endl;
       return;
    }
 
@@ -345,14 +345,14 @@ void ArgParse::Like()
    // check the index number to make sure that the story exists.
    if (index > journal.length())
    {
-      cerr << "Index out of bounds." << endl;
-      cerr << "Maximum value: " << journal.length() << endl;
+      cout << "Index out of bounds." << endl;
+      cout << "Maximum value: " << journal.length() << endl;
       return;
    }
    else if (index < 1)
    {
-      cerr << "Index out of bounds." << endl;
-      cerr << "Minimum value: 1" << endl;
+      cout << "Index out of bounds." << endl;
+      cout << "Minimum value: 1" << endl;
       return;
    }
 
@@ -361,14 +361,14 @@ void ArgParse::Like()
 
    if (sub_index > max_comment_index)
    {
-      cerr << "Index out of bounds." << endl;
-      cerr << "Number of comments on this post: " << max_comment_index << endl;
+      cout << "Index out of bounds." << endl;
+      cout << "Number of comments on this post: " << max_comment_index << endl;
       return;
    }
    else if (sub_index < 0)
    {
-      cerr << "Index out of bounds." << endl;
-      cerr << "Minimum value: 1 (or no value)" << endl;
+      cout << "Index out of bounds." << endl;
+      cout << "Minimum value: 1 (or no value)" << endl;
       return;
    }
    
@@ -518,29 +518,29 @@ void ArgParse::Login()
 	  *  4) The user sent a SIGINT to the process during login.
 	  */
 	 if      (content == "001")
-	    cerr << "Invalid Email or Password." << endl;
+	    cout << "Invalid Email or Password." << endl;
 	 
 	 else if (content == "002")
-	    cerr << "User denied permission to F.aceBash." << endl;
+	    cout << "User denied permission to F.aceBash." << endl;
 	 
 	 else if (content == "003")
-	    cerr << "Not connected to the Internet." << endl;
+	    cout << "Not connected to the Internet." << endl;
 
 	 else if (content == "004")
-	    cerr << "Login process interrupted." << endl;
+	    cout << "Login process interrupted." << endl;
 
 	 else if (content == "005")
-	    cerr << "Bad arguments. Reinstalling may help." << endl;
+	    cout << "Bad arguments. Reinstalling may help." << endl;
 	 
 	 else // Something went wrong (maybe on Facebook's end)
-	    cerr << "An unknown error occured." << endl;
+	    cout << "An unknown error occured." << endl;
 	 
       }
    }
    // The file could not be opened. Something went wrong on this end
    else
    {
-      cerr << "Unable to login. Make sure you have proper "
+      cout << "Unable to login. Make sure you have proper "
 	   << "local permissions." << endl;
    }
    
@@ -712,8 +712,8 @@ void ArgParse::UpdateStatus()
    bool parsingSuccessful = reader.parse(ss.str(), root);
    if (!parsingSuccessful)
    {
-      cerr << "Failed to parse response." << endl;
-      cerr << ss.str() << endl;
+      cout << "Failed to parse response." << endl;
+      cout << ss.str() << endl;
    }
    
    NetUtils::showErrorMessage(root);
@@ -856,7 +856,7 @@ void ArgParse::Upload()
    // need to make sure that some photo files have been provided.
    if (num_imgs == 0 && num_vids == 0)
    {
-      cerr << "No files specified!" << endl;
+      cout << "No files specified!" << endl;
       return;
    }
 
@@ -899,7 +899,7 @@ void ArgParse::Upload()
       // Upload all images to Facebook.
       success = sendImagesToAlbum(album_id, images);
       if (!success)
-	 cerr << "Image upload was not completely successful." << endl;
+	 cout << "Image upload was not completely successful." << endl;
    }
 
    if (num_vids > 0)
@@ -912,7 +912,7 @@ void ArgParse::Upload()
       // Upload all videos to Facebook.
       success = sendVideosToFacebook(videos);
       if (!success)
-	 cerr << "Video upload was not completely successful." << endl;
+	 cout << "Video upload was not completely successful." << endl;
    }
 }
 
@@ -963,7 +963,7 @@ bool ArgParse::sendImagesToAlbum(const string & ID, const vector<string> & files
 	 // Make sure no parsing errors occurred.
 	 if (!parsingSuccessful)
 	 {
-	    cerr << "Failed to parse the document." << endl;
+	    cout << "Failed to parse the document." << endl;
 	    small_success = false;
 	 }
 	 else
@@ -1038,7 +1038,7 @@ bool ArgParse::sendVideosToFacebook(const vector<string> & files)
 	 // Make sure no parsing errors occurred.
 	 if (!parsingSuccessful)
 	 {
-	    cerr << "Failed to parse the document." << endl;
+	    cout << "Failed to parse the document." << endl;
 	    small_success = false;
 	 }
 	 else
@@ -1091,7 +1091,7 @@ bool ArgParse::getAlbumNames(map<string, string> & names)
    // Make sure no parsing errors occurred.
    if (!parsingSuccessful)
    {
-      cerr << "Failed to parse the document." << endl;
+      cout << "Failed to parse the document." << endl;
       return false;
    }
    
@@ -1144,7 +1144,7 @@ bool ArgParse::makeAlbum(const string & name, const string & message, string & I
    // Make sure no parsing errors occurred.
    if (!parsingSuccessful)
    {
-      cerr << "Failed to parse the document." << endl;
+      cout << "Failed to parse the document." << endl;
       return false;
    }
    
@@ -1316,7 +1316,7 @@ bool ArgParse::parseRange(const string & argument, set<int> & list)
       // stop execution, returning false.
       else
       {
-	 cerr << "Parser error. Unknown character '" << *itr << "'" << endl;
+	 cout << "Parser error. Unknown character '" << *itr << "'" << endl;
 	 return false;
       }
    }

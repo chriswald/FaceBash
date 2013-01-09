@@ -204,19 +204,19 @@ bool NetUtils::getFriendID(const string & name, string & ID)
    // message and return \0. Otherwise return the ID of the one match.
    if (ids.size() > 1)
    {
-      cerr << "You have " << ids.size() << " friends with '" 
+      cout << "You have " << ids.size() << " friends with '" 
 	   << name << "' in their name." << endl;
       map<string, string>::iterator itr = ids.begin();
       int how_many = (ids.size() > 5 ? 5 : ids.size());
       for (int i = 0; i < how_many; i ++, itr ++)
       {
-	 cerr << itr->first << endl;
+	 cout << itr->first << endl;
       }
       return false;
    }
    else if (ids.size() == 0)
    {
-      cerr << "You don't have any friends with '" << name 
+      cout << "You don't have any friends with '" << name 
 	   << "' in their name." << endl;
       return false;
    }
@@ -246,7 +246,7 @@ bool NetUtils::queryForFriends(Json::Value & root)
    // Make sure no errors occurred.
    if (!parsingSuccessful)
    {
-      cerr << "Failed to parse the document." << endl;
+      cout << "Failed to parse the document." << endl;
       return false;
    }
    
