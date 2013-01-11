@@ -1,4 +1,4 @@
-NewsStory.o: NewsStory.cpp NewsStory.h /usr/include/c++/4.7/iomanip \
+NewsStory.o: NewsStory.cpp NewsStory.hpp /usr/include/c++/4.7/iomanip \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++config.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
@@ -166,7 +166,7 @@ NewsStory.o: NewsStory.cpp NewsStory.h /usr/include/c++/4.7/iomanip \
  /usr/local/include/curlpp/internal/CurlHandle.hpp \
  /usr/local/include/curlpp/internal/OptionList.hpp \
  /usr/local/include/curlpp/internal/../OptionBase.hpp \
- /usr/local/include/curlpp/Easy.inl Comment.h NetUtils.h \
+ /usr/local/include/curlpp/Easy.inl Comment.hpp NetUtils.hpp \
  /usr/include/c++/4.7/algorithm /usr/include/c++/4.7/utility \
  /usr/include/c++/4.7/bits/stl_relops.h \
  /usr/include/c++/4.7/bits/stl_algo.h \
@@ -175,7 +175,7 @@ NewsStory.o: NewsStory.cpp NewsStory.h /usr/include/c++/4.7/iomanip \
  /usr/include/c++/4.7/bits/codecvt.h /usr/include/c++/4.7/cstdio \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/basic_file.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++io.h \
- /usr/include/c++/4.7/bits/fstream.tcc Utils.h \
+ /usr/include/c++/4.7/bits/fstream.tcc Utils.hpp \
  /usr/local/include/readline/readline.h \
  /usr/local/include/readline/rlstdc.h \
  /usr/local/include/readline/rltypedefs.h \
@@ -186,7 +186,7 @@ NewsStory.o: NewsStory.cpp NewsStory.h /usr/include/c++/4.7/iomanip \
  /usr/include/c++/4.7/iterator \
  /usr/include/c++/4.7/bits/stream_iterator.h utf8/unchecked.h
 
-NewsStory.h:
+NewsStory.hpp:
 
 /usr/include/c++/4.7/iomanip:
 
@@ -612,9 +612,9 @@ NewsStory.h:
 
 /usr/local/include/curlpp/Easy.inl:
 
-Comment.h:
+Comment.hpp:
 
-NetUtils.h:
+NetUtils.hpp:
 
 /usr/include/c++/4.7/algorithm:
 
@@ -640,7 +640,7 @@ NetUtils.h:
 
 /usr/include/c++/4.7/bits/fstream.tcc:
 
-Utils.h:
+Utils.hpp:
 
 /usr/local/include/readline/readline.h:
 

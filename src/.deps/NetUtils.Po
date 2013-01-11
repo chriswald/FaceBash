@@ -1,4 +1,4 @@
-NetUtils.o: NetUtils.cpp NetUtils.h /usr/include/c++/4.7/algorithm \
+NetUtils.o: NetUtils.cpp NetUtils.hpp /usr/include/c++/4.7/algorithm \
  /usr/include/c++/4.7/utility \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++config.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/os_defines.h \
@@ -176,8 +176,8 @@ NetUtils.o: NetUtils.cpp NetUtils.h /usr/include/c++/4.7/algorithm \
  /usr/include/json/features.h /usr/include/c++/4.7/deque \
  /usr/include/c++/4.7/bits/stl_deque.h \
  /usr/include/c++/4.7/bits/deque.tcc /usr/include/c++/4.7/stack \
- /usr/include/c++/4.7/bits/stl_stack.h /usr/include/json/writer.h Utils.h \
- /usr/local/include/readline/readline.h \
+ /usr/include/c++/4.7/bits/stl_stack.h /usr/include/json/writer.h \
+ Utils.hpp /usr/local/include/readline/readline.h \
  /usr/local/include/readline/rlstdc.h \
  /usr/local/include/readline/rltypedefs.h \
  /usr/local/include/readline/keymaps.h \
@@ -185,7 +185,7 @@ NetUtils.o: NetUtils.cpp NetUtils.h /usr/include/c++/4.7/algorithm \
  /usr/include/x86_64-linux-gnu/bits/string3.h \
  /usr/local/include/readline/tilde.h
 
-NetUtils.h:
+NetUtils.hpp:
 
 /usr/include/c++/4.7/algorithm:
 
@@ -633,7 +633,7 @@ NetUtils.h:
 
 /usr/include/json/writer.h:
 
-Utils.h:
+Utils.hpp:
 
 /usr/local/include/readline/readline.h:
 

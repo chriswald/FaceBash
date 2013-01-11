@@ -1,4 +1,4 @@
-#include "Comment.h"
+#include "Comment.hpp"
 
 Comment::Comment(Json::Value value, int i)
 {

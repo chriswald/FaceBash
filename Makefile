@@ -707,11 +707,6 @@ uninstall-am:
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
 	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am
 
-#CFLAGS=-Wall -I/usr/local/include -I/usr/include -DVERSION=\"$(VERSION)\" -DPROG="\"$(PACKAGE)\""
-#LDFLAGS=-L/usr/local/lib -ljson -lcurlpp -lstdc++ -lcurl -lreadline -lncurses
-
-#bin_PROGRAMS = facebash
-#facebash_SOURCES = src/ArgParse.cpp src/ArgParse.h src/Comment.cpp src/Comment.h src/facebash.cpp src/Journal.cpp src/Journal.h src/LoginField.cpp src/LoginField.h src/NetUtils.cpp src/NetUtils.h src/NewsStory.cpp src/NewsStory.h src/Utils.cpp src/Utils.h src/utf8.h src/utf8/checked.h src/utf8/unchecked.h src/utf8/core.h
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

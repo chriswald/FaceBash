@@ -1,4 +1,4 @@
-#include "Journal.h"
+#include "Journal.hpp"
 
 Journal::Journal(bool get_stories_now, string who)
 {

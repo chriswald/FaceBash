@@ -63,7 +63,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_facebash_OBJECTS = ArgParse.$(OBJEXT) Comment.$(OBJEXT) \
 	facebash.$(OBJEXT) Journal.$(OBJEXT) LoginField.$(OBJEXT) \
-	NetUtils.$(OBJEXT) NewsStory.$(OBJEXT) Utils.$(OBJEXT)
+	NetUtils.$(OBJEXT) NewsStory.$(OBJEXT) Notification.$(OBJEXT) \
+	NotifLog.$(OBJEXT) Utils.$(OBJEXT)
 facebash_OBJECTS = $(am_facebash_OBJECTS)
 facebash_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.
@@ -190,7 +191,7 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 AUTOMAKE_OPTIONS = foreign
-facebash_SOURCES = ArgParse.cpp ArgParse.h Comment.cpp Comment.h facebash.cpp Journal.cpp Journal.h LoginField.cpp LoginField.h NetUtils.cpp NetUtils.h NewsStory.cpp NewsStory.h Utils.cpp Utils.h utf8.h utf8/checked.h utf8/unchecked.h utf8/core.h
+facebash_SOURCES = ArgParse.cpp Comment.cpp facebash.cpp Journal.cpp LoginField.cpp NetUtils.cpp NewsStory.cpp Notification.cpp NotifLog.cpp Utils.cpp Utils.h utf8.h utf8/checked.h utf8/unchecked.h utf8/core.h
 all: all-am
 
 .SUFFIXES:
@@ -281,6 +282,8 @@ include ./$(DEPDIR)/Journal.Po
 include ./$(DEPDIR)/LoginField.Po
 include ./$(DEPDIR)/NetUtils.Po
 include ./$(DEPDIR)/NewsStory.Po
+include ./$(DEPDIR)/NotifLog.Po
+include ./$(DEPDIR)/Notification.Po
 include ./$(DEPDIR)/Utils.Po
 include ./$(DEPDIR)/facebash.Po
 

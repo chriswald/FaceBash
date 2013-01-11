@@ -12,8 +12,8 @@
 #include <curlpp/Options.hpp>
 #include <curlpp/Easy.hpp>
 
-#include "Comment.h"
-#include "NetUtils.h"
+#include "Comment.hpp"
+#include "NetUtils.hpp"
 #include "utf8.h"
 
 using std::endl;

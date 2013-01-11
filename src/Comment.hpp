@@ -5,7 +5,7 @@
 
 #include <json/json.h>
 
-#include "NetUtils.h"
+#include "NetUtils.hpp"
 
 using std::string;
 using std::stringstream;

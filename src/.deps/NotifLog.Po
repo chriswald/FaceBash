@@ -1,4 +1,4 @@
-facebash.o: facebash.cpp ArgParse.hpp /usr/include/c++/4.7/cctype \
+NotifLog.o: NotifLog.cpp NotifLog.hpp /usr/include/c++/4.7/iostream \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++config.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
@@ -7,23 +7,14 @@ facebash.o: facebash.cpp ArgParse.hpp /usr/include/c++/4.7/cctype \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/cpu_defines.h \
- /usr/include/ctype.h /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/endian.h \
- /usr/include/x86_64-linux-gnu/bits/endian.h \
- /usr/include/x86_64-linux-gnu/bits/byteswap.h /usr/include/xlocale.h \
- /usr/include/c++/4.7/cstdio /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.7/include/stddef.h /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.7/include/stdarg.h \
- /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
- /usr/include/x86_64-linux-gnu/bits/stdio.h \
- /usr/include/x86_64-linux-gnu/bits/stdio2.h /usr/include/c++/4.7/fstream \
- /usr/include/c++/4.7/istream /usr/include/c++/4.7/ios \
+ /usr/include/c++/4.7/ostream /usr/include/c++/4.7/ios \
  /usr/include/c++/4.7/iosfwd /usr/include/c++/4.7/bits/stringfwd.h \
  /usr/include/c++/4.7/bits/postypes.h /usr/include/c++/4.7/cwchar \
+ /usr/include/wchar.h /usr/include/stdio.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /usr/include/x86_64-linux-gnu/bits/wchar2.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.7/include/stddef.h \
+ /usr/include/xlocale.h /usr/include/x86_64-linux-gnu/bits/wchar2.h \
  /usr/include/c++/4.7/exception \
  /usr/include/c++/4.7/bits/atomic_lockfree_defines.h \
  /usr/include/c++/4.7/bits/char_traits.h \
@@ -41,7 +32,11 @@ facebash.o: facebash.cpp ArgParse.hpp /usr/include/c++/4.7/cctype \
  /usr/include/c++/4.7/debug/debug.h /usr/include/c++/4.7/bits/localefwd.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++locale.h \
  /usr/include/c++/4.7/clocale /usr/include/locale.h \
- /usr/include/x86_64-linux-gnu/bits/locale.h \
+ /usr/include/x86_64-linux-gnu/bits/locale.h /usr/include/c++/4.7/cctype \
+ /usr/include/ctype.h /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/byteswap.h \
  /usr/include/c++/4.7/bits/ios_base.h \
  /usr/include/c++/4.7/ext/atomicity.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/gthr.h \
@@ -73,18 +68,28 @@ facebash.o: facebash.cpp ArgParse.hpp /usr/include/c++/4.7/cctype \
  /usr/include/c++/4.7/bits/streambuf_iterator.h \
  /usr/include/c++/4.7/x86_64-linux-gnu/bits/ctype_inline.h \
  /usr/include/c++/4.7/bits/locale_facets.tcc \
- /usr/include/c++/4.7/bits/basic_ios.tcc /usr/include/c++/4.7/ostream \
- /usr/include/c++/4.7/bits/ostream.tcc \
- /usr/include/c++/4.7/bits/istream.tcc \
- /usr/include/c++/4.7/bits/codecvt.h \
- /usr/include/c++/4.7/x86_64-linux-gnu/bits/basic_file.h \
- /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++io.h \
- /usr/include/c++/4.7/bits/fstream.tcc /usr/include/c++/4.7/iomanip \
- /usr/include/c++/4.7/iostream /usr/include/c++/4.7/set \
- /usr/include/c++/4.7/bits/stl_tree.h /usr/include/c++/4.7/bits/stl_set.h \
- /usr/include/c++/4.7/bits/stl_multiset.h /usr/include/c++/4.7/sstream \
- /usr/include/c++/4.7/bits/sstream.tcc /usr/include/stdlib.h \
- /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+ /usr/include/c++/4.7/bits/basic_ios.tcc \
+ /usr/include/c++/4.7/bits/ostream.tcc /usr/include/c++/4.7/istream \
+ /usr/include/c++/4.7/bits/istream.tcc /usr/include/c++/4.7/sstream \
+ /usr/include/c++/4.7/bits/sstream.tcc /usr/include/json/json.h \
+ /usr/include/json/autolink.h /usr/include/json/config.h \
+ /usr/include/json/value.h /usr/include/json/forwards.h \
+ /usr/include/c++/4.7/vector /usr/include/c++/4.7/bits/stl_construct.h \
+ /usr/include/c++/4.7/ext/alloc_traits.h \
+ /usr/include/c++/4.7/bits/stl_uninitialized.h \
+ /usr/include/c++/4.7/bits/stl_vector.h \
+ /usr/include/c++/4.7/bits/stl_bvector.h \
+ /usr/include/c++/4.7/bits/vector.tcc /usr/include/c++/4.7/map \
+ /usr/include/c++/4.7/bits/stl_tree.h /usr/include/c++/4.7/bits/stl_map.h \
+ /usr/include/c++/4.7/bits/stl_multimap.h /usr/include/json/reader.h \
+ /usr/include/json/features.h /usr/include/c++/4.7/deque \
+ /usr/include/c++/4.7/bits/stl_deque.h \
+ /usr/include/c++/4.7/bits/deque.tcc /usr/include/c++/4.7/stack \
+ /usr/include/c++/4.7/bits/stl_stack.h /usr/include/json/writer.h \
+ NetUtils.hpp /usr/include/c++/4.7/algorithm /usr/include/c++/4.7/utility \
+ /usr/include/c++/4.7/bits/stl_relops.h \
+ /usr/include/c++/4.7/bits/stl_algo.h /usr/include/c++/4.7/cstdlib \
+ /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
  /usr/include/x86_64-linux-gnu/sys/select.h \
@@ -93,26 +98,18 @@ facebash.o: facebash.cpp ArgParse.hpp /usr/include/c++/4.7/cctype \
  /usr/include/x86_64-linux-gnu/bits/select2.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /usr/include/x86_64-linux-gnu/sys/wait.h /usr/include/signal.h \
- /usr/include/x86_64-linux-gnu/bits/signum.h \
- /usr/include/x86_64-linux-gnu/bits/siginfo.h \
- /usr/include/x86_64-linux-gnu/bits/sigaction.h \
- /usr/include/x86_64-linux-gnu/bits/sigcontext.h \
- /usr/include/x86_64-linux-gnu/bits/sigstack.h \
- /usr/include/x86_64-linux-gnu/sys/ucontext.h \
- /usr/include/x86_64-linux-gnu/bits/sigthread.h \
- /usr/include/x86_64-linux-gnu/sys/resource.h \
- /usr/include/x86_64-linux-gnu/bits/resource.h /usr/include/unistd.h \
- /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
- /usr/include/x86_64-linux-gnu/bits/environments.h \
- /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
- /usr/include/x86_64-linux-gnu/bits/unistd.h /usr/include/c++/4.7/vector \
- /usr/include/c++/4.7/bits/stl_construct.h \
- /usr/include/c++/4.7/ext/alloc_traits.h \
- /usr/include/c++/4.7/bits/stl_uninitialized.h \
- /usr/include/c++/4.7/bits/stl_vector.h \
- /usr/include/c++/4.7/bits/stl_bvector.h \
- /usr/include/c++/4.7/bits/vector.tcc \
+ /usr/include/c++/4.7/bits/algorithmfwd.h \
+ /usr/include/c++/4.7/bits/stl_heap.h \
+ /usr/include/c++/4.7/bits/stl_tempbuf.h /usr/include/c++/4.7/fstream \
+ /usr/include/c++/4.7/bits/codecvt.h /usr/include/c++/4.7/cstdio \
+ /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio2.h \
+ /usr/include/c++/4.7/x86_64-linux-gnu/bits/basic_file.h \
+ /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++io.h \
+ /usr/include/c++/4.7/bits/fstream.tcc \
  /usr/local/include/curlpp/cURLpp.hpp \
  /usr/local/include/curlpp/internal/buildconfig.h \
  /usr/include/curl/curl.h /usr/include/curl/curlver.h \
@@ -136,7 +133,7 @@ facebash.o: facebash.cpp ArgParse.hpp /usr/include/c++/4.7/cctype \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/curl/easy.h \
  /usr/include/curl/multi.h /usr/include/curl/curl.h \
- /usr/include/c++/4.7/cstdlib /usr/local/include/curlpp/Options.hpp \
+ /usr/local/include/curlpp/Options.hpp \
  /usr/local/include/curlpp/Option.hpp \
  /usr/local/include/curlpp/internal/OptionContainer.hpp \
  /usr/local/include/curlpp/internal/buildconfig.h \
@@ -152,7 +149,7 @@ facebash.o: facebash.cpp ArgParse.hpp /usr/include/c++/4.7/cctype \
  /usr/local/include/curlpp/config.win32.h \
  /usr/local/include/utilspp/Functors.hpp \
  /usr/local/include/utilspp/functor/Functor.hpp \
- /usr/include/c++/4.7/memory /usr/include/c++/4.7/bits/stl_tempbuf.h \
+ /usr/include/c++/4.7/memory \
  /usr/include/c++/4.7/bits/stl_raw_storage_iter.h \
  /usr/include/c++/4.7/backward/auto_ptr.h \
  /usr/local/include/utilspp/functor/../NullType.hpp \
@@ -177,37 +174,18 @@ facebash.o: facebash.cpp ArgParse.hpp /usr/include/c++/4.7/cctype \
  /usr/local/include/curlpp/internal/CurlHandle.hpp \
  /usr/local/include/curlpp/internal/OptionList.hpp \
  /usr/local/include/curlpp/internal/../OptionBase.hpp \
- /usr/include/c++/4.7/map /usr/include/c++/4.7/bits/stl_map.h \
- /usr/include/c++/4.7/bits/stl_multimap.h \
- /usr/local/include/curlpp/Easy.inl /usr/include/json/json.h \
- /usr/include/json/autolink.h /usr/include/json/config.h \
- /usr/include/json/value.h /usr/include/json/forwards.h \
- /usr/include/json/reader.h /usr/include/json/features.h \
- /usr/include/c++/4.7/deque /usr/include/c++/4.7/bits/stl_deque.h \
- /usr/include/c++/4.7/bits/deque.tcc /usr/include/c++/4.7/stack \
- /usr/include/c++/4.7/bits/stl_stack.h /usr/include/json/writer.h \
- Journal.hpp NetUtils.hpp /usr/include/c++/4.7/algorithm \
- /usr/include/c++/4.7/utility /usr/include/c++/4.7/bits/stl_relops.h \
- /usr/include/c++/4.7/bits/stl_algo.h \
- /usr/include/c++/4.7/bits/algorithmfwd.h \
- /usr/include/c++/4.7/bits/stl_heap.h Utils.hpp \
+ /usr/local/include/curlpp/Easy.inl Utils.hpp \
  /usr/local/include/readline/readline.h \
  /usr/local/include/readline/rlstdc.h \
  /usr/local/include/readline/rltypedefs.h \
  /usr/local/include/readline/keymaps.h \
  /usr/local/include/readline/chardefs.h /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/string3.h \
- /usr/local/include/readline/tilde.h NewsStory.hpp Comment.hpp utf8.h \
- utf8/checked.h utf8/core.h /usr/include/c++/4.7/iterator \
- /usr/include/c++/4.7/bits/stream_iterator.h utf8/unchecked.h \
- LoginField.hpp /usr/include/termios.h \
- /usr/include/x86_64-linux-gnu/bits/termios.h \
- /usr/include/x86_64-linux-gnu/sys/ttydefaults.h NotifLog.hpp \
- Notification.hpp
+ /usr/local/include/readline/tilde.h Notification.hpp
 
-ArgParse.hpp:
+NotifLog.hpp:
 
-/usr/include/c++/4.7/cctype:
+/usr/include/c++/4.7/iostream:
 
 /usr/include/c++/4.7/x86_64-linux-gnu/bits/c++config.h:
 
@@ -227,45 +205,7 @@ ArgParse.hpp:
 
 /usr/include/c++/4.7/x86_64-linux-gnu/bits/cpu_defines.h:
 
-/usr/include/ctype.h:
-
-/usr/include/x86_64-linux-gnu/bits/types.h:
-
-/usr/include/x86_64-linux-gnu/bits/typesizes.h:
-
-/usr/include/endian.h:
-
-/usr/include/x86_64-linux-gnu/bits/endian.h:
-
-/usr/include/x86_64-linux-gnu/bits/byteswap.h:
-
-/usr/include/xlocale.h:
-
-/usr/include/c++/4.7/cstdio:
-
-/usr/include/stdio.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.7/include/stddef.h:
-
-/usr/include/libio.h:
-
-/usr/include/_G_config.h:
-
-/usr/include/wchar.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.7/include/stdarg.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
-
-/usr/include/x86_64-linux-gnu/bits/sys_errlist.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdio.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdio2.h:
-
-/usr/include/c++/4.7/fstream:
-
-/usr/include/c++/4.7/istream:
+/usr/include/c++/4.7/ostream:
 
 /usr/include/c++/4.7/ios:
 
@@ -277,7 +217,17 @@ ArgParse.hpp:
 
 /usr/include/c++/4.7/cwchar:
 
+/usr/include/wchar.h:
+
+/usr/include/stdio.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.7/include/stdarg.h:
+
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.7/include/stddef.h:
+
+/usr/include/xlocale.h:
 
 /usr/include/x86_64-linux-gnu/bits/wchar2.h:
 
@@ -322,6 +272,20 @@ ArgParse.hpp:
 /usr/include/locale.h:
 
 /usr/include/x86_64-linux-gnu/bits/locale.h:
+
+/usr/include/c++/4.7/cctype:
+
+/usr/include/ctype.h:
+
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
+/usr/include/x86_64-linux-gnu/bits/typesizes.h:
+
+/usr/include/endian.h:
+
+/usr/include/x86_64-linux-gnu/bits/endian.h:
+
+/usr/include/x86_64-linux-gnu/bits/byteswap.h:
 
 /usr/include/c++/4.7/bits/ios_base.h:
 
@@ -399,35 +363,75 @@ ArgParse.hpp:
 
 /usr/include/c++/4.7/bits/basic_ios.tcc:
 
-/usr/include/c++/4.7/ostream:
-
 /usr/include/c++/4.7/bits/ostream.tcc:
 
+/usr/include/c++/4.7/istream:
+
 /usr/include/c++/4.7/bits/istream.tcc:
-
-/usr/include/c++/4.7/bits/codecvt.h:
-
-/usr/include/c++/4.7/x86_64-linux-gnu/bits/basic_file.h:
-
-/usr/include/c++/4.7/x86_64-linux-gnu/bits/c++io.h:
-
-/usr/include/c++/4.7/bits/fstream.tcc:
-
-/usr/include/c++/4.7/iomanip:
-
-/usr/include/c++/4.7/iostream:
-
-/usr/include/c++/4.7/set:
-
-/usr/include/c++/4.7/bits/stl_tree.h:
-
-/usr/include/c++/4.7/bits/stl_set.h:
-
-/usr/include/c++/4.7/bits/stl_multiset.h:
 
 /usr/include/c++/4.7/sstream:
 
 /usr/include/c++/4.7/bits/sstream.tcc:
+
+/usr/include/json/json.h:
+
+/usr/include/json/autolink.h:
+
+/usr/include/json/config.h:
+
+/usr/include/json/value.h:
+
+/usr/include/json/forwards.h:
+
+/usr/include/c++/4.7/vector:
+
+/usr/include/c++/4.7/bits/stl_construct.h:
+
+/usr/include/c++/4.7/ext/alloc_traits.h:
+
+/usr/include/c++/4.7/bits/stl_uninitialized.h:
+
+/usr/include/c++/4.7/bits/stl_vector.h:
+
+/usr/include/c++/4.7/bits/stl_bvector.h:
+
+/usr/include/c++/4.7/bits/vector.tcc:
+
+/usr/include/c++/4.7/map:
+
+/usr/include/c++/4.7/bits/stl_tree.h:
+
+/usr/include/c++/4.7/bits/stl_map.h:
+
+/usr/include/c++/4.7/bits/stl_multimap.h:
+
+/usr/include/json/reader.h:
+
+/usr/include/json/features.h:
+
+/usr/include/c++/4.7/deque:
+
+/usr/include/c++/4.7/bits/stl_deque.h:
+
+/usr/include/c++/4.7/bits/deque.tcc:
+
+/usr/include/c++/4.7/stack:
+
+/usr/include/c++/4.7/bits/stl_stack.h:
+
+/usr/include/json/writer.h:
+
+NetUtils.hpp:
+
+/usr/include/c++/4.7/algorithm:
+
+/usr/include/c++/4.7/utility:
+
+/usr/include/c++/4.7/bits/stl_relops.h:
+
+/usr/include/c++/4.7/bits/stl_algo.h:
+
+/usr/include/c++/4.7/cstdlib:
 
 /usr/include/stdlib.h:
 
@@ -451,53 +455,35 @@ ArgParse.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/stdlib.h:
 
-/usr/include/x86_64-linux-gnu/sys/wait.h:
+/usr/include/c++/4.7/bits/algorithmfwd.h:
 
-/usr/include/signal.h:
+/usr/include/c++/4.7/bits/stl_heap.h:
 
-/usr/include/x86_64-linux-gnu/bits/signum.h:
+/usr/include/c++/4.7/bits/stl_tempbuf.h:
 
-/usr/include/x86_64-linux-gnu/bits/siginfo.h:
+/usr/include/c++/4.7/fstream:
 
-/usr/include/x86_64-linux-gnu/bits/sigaction.h:
+/usr/include/c++/4.7/bits/codecvt.h:
 
-/usr/include/x86_64-linux-gnu/bits/sigcontext.h:
+/usr/include/c++/4.7/cstdio:
 
-/usr/include/x86_64-linux-gnu/bits/sigstack.h:
+/usr/include/libio.h:
 
-/usr/include/x86_64-linux-gnu/sys/ucontext.h:
+/usr/include/_G_config.h:
 
-/usr/include/x86_64-linux-gnu/bits/sigthread.h:
+/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
-/usr/include/x86_64-linux-gnu/sys/resource.h:
+/usr/include/x86_64-linux-gnu/bits/sys_errlist.h:
 
-/usr/include/x86_64-linux-gnu/bits/resource.h:
+/usr/include/x86_64-linux-gnu/bits/stdio.h:
 
-/usr/include/unistd.h:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:
 
-/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
+/usr/include/c++/4.7/x86_64-linux-gnu/bits/basic_file.h:
 
-/usr/include/x86_64-linux-gnu/bits/environments.h:
+/usr/include/c++/4.7/x86_64-linux-gnu/bits/c++io.h:
 
-/usr/include/x86_64-linux-gnu/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/x86_64-linux-gnu/bits/unistd.h:
-
-/usr/include/c++/4.7/vector:
-
-/usr/include/c++/4.7/bits/stl_construct.h:
-
-/usr/include/c++/4.7/ext/alloc_traits.h:
-
-/usr/include/c++/4.7/bits/stl_uninitialized.h:
-
-/usr/include/c++/4.7/bits/stl_vector.h:
-
-/usr/include/c++/4.7/bits/stl_bvector.h:
-
-/usr/include/c++/4.7/bits/vector.tcc:
+/usr/include/c++/4.7/bits/fstream.tcc:
 
 /usr/local/include/curlpp/cURLpp.hpp:
 
@@ -555,8 +541,6 @@ ArgParse.hpp:
 
 /usr/include/curl/curl.h:
 
-/usr/include/c++/4.7/cstdlib:
-
 /usr/local/include/curlpp/Options.hpp:
 
 /usr/local/include/curlpp/Option.hpp:
@@ -598,8 +582,6 @@ ArgParse.hpp:
 /usr/local/include/utilspp/functor/Functor.hpp:
 
 /usr/include/c++/4.7/memory:
-
-/usr/include/c++/4.7/bits/stl_tempbuf.h:
 
 /usr/include/c++/4.7/bits/stl_raw_storage_iter.h:
 
@@ -649,55 +631,7 @@ ArgParse.hpp:
 
 /usr/local/include/curlpp/internal/../OptionBase.hpp:
 
-/usr/include/c++/4.7/map:
-
-/usr/include/c++/4.7/bits/stl_map.h:
-
-/usr/include/c++/4.7/bits/stl_multimap.h:
-
 /usr/local/include/curlpp/Easy.inl:
-
-/usr/include/json/json.h:
-
-/usr/include/json/autolink.h:
-
-/usr/include/json/config.h:
-
-/usr/include/json/value.h:
-
-/usr/include/json/forwards.h:
-
-/usr/include/json/reader.h:
-
-/usr/include/json/features.h:
-
-/usr/include/c++/4.7/deque:
-
-/usr/include/c++/4.7/bits/stl_deque.h:
-
-/usr/include/c++/4.7/bits/deque.tcc:
-
-/usr/include/c++/4.7/stack:
-
-/usr/include/c++/4.7/bits/stl_stack.h:
-
-/usr/include/json/writer.h:
-
-Journal.hpp:
-
-NetUtils.hpp:
-
-/usr/include/c++/4.7/algorithm:
-
-/usr/include/c++/4.7/utility:
-
-/usr/include/c++/4.7/bits/stl_relops.h:
-
-/usr/include/c++/4.7/bits/stl_algo.h:
-
-/usr/include/c++/4.7/bits/algorithmfwd.h:
-
-/usr/include/c++/4.7/bits/stl_heap.h:
 
 Utils.hpp:
 
@@ -716,31 +650,5 @@ Utils.hpp:
 /usr/include/x86_64-linux-gnu/bits/string3.h:
 
 /usr/local/include/readline/tilde.h:
-
-NewsStory.hpp:
-
-Comment.hpp:
-
-utf8.h:
-
-utf8/checked.h:
-
-utf8/core.h:
-
-/usr/include/c++/4.7/iterator:
-
-/usr/include/c++/4.7/bits/stream_iterator.h:
-
-utf8/unchecked.h:
-
-LoginField.hpp:
-
-/usr/include/termios.h:
-
-/usr/include/x86_64-linux-gnu/bits/termios.h:
-
-/usr/include/x86_64-linux-gnu/sys/ttydefaults.h:
-
-NotifLog.hpp:
 
 Notification.hpp:

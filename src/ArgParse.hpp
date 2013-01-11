@@ -22,11 +22,12 @@
 
 #include <json/json.h>
 
-#include "Journal.h"
-#include "LoginField.h"
-#include "NetUtils.h"
-#include "NewsStory.h"
-#include "Utils.h"
+#include "Journal.hpp"
+#include "LoginField.hpp"
+#include "NetUtils.hpp"
+#include "NewsStory.hpp"
+#include "NotifLog.hpp"
+#include "Utils.hpp"
 
 using std::cin;
 using std::cout;

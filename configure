@@ -585,7 +585,7 @@ PACKAGE_STRING='F.aceBash 0.4'
 PACKAGE_BUGREPORT='wald.j.chris@gmail.com'
 PACKAGE_URL=''
 
-ac_unique_file="src/ArgParse.h"
+ac_unique_file="src/ArgParse.hpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

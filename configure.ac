@@ -7,7 +7,7 @@ AM_INIT_AUTOMAKE([F.aceBash], [0.4])
 AM_PATH_PYTHON([2.7], [], [
    echo "**** Python 2.7 or later is required for this program."
    exit -1])
-AC_CONFIG_SRCDIR([src/ArgParse.h])
+AC_CONFIG_SRCDIR([src/ArgParse.hpp])
 #AC_CONFIG_HEADERS([src/configure.h])
 
 # Checks for programs.

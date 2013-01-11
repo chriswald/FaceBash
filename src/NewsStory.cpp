@@ -1,4 +1,4 @@
-#include "NewsStory.h"
+#include "NewsStory.hpp"
 
 /*
  * Creates a new NewsStory object and sets its ID, number of likes, and number

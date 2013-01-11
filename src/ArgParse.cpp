@@ -1,4 +1,4 @@
-#include "ArgParse.h"
+#include "ArgParse.hpp"
 
 /*
  * Constructor:
@@ -86,7 +86,10 @@ void ArgParse::ParseArgs()
    {
       string cmd = commands[i];
       
-      if      (cmd == "c" || cmd == "comment")
+      if      (cmd == "a" || cmd == "notifications")
+	 ShowNotifications();
+
+      else if (cmd == "c" || cmd == "comment")
 	 Comment();
       
       else if (cmd == "h" || cmd == "help")
@@ -138,6 +141,30 @@ int ArgParse::argIndex(string arg)
       if (arguments[i] == arg)
 	 return i;
    return -1;
+}
+
+/*
+ * Show Notifications:
+ * 
+ */
+void ArgParse::ShowNotifications()
+{
+   bool plain_format = false;
+   
+   if (count > 1)
+   {
+      if (argHas("--plain"))
+	 plain_format = true;
+   }
+
+   NotifLog log = NotifLog(plain_format);   
+   bool request_success = true;
+   request_success = log.getNotifications();
+
+   if (!request_success)
+      return;
+
+   cout << log;
 }
 
 /*

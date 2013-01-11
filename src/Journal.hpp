@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "NetUtils.h"
-#include "NewsStory.h"
+#include "NetUtils.hpp"
+#include "NewsStory.hpp"
 
 using std::ostream;
 using std::string;
