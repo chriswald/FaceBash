@@ -1,5 +1,5 @@
-#ifndef __COMMENT_H
-#define __COMMENT_H
+#ifndef __COMMENT_HPP
+#define __COMMENT_HPP
 
 #include <string>
 
@@ -26,4 +26,4 @@ private:
    int index;
 };
 
-#endif // __COMMENT_H
+#endif // __COMMENT_HPP

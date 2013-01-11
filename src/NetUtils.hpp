@@ -1,5 +1,5 @@
-#ifndef __NET_UTILS_H
-#define __NET_UTILS_H
+#ifndef __NET_UTILS_HPP
+#define __NET_UTILS_HPP
 
 #include <algorithm>
 #include <fstream>
@@ -53,4 +53,4 @@ private:
 			     const string & name);
 };
 
-#endif // __NET_UTILS_H
+#endif // __NET_UTILS_HPP

@@ -1,5 +1,5 @@
-#ifndef __UTILS_H
-#define __UTILS_H
+#ifndef __UTILS_HPP
+#define __UTILS_HPP
 
 #include <cstdlib>
 #include <iostream>
@@ -19,4 +19,4 @@ public:
    static string authFile();
 };
 
-#endif // __UTILS_H
+#endif // __UTILS_HPP

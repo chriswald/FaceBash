@@ -1,5 +1,5 @@
-#ifndef __ARG_PARSE_H
-#define __ARG_PARSE_H
+#ifndef __ARG_PARSE_HPP
+#define __ARG_PARSE_HPP
 
 #include <cctype>
 #include <cstdio>
@@ -54,7 +54,8 @@ public:
    bool argHas(string arg);
    int  argIndex(string arg);
    bool isCommand(string arg);
-   
+
+   void ShowNotifications();
    void Comment();
    void Like();
    void Login();
@@ -88,4 +89,4 @@ private:
    const static unsigned short int ERROR_CODE_LENGTH = 3;
 };
 
-#endif // __ARG_PARSE_H
+#endif // __ARG_PARSE_HPP

@@ -1,5 +1,5 @@
-#ifndef __LOGIN_FIELD_H
-#define __LOGIN_FIELD_H
+#ifndef __LOGIN_FIELD_HPP
+#define __LOGIN_FIELD_HPP
 
 #include <cstdlib>
 #include <iostream>
@@ -38,4 +38,4 @@ private:
    void SetStdinEcho(bool enable);
 };
 
-#endif //__LOGIN_FIELD_H
+#endif //__LOGIN_FIELD_HPP

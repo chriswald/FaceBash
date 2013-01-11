@@ -1,5 +1,5 @@
-#ifndef __NEWS_STORY_H
-#define __NEWS_STORY_H
+#ifndef __NEWS_STORY_HPP
+#define __NEWS_STORY_HPP
 
 #include <iomanip>
 #include <iostream>
@@ -79,4 +79,4 @@ private:
    vector<Comment> comments;
 };
 
-#endif // __NEWS_STORY_H
+#endif // __NEWS_STORY_HPP

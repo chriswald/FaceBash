@@ -1,5 +1,5 @@
-#ifndef __JOURNAL_H
-#define __JOURNAL_H
+#ifndef __JOURNAL_HPP
+#define __JOURNAL_HPP
 
 #include <iostream>
 #include <string>
@@ -30,4 +30,4 @@ private:
    vector<NewsStory> news_stories;
 };
 
-#endif // __JOURNAL_H
+#endif // __JOURNAL_HPP
