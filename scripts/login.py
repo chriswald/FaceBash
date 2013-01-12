@@ -39,7 +39,7 @@ def write_file(return_val):
 
 def main():
 
-    if not len(sys.argv) == 3:
+    if not len(sys.argv) == 4:
         write_file(BAD_ARGUMENTS)
         exit(0)
 
@@ -150,14 +150,19 @@ def main():
         # If we were redirected to a facebook site ask the user for permission to
         # add this application to their trusted list.
         if 'permissions.request' in url:
-            sys.stdout.write('Do you want to grant this app permissions to your Facebook account? (Y/n): ')
-            answer = str(raw_input())
-            if answer == 'Y' or answer == 'y':
+            if sys.argv[3] == 'yes':
                 browser.select_form(nr=2)
                 response1 = browser.submit(nr=0)
                 url = response1.geturl()
             else:
-                return_val = PERMISSION_DENIED
+                sys.stdout.write('Do you want to grant this app permissions to your Facebook account? (Y/n): ')
+                answer = str(raw_input())
+                if answer == 'Y' or answer == 'y':
+                    browser.select_form(nr=2)
+                    response1 = browser.submit(nr=0)
+                    url = response1.geturl()
+                else:
+                    return_val = PERMISSION_DENIED
 
         if '#' in url and '&' in url:
             POSTS = url[url.index('#')+1:]

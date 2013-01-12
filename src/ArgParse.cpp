@@ -446,6 +446,7 @@ void ArgParse::Login()
 {
    string user = "\0";
    string pass = "\0";
+   string grant_permission = "no";
 
    if (count > 1)
    {
@@ -468,6 +469,9 @@ void ArgParse::Login()
 	    pass = string(arguments[pass_index+1]);
 	 }
       }
+
+      if (argHas("--grant"))
+	 grant_permission = "yes";
    }
 
    // Read login information from the user.
@@ -504,6 +508,7 @@ void ArgParse::Login()
 	    script.c_str(),
 	    user.c_str(),
 	    pass.c_str(),
+	    grant_permission.c_str(),
 	    (char *) 0);
    }
    // Parent process
