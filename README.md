@@ -35,19 +35,23 @@ Commands
                     --val message Specifies the text to post as the comment. This enables "quite mode" where the status being commented on is not shown and the user is not prompted.
                     --num number  An integer that represents the index of the post to comment on.
                     --who person  The name of the friend whose wall the post to be commented on is on. Use "me" if the post to be commented on is on your own wall.
+		    --plain       Indicates that the output should be minimally formatted.
     -h, --help      Shows the version number and help text.
     -l, --login     Prompts the user to enter credentials to log into Facebook.
                     --user email  The email address (user name) to log into Facebook with.
                     --pass pass   The password to log in with. It is recommended not to use this flag as the password will be visible in history as well as 'w' and 'who' (among other) commands, but it can be useful for scripting. Don't say you weren't warned.
+		    --grant       Signals that F.aceBash will be silently granted permissions if requested on login.
         --logout    Logs the user out of Facebook.
     -k, --like      Likes a post or comment.
                     --num number  A number in the form [post index].[comment index] . If no post index is given 1, or the most recent post, is assumed. If no comment index is given (even if a period is provided) only the post index is used.
                     --who person  The name of the friend whose wall the post or comment to be liked is on. Use "me" if the post or comment to be liked is on your own wall.
                     --force_yes   If this argument is passed "quite mode" is enabled and the user is not asked for confirmation on the item to be liked.
+		    --plain       Indicates that the output should be minimally formatted.
     -n, --show_news_feed
                     Shows as many items of a news feed as can be found, including comments and likes.
                     --who person  The name of the friend whose wall is to be shown. Use "me" to show your own wall.
                     --num range   Range is a set of numbers. Sets of numbers are comma delimited. A set can be one number, a fixed span, or an arbitrary span. A fixed span is two '-' seperated numbers where each number is the range is added to the list inclusivly. An arbitrary span is one number with a '*' either before or after it. If the '*' is before the number, then all numbers between 0 and the following number inclusively are added to the list. If the '*' is after the number, all items available after and including that number are added to the list.
+		    --plain       Indicates that the output should be minimally formatted.
     -s, --update_status
                     Allows a user to post a status to their wall.
                     --who person  The name of the friend whose wall the status should be posted on. "me" is not excepted for this command.
