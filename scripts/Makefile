@@ -96,11 +96,11 @@ am__py_compile = PYTHON=$(PYTHON) $(SHELL) $(py_compile)
 am__installdirs = "$(DESTDIR)$(pythondir)"
 py_compile = $(top_srcdir)/py-compile
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/chris/FaceBash/missing --run aclocal-1.11
+ACLOCAL = ${SHELL} /home/pi/FaceBash/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
-AUTOCONF = ${SHELL} /home/chris/FaceBash/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/chris/FaceBash/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/chris/FaceBash/missing --run automake-1.11
+AUTOCONF = ${SHELL} /home/pi/FaceBash/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/pi/FaceBash/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/pi/FaceBash/missing --run automake-1.11
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -111,7 +111,7 @@ CXX = g++
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"F.aceBash\" -DPACKAGE_TARNAME=\"f-acebash\" -DPACKAGE_VERSION=\"0.4\" -DPACKAGE_STRING=\"F.aceBash\ 0.4\" -DPACKAGE_BUGREPORT=\"wald.j.chris@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"F.aceBash\" -DVERSION=\"0.4\" -DHAVE_LIBCURL=1 -DHAVE_LIBCURLPP=1 -DHAVE_LIBJSON=1 -DHAVE_LIBNCURSES=1 -DHAVE_LIBREADLINE=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STDLIB_H=1 -DHAVE_TERMIOS_H=1 -DHAVE_UNISTD_H=1 -DHAVE__BOOL=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1
+DEFS = -DPACKAGE_NAME=\"F.aceBash\" -DPACKAGE_TARNAME=\"f-acebash\" -DPACKAGE_VERSION=\"0.5\" -DPACKAGE_STRING=\"F.aceBash\ 0.5\" -DPACKAGE_BUGREPORT=\"wald.j.chris@gmail.com\" -DPACKAGE_URL=\"\" -DPACKAGE=\"F.aceBash\" -DVERSION=\"0.5\" -DHAVE_LIBCURL=1 -DHAVE_LIBCURLPP=1 -DHAVE_LIBJSON=1 -DHAVE_LIBNCURSES=1 -DHAVE_LIBREADLINE=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STDLIB_H=1 -DHAVE_TERMIOS_H=1 -DHAVE_UNISTD_H=1 -DHAVE__BOOL=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1
 DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
@@ -129,16 +129,16 @@ LIBOBJS =
 LIBS = -lreadline -lncurses -ljson -lcurlpp -lcurl 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/chris/FaceBash/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/pi/FaceBash/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = F.aceBash
 PACKAGE_BUGREPORT = wald.j.chris@gmail.com
 PACKAGE_NAME = F.aceBash
-PACKAGE_STRING = F.aceBash 0.4
+PACKAGE_STRING = F.aceBash 0.5
 PACKAGE_TARNAME = f-acebash
 PACKAGE_URL = 
-PACKAGE_VERSION = 0.4
+PACKAGE_VERSION = 0.5
 PATH_SEPARATOR = :
 PYTHON = /usr/bin/python
 PYTHON_EXEC_PREFIX = ${exec_prefix}
@@ -148,11 +148,11 @@ PYTHON_VERSION = 2.7
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
-VERSION = 0.4
-abs_builddir = /home/chris/FaceBash/scripts
-abs_srcdir = /home/chris/FaceBash/scripts
-abs_top_builddir = /home/chris/FaceBash
-abs_top_srcdir = /home/chris/FaceBash
+VERSION = 0.5
+abs_builddir = /home/pi/FaceBash/scripts
+abs_srcdir = /home/pi/FaceBash/scripts
+abs_top_builddir = /home/pi/FaceBash
+abs_top_srcdir = /home/pi/FaceBash
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 am__include = include
@@ -172,7 +172,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/chris/FaceBash/install-sh
+install_sh = ${SHELL} /home/pi/FaceBash/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -252,12 +252,8 @@ install-pythonPYTHON: $(python_PYTHON)
 	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pythondir)" || exit $$?; \
 	done || exit $$?; \
 	if test -n "$$dlist"; then \
-	  if test -z "$(DESTDIR)"; then \
-	    $(am__py_compile) --basedir "$(pythondir)" $$dlist; \
-	  else \
-	    $(am__py_compile) --destdir "$(DESTDIR)" \
-	                      --basedir "$(pythondir)" $$dlist; \
-	  fi; \
+	  $(am__py_compile) --destdir "$(DESTDIR)" \
+	                    --basedir "$(pythondir)" $$dlist; \
 	else :; fi
 
 uninstall-pythonPYTHON:

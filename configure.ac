@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([F.aceBash], [0.4], [wald.j.chris@gmail.com])
-AM_INIT_AUTOMAKE([F.aceBash], [0.4])
+AC_INIT([F.aceBash], [0.5], [wald.j.chris@gmail.com])
+AM_INIT_AUTOMAKE([F.aceBash], [0.5])
 AM_PATH_PYTHON([2.7], [], [
    echo "**** Python 2.7 or later is required for this program."
    exit -1])
