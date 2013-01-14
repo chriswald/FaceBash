@@ -252,8 +252,12 @@ install-pythonPYTHON: $(python_PYTHON)
 	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pythondir)" || exit $$?; \
 	done || exit $$?; \
 	if test -n "$$dlist"; then \
-	  $(am__py_compile) --destdir "$(DESTDIR)" \
-	                    --basedir "$(pythondir)" $$dlist; \
+	  if test -z "$(DESTDIR)"; then \
+	    $(am__py_compile) --basedir "$(pythondir)" $$dlist; \
+	  else \
+	    $(am__py_compile) --destdir "$(DESTDIR)" \
+	                      --basedir "$(pythondir)" $$dlist; \
+	  fi; \
 	else :; fi
 
 uninstall-pythonPYTHON:
