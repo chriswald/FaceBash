@@ -10,7 +10,7 @@ PERMISSION_DENIED = '002'
 BAD_CONNECTION    = '003'
 INTERRUPTED       = '004'
 BAD_ARGUMENTS     = '005'
-UNKNOW_ERROR      = '999'
+UNKNOWN_ERROR     = '999'
 
 def signal_handler(signal, frame):
     write_file(INTERRUPTED)
@@ -49,7 +49,7 @@ def main():
     # Build the URI I need
     uri =  'https://www.facebook.com/dialog/oauth?'
     uri += 'client_id=103806206443210'
-    uri += '&redirect_uri=http://chriswald.com/facebash.htm'
+    uri += '&redirect_uri=http://chriswald.com/facebash.html'
     uri += '&scope=user_about_me,friends_about_me,friends_birthday,user_likes,friends_likes,user_relationships,friends_relationships,user_status,friends_status,publish_stream,read_stream,user_photos,friends_photos,user_videos,friends_videos,manage_notifications'
     uri += '&response_type=token'
 
@@ -69,8 +69,8 @@ def main():
     #    2: facebook.com/login.php
     #    3: facebook.com/dialog/permissions.request
     #
-    # 1: chriswald.com/facebash.htm
-    # =============================
+    # 1: chriswald.com/facebash.html
+    # ==============================
     #
     # This page is the ultimate goal of the process because it will be
     # passed the authentification token and expiration time. This page
@@ -130,7 +130,7 @@ def main():
     
     # This is where the magic happens
     # Open the URI, fill out the forms and submit everything
-    return_val = UNKNOW_ERROR
+    return_val = UNKNOWN_ERROR
     url = ''
 
     try:
@@ -149,17 +149,29 @@ def main():
     else:
         # If we were redirected to a facebook site ask the user for permission to
         # add this application to their trusted list.
-        if 'permissions.request' in url:
+        if 'dialog/oauth?redirect_uri=' in url:
             if sys.argv[3] == 'yes':
-                browser.select_form(nr=2)
-                response1 = browser.submit(nr=0)
+                browser.select_form(nr=0)
+                response1 = browser.submit(name='__CONFIRM__')
+                url = response1.geturl()
+                browser.select_form(nr=0)
+                response1 = browser.submit(name='__CONFIRM__')
+                url = response1.geturl()
+                browser.select_form(nr=0)
+                response1 = browser.submit(name='__CONFIRM__')
                 url = response1.geturl()
             else:
                 sys.stdout.write('Do you want to grant this app permissions to your Facebook account? (Y/n): ')
                 answer = str(raw_input())
                 if answer == 'Y' or answer == 'y':
-                    browser.select_form(nr=2)
-                    response1 = browser.submit(nr=0)
+                    browser.select_form(nr=0)
+                    response1 = browser.submit(name='__CONFIRM__', label='l')
+                    url = response1.geturl()
+                    browser.select_form(nr=0)
+                    response1 = browser.submit(name='__CONFIRM__')
+                    url = response1.geturl()
+                    browser.select_form(nr=0)
+                    response1 = browser.submit(name='__CONFIRM__')
                     url = response1.geturl()
                 else:
                     return_val = PERMISSION_DENIED
@@ -170,7 +182,8 @@ def main():
             auth_token = parts[0].split('=')[1]
             return_val = auth_token
         else:
-            return_val = UNKNOW_ERROR
+            print url
+            return_val = UNKNOWN_ERROR
 
     write_file(return_val)
 
