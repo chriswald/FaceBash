@@ -32,10 +32,9 @@ wget http://iweb.dl.sourceforge.net/project/jsoncpp/jsoncpp/0.5.0/jsoncpp-src-0.
 tar -xzf jsoncpp-src-0.5.0.tar.gz
 rm jsoncpp-src-0.5.0.tar.gz
 mv jsoncpp-src-0.5.0 jsoncpp
-wget http://superb-dca3.dl.sourceforge.net/project/scons/scons/2.2.0/scons-2.2.0.tar.gz
-tar -xzf scons-2.2.0.tar.gz
-rm scons-2.2.0.tar.gz
-mv scons-2.2.0 scons
+wget -O scons.tar.gz http://downloads.sourceforge.net/project/scons/scons/2.3.4/scons-2.3.4.tar.gz?r=&ts=1416275814&use_mirror=iweb -O scons-2.3.4.tar.gz
+tar -xzf scons.tar.gz
+rm scons.tar.gz
 cd scons
 sudo python setup.py install
 cp script/scons ../jsoncpp/scons.py
